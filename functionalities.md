@@ -19,3 +19,6 @@
 - terms&conditions
 - under profile: X€ saved, Ykg food saved, Z€ spent
 - some plots for statistics
+- refferal system
+- offline mode
+- social sharing
