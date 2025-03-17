@@ -29,20 +29,20 @@
 - social sharing
 
 ## List of Screens
-- [] Sign up
-  - [] with google
-  - [] with mail and create password
-- [] Log in
-- [] Profile
+- [ ] Sign up
+  - [ ] with google
+  - [ ] with mail and create password
+- [ ] Log in
+- [ ] Profile
   - statistics
   - 
-- [] Main screen
+- [ ] Main screen
   - shows upon opening the app
   - map
   - favourites' orders today
   - filters
   - search
-- [] Product screen
-- [] Checkout
-- [] "For You Page"
-- [] Messages (optional)
+- [ ] Product screen
+- [ ] Checkout
+- [ ] "For You Page"
+- [ ] Messages (optional)
