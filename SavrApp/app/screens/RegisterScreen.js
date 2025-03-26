@@ -121,7 +121,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
               styles.input,
               {
                 borderColor: isDarkMode ? "#444" : "#ddd",
-                backgroundColor: "#f1f1f1",
+                backgroundColor: isDarkMode ? "grey" : "#f1f1f1",
                 color: isDarkMode ? "white" : "black",
               },
             ]}
