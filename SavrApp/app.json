@@ -45,6 +45,7 @@
       "eas": {
         "projectId": "496b934d-b90f-4095-bf03-50e9bceb0fdd"
       }
-    }
+    },
+    "main": "App.js"
   }
 }
