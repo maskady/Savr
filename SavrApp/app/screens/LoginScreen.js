@@ -13,12 +13,14 @@ import {
 import { useRoute,  useNavigation } from '@react-navigation/native';
 import { storeToken } from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
+import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 
 const LoginScreen = ({setIsAuthenticated}) => {
   const [password, setPassword] = useState("");
   const [theme, setTheme] = useState(Appearance.getColorScheme()); 
   const route = useRoute();
   const { email } = route.params;
+  const inputAccessoryViewID4 = "inputAccessoryViewID4";  
 
   console.log("Email:", email);
 
@@ -113,6 +115,9 @@ const LoginScreen = ({setIsAuthenticated}) => {
             ]}
             value={email}
             editable={false}
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID4 : undefined}
+            returnKeyType="done"
+            onSubmitEditing={handleSignin}
           />
 
           <TextInput
@@ -148,6 +153,7 @@ const LoginScreen = ({setIsAuthenticated}) => {
         </View>
         <View />
       </View>
+      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID4} />}
     </SafeAreaView>
   );
 };
@@ -176,7 +182,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 60,
+    marginTop: 40,
     marginBottom: 30,
   },
   formContainer: {

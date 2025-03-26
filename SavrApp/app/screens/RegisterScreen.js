@@ -17,7 +17,7 @@ import {
 import { ArrowLeft } from "lucide-react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { storeToken } from "../utils/token";
-import { ArrowLeft } from "lucide-react-native";
+import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 
 const RegisterScreen = ({setIsAuthenticated}) => {
   const [fullName, setFullName] = useState("");
@@ -29,6 +29,11 @@ const RegisterScreen = ({setIsAuthenticated}) => {
   const fullNameRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
+
+  const inputAccessoryViewID1 = "inputAccessoryViewID1";  
+  const inputAccessoryViewID2 = "inputAccessoryViewID2"; 
+  const inputAccessoryViewID3 = "inputAccessoryViewID3";  
+
 
   console.log("Email:", email);
 
@@ -162,6 +167,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current.focus()} 
             submitBehavior="submit" 
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID1 : undefined}
           />
 
           <TextInput
@@ -182,6 +188,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             returnKeyType="next"
             onSubmitEditing={() => confirmPasswordRef.current.focus()} 
             submitBehavior="submit"
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID2 : undefined}
           />
 
           <TextInput
@@ -201,6 +208,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
             returnKeyType="done"
             onSubmitEditing={handleSignup}
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID3 : undefined}
           />
 
           <TouchableOpacity
@@ -218,10 +226,13 @@ const RegisterScreen = ({setIsAuthenticated}) => {
           </TouchableOpacity>
         </View>
         <View />
-      </View>
+        </View>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
+    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID1} />}
+    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID2} />}
+    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID3} />}
     </SafeAreaView>
   );
 };
