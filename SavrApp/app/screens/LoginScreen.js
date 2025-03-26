@@ -9,16 +9,22 @@ import {
   StatusBar,
   Appearance,
   Platform,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
 } from "react-native";
 import { useRoute,  useNavigation } from '@react-navigation/native';
 import { storeToken } from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
+import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 
 const LoginScreen = ({setIsAuthenticated}) => {
   const [password, setPassword] = useState("");
   const [theme, setTheme] = useState(Appearance.getColorScheme()); 
   const route = useRoute();
   const { email } = route.params;
+  const inputAccessoryViewID4 = "inputAccessoryViewID4";  
 
   console.log("Email:", email);
 
@@ -83,6 +89,12 @@ const LoginScreen = ({setIsAuthenticated}) => {
         barStyle={isDarkMode ? "light-content" : "dark-content"}
         backgroundColor={isDarkMode ? "#333" : "white"}
       />
+      <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+          >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.content}>
         {Platform.OS === "ios" && (
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -130,6 +142,9 @@ const LoginScreen = ({setIsAuthenticated}) => {
             secureTextEntry
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
             autoCapitalize="none"
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID4 : undefined}
+            returnKeyType="done"
+            onSubmitEditing={handleSignin}
           />
 
           <TouchableOpacity
@@ -148,6 +163,10 @@ const LoginScreen = ({setIsAuthenticated}) => {
         </View>
         <View />
       </View>
+      </ScrollView>
+      </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID4} />}
     </SafeAreaView>
   );
 };
@@ -176,7 +195,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 60,
+    marginTop: 40,
     marginBottom: 30,
   },
   formContainer: {

@@ -9,12 +9,15 @@ import {
   StatusBar,
   Image,
   Appearance,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 
 const WelcomeScreen = () => {
   const [email, setEmail] = useState("");
   const [theme, setTheme] = useState(Appearance.getColorScheme()); // Initialization with the current value
+  const inputAccessoryViewID0 = "inputAccessoryViewID0";  
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
@@ -132,6 +135,9 @@ const WelcomeScreen = () => {
             keyboardType="email-address"
             autoCapitalize="none"
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID0 : undefined}
+            returnKeyType="done"
+            onSubmitEditing={handleContinue}
           />
 
           <TouchableOpacity
@@ -205,6 +211,7 @@ const WelcomeScreen = () => {
         </View>
         <View />
       </View>
+      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID0} />}
     </SafeAreaView>
   );
 };
