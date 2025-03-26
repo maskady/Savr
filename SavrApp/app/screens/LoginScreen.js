@@ -8,9 +8,11 @@ import {
   TouchableOpacity,
   StatusBar,
   Appearance,
+  Platform,
 } from "react-native";
 import { useRoute,  useNavigation } from '@react-navigation/native';
 import { storeToken } from "../utils/token";
+import { ArrowLeft } from "lucide-react-native";
 
 const LoginScreen = ({setIsAuthenticated}) => {
   const [password, setPassword] = useState("");
@@ -82,6 +84,11 @@ const LoginScreen = ({setIsAuthenticated}) => {
         backgroundColor={isDarkMode ? "#333" : "white"}
       />
       <View style={styles.content}>
+        {Platform.OS === "ios" && (
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <ArrowLeft size={24} color={isDarkMode ? "white" : "black"} />
+          </TouchableOpacity>
+        )}
         <Text style={[styles.title, { color: isDarkMode ? "white" : "black" }]}>
           Savr
         </Text>
