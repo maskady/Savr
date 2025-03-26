@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,7 +9,12 @@ import {
   StatusBar,
   Appearance,
   Platform,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
 } from "react-native";
+import { ArrowLeft } from "lucide-react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { storeToken } from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
@@ -21,6 +26,9 @@ const RegisterScreen = ({setIsAuthenticated}) => {
   const [theme, setTheme] = useState(Appearance.getColorScheme()); 
   const route = useRoute();
   const { email } = route.params;
+  const fullNameRef = useRef(null);
+  const passwordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
 
   console.log("Email:", email);
 
@@ -79,6 +87,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
 
   const isDarkMode = theme === "dark";
   //console.log("Current theme:", theme); 
+  console.log("Current OS:", Platform.OS);
 
   return (
     <SafeAreaView
@@ -91,6 +100,12 @@ const RegisterScreen = ({setIsAuthenticated}) => {
         barStyle={isDarkMode ? "light-content" : "dark-content"}
         backgroundColor={isDarkMode ? "#333" : "white"}
       />
+      <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.content}>
         {Platform.OS === "ios" && (
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -121,7 +136,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
               styles.input,
               {
                 borderColor: isDarkMode ? "#444" : "#ddd",
-                backgroundColor: "#f1f1f1",
+                backgroundColor: isDarkMode ? "grey" : "#f1f1f1",
                 color: isDarkMode ? "white" : "black",
               },
             ]}
@@ -130,6 +145,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
           />
 
           <TextInput
+            ref={fullNameRef}
             style={[
               styles.input,
               {
@@ -143,9 +159,13 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             onChangeText={setFullName}
             autoCapitalize="words"
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            returnKeyType="next"
+            onSubmitEditing={() => passwordRef.current.focus()} 
+            submitBehavior="submit" 
           />
 
           <TextInput
+            ref={passwordRef}
             style={[
               styles.input,
               {
@@ -159,9 +179,13 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             onChangeText={setPassword}
             secureTextEntry
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            returnKeyType="next"
+            onSubmitEditing={() => confirmPasswordRef.current.focus()} 
+            submitBehavior="submit"
           />
 
           <TextInput
+            ref={confirmPasswordRef}
             style={[
               styles.input,
               {
@@ -175,6 +199,8 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             onChangeText={setConfirmPassword}
             secureTextEntry
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            returnKeyType="done"
+            onSubmitEditing={handleSignup}
           />
 
           <TouchableOpacity
@@ -193,6 +219,9 @@ const RegisterScreen = ({setIsAuthenticated}) => {
         </View>
         <View />
       </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
