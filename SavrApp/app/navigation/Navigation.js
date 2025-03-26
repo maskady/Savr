@@ -6,7 +6,7 @@ const Navigation = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
-    isAuthenticated ? <AppStack /> : <AuthStack />
+    isAuthenticated ? <AppStack /> : <AuthStack setIsAuthenticated={setIsAuthenticated} />
   );
 };
 
