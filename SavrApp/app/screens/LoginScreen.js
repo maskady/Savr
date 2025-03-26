@@ -115,9 +115,6 @@ const LoginScreen = ({setIsAuthenticated}) => {
             ]}
             value={email}
             editable={false}
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID4 : undefined}
-            returnKeyType="done"
-            onSubmitEditing={handleSignin}
           />
 
           <TextInput
@@ -135,6 +132,9 @@ const LoginScreen = ({setIsAuthenticated}) => {
             secureTextEntry
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
             autoCapitalize="none"
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID4 : undefined}
+            returnKeyType="done"
+            onSubmitEditing={handleSignin}
           />
 
           <TouchableOpacity
