@@ -9,6 +9,10 @@ import {
   StatusBar,
   Appearance,
   Platform,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
 } from "react-native";
 import { useRoute,  useNavigation } from '@react-navigation/native';
 import { storeToken } from "../utils/token";
@@ -85,6 +89,12 @@ const LoginScreen = ({setIsAuthenticated}) => {
         barStyle={isDarkMode ? "light-content" : "dark-content"}
         backgroundColor={isDarkMode ? "#333" : "white"}
       />
+      <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+          >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.content}>
         {Platform.OS === "ios" && (
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -153,6 +163,9 @@ const LoginScreen = ({setIsAuthenticated}) => {
         </View>
         <View />
       </View>
+      </ScrollView>
+      </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
       {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID4} />}
     </SafeAreaView>
   );
