@@ -76,7 +76,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
   };
 
   const isDarkMode = theme === "dark";
-  console.log("Current theme:", theme); 
+  //console.log("Current theme:", theme); 
 
   return (
     <SafeAreaView
