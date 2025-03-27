@@ -15,7 +15,8 @@ import { storeToken } from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
 
 const RegisterScreen = ({setIsAuthenticated}) => {
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [theme, setTheme] = useState(Appearance.getColorScheme()); 
@@ -42,7 +43,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
   const navigation = useNavigation();
   
   const handleSignup = async () => {
-    if (email === "" || fullName === "" || password === "" || confirmPassword === "") {
+    if (email === "" || firstName === "" || lastName == "" || password === "" || confirmPassword === "") {
       alert("Please fill in all fields");
       return;
     }
@@ -58,7 +59,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, "firstName": fullName.split(" ")[0], "lastName": fullName.split(" ")[1], password, confirmPassword }),
+        body: JSON.stringify({ email, "firstName": firstName, "lastName": lastName, password, confirmPassword }),
       });
       const data = await response.json();
 
@@ -138,9 +139,25 @@ const RegisterScreen = ({setIsAuthenticated}) => {
                 color: isDarkMode ? "white" : "black",
               },
             ]}
-            placeholder="Full Name"
-            value={fullName}
-            onChangeText={setFullName}
+            placeholder="First Name"
+            value={firstName}
+            onChangeText={setFirstName}
+            autoCapitalize="words"
+            placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+          />
+
+          <TextInput
+            style={[
+              styles.input,
+              {
+                borderColor: isDarkMode ? "#444" : "#ddd",
+                backgroundColor: isDarkMode ? "#333" : "white",
+                color: isDarkMode ? "white" : "black",
+              },
+            ]}
+            placeholder="Last Name"
+            value={lastName}
+            onChangeText={setLastName}
             autoCapitalize="words"
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
           />

@@ -47,7 +47,7 @@ const WelcomeScreen = () => {
     try {
       // TODO: Implement real API call
       let response = {};
-      if (email.length > 10) {
+      if (email.length > 13) { 
         response = {
           ok: true,
           data: {
