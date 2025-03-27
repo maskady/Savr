@@ -24,9 +24,9 @@ const LoginScreen = ({setIsAuthenticated}) => {
   const [theme, setTheme] = useState(Appearance.getColorScheme()); 
   const route = useRoute();
   const { email } = route.params;
-  const inputAccessoryViewID4 = "inputAccessoryViewID4";  
+  const inputAccessoryLoginPassword = "inputAccessoryLoginPassword";
 
-  console.log("Email:", email);
+  console.log("LoginScreen | email:", email);
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
@@ -76,7 +76,6 @@ const LoginScreen = ({setIsAuthenticated}) => {
   }
 
   const isDarkMode = theme === "dark";
-  //console.log("Current theme:", theme); 
 
   return (
     <SafeAreaView
@@ -142,7 +141,7 @@ const LoginScreen = ({setIsAuthenticated}) => {
             secureTextEntry
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
             autoCapitalize="none"
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID4 : undefined}
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryLoginPassword : undefined}
             returnKeyType="done"
             onSubmitEditing={handleSignin}
           />
@@ -166,7 +165,7 @@ const LoginScreen = ({setIsAuthenticated}) => {
       </ScrollView>
       </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID4} />}
+      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryLoginPassword} />}
     </SafeAreaView>
   );
 };

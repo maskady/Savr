@@ -32,14 +32,12 @@ const RegisterScreen = ({setIsAuthenticated}) => {
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
 
-  const inputAccessoryViewID1 = "inputAccessoryViewID1";  
-  const inputAccessoryViewID2 = "inputAccessoryViewID2"; 
-  const inputAccessoryViewID3 = "inputAccessoryViewID3";  
-  const inputAccessoryViewID6 = "inputAccessoryViewID6";  
+  const inputAccessoryRegisterFirstName = "inputAccessoryRegisterFirstName";
+  const inputAccessoryRegisterLastName = "inputAccessoryRegisterLastName";
+  const inputAccessoryRegisterPassword = "inputAccessoryRegisterPassword";
+  const inputAccessoryRegisterConfirmPassword = "inputAccessoryRegisterConfirmPassword";
 
-
-
-  console.log("Email:", email);
+  console.log("RegisterScreen | email:", email);
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
@@ -95,8 +93,6 @@ const RegisterScreen = ({setIsAuthenticated}) => {
   };
 
   const isDarkMode = theme === "dark";
-  //console.log("Current theme:", theme); 
-  console.log("Current OS:", Platform.OS);
 
   return (
     <SafeAreaView
@@ -171,7 +167,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             autoCapitalize="words"
             submitBehavior="submit" 
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID6 : undefined}
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterFirstName : undefined}
           />
 
           <TextInput
@@ -192,7 +188,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current.focus()} 
             submitBehavior="submit" 
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID1 : undefined}
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterLastName : undefined}
           />
 
           <TextInput
@@ -213,7 +209,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             returnKeyType="next"
             onSubmitEditing={() => confirmPasswordRef.current.focus()} 
             submitBehavior="submit"
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID2 : undefined}
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterPassword : undefined}
           />
 
           <TextInput
@@ -233,7 +229,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
             returnKeyType="done"
             onSubmitEditing={handleSignup}
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID3 : undefined}
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterConfirmPassword : undefined}
           />
 
           <TouchableOpacity
@@ -255,10 +251,10 @@ const RegisterScreen = ({setIsAuthenticated}) => {
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
-    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID1} />}
-    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID2} />}
-    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID3} />}
-    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID6} />}
+    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterFirstName} />}
+    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterLastName} />}
+    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterPassword} />}
+    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterConfirmPassword} />}
     </SafeAreaView>
   );
 };
