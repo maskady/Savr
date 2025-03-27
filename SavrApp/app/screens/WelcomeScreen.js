@@ -17,7 +17,7 @@ import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 const WelcomeScreen = () => {
   const [email, setEmail] = useState("");
   const [theme, setTheme] = useState(Appearance.getColorScheme()); // Initialization with the current value
-  const inputAccessoryViewID0 = "inputAccessoryViewID0";  
+  const inputAccessoryWelcomeEmail = "inputAccessoryWelcomeEmail";
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
@@ -35,8 +35,6 @@ const WelcomeScreen = () => {
   }, []);
 
   const isDarkMode = theme === "dark";
-
-  //console.log("Current theme:", theme); 
 
   const navigation = useNavigation();
 
@@ -135,7 +133,7 @@ const WelcomeScreen = () => {
             keyboardType="email-address"
             autoCapitalize="none"
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID0 : undefined}
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryWelcomeEmail : undefined}
             returnKeyType="done"
             onSubmitEditing={handleContinue}
           />
@@ -211,7 +209,7 @@ const WelcomeScreen = () => {
         </View>
         <View />
       </View>
-      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID0} />}
+      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryWelcomeEmail} />}
     </SafeAreaView>
   );
 };
