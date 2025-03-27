@@ -66,12 +66,12 @@ const LoginScreen = ({setIsAuthenticated}) => {
         setIsAuthenticated(true);
       } else {
         console.error(data);
-        // navigation.navigate("Error");
+        navigation.navigate("Error");
       }
     }
     catch(error){
       console.error(error);
-      // navigation.navigate("Error");
+      navigation.navigate("Error");
     }
   }
 
