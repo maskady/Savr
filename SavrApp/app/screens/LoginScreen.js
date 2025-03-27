@@ -66,7 +66,9 @@ const LoginScreen = ({setIsAuthenticated}) => {
         setIsAuthenticated(true);
       } else {
         console.error(data);
-        navigation.navigate("Error");
+        if(response.status === 401){
+          alert("Incorrect username or password");
+        }
       }
     }
     catch(error){
