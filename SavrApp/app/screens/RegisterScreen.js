@@ -207,6 +207,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             secureTextEntry
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
             returnKeyType="next"
+            autoCapitalize="none"
             onSubmitEditing={() => confirmPasswordRef.current.focus()} 
             submitBehavior="submit"
             inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterPassword : undefined}
@@ -228,6 +229,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             secureTextEntry
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
             returnKeyType="done"
+            autoCapitalize="none"
             onSubmitEditing={handleSignup}
             inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterConfirmPassword : undefined}
           />

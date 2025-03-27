@@ -46,28 +46,16 @@ const WelcomeScreen = () => {
     }
   
     try {
-      // TODO: Implement real API call
-      let response = {};
-      if (email.length > 13) { 
-        response = {
-          ok: true,
-          data: {
-            exists: true,
-          },
-        };
-      } else {
-        response = {
-          ok: true,
-          data: {
-            exists: false,
-          },
-        };
-      }
-
-      const { data } = response; // Destructure 'data' from 'response'
+      const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/exists", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
   
-      if (response.ok) {
-        if (data.exists) {
+      if (response.status != 500) {  
+        if (response.status === 200) {
           navigation.navigate("Login", { email });
         } else {
           navigation.navigate("Register", { email });
