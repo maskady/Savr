@@ -27,13 +27,16 @@ const RegisterScreen = ({setIsAuthenticated}) => {
   const [theme, setTheme] = useState(Appearance.getColorScheme()); 
   const route = useRoute();
   const { email } = route.params;
-  const fullNameRef = useRef(null);
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
 
   const inputAccessoryViewID1 = "inputAccessoryViewID1";  
   const inputAccessoryViewID2 = "inputAccessoryViewID2"; 
   const inputAccessoryViewID3 = "inputAccessoryViewID3";  
+  const inputAccessoryViewID6 = "inputAccessoryViewID6";  
+
 
 
   console.log("Email:", email);
@@ -151,7 +154,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
           />
 
           <TextInput
-            ref={fullNameRef}
+            ref={firstNameRef}
             style={[
               styles.input,
               {
@@ -163,11 +166,16 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             placeholder="First Name"
             value={firstName}
             onChangeText={setFirstName}
+            onSubmitEditing={() => lastNameRef.current.focus()}
+            returnKeyType="next"
             autoCapitalize="words"
+            submitBehavior="submit" 
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryViewID6 : undefined}
           />
 
           <TextInput
+            ref={lastNameRef}
             style={[
               styles.input,
               {
@@ -250,6 +258,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
     {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID1} />}
     {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID2} />}
     {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID3} />}
+    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryViewID6} />}
     </SafeAreaView>
   );
 };
