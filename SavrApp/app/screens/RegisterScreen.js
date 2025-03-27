@@ -183,6 +183,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             placeholder="Last Name"
             value={lastName}
             onChangeText={setLastName}
+            autoCapitalize="words"
             placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current.focus()} 
