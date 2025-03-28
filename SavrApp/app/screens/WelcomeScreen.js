@@ -49,6 +49,8 @@ const WelcomeScreen = () => {
       alert("Please enter a valid email address");
       return;
     }
+
+    const emailTrimmed = email.trim();
   
     try {
       const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/exists", {
@@ -56,7 +58,7 @@ const WelcomeScreen = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: emailTrimmed }),
       });
   
       if (response.status != 500) {  

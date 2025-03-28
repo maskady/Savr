@@ -57,32 +57,37 @@ const RegisterScreen = ({setIsAuthenticated}) => {
   const navigation = useNavigation();
   
   const handleSignup = async () => {
+    console.log("Test")
     if (email === "" || firstName === "" || lastName == "" || password === "" || confirmPassword === "") {
       alert("Please fill in all fields");
       return;
     }
+    console.log("Test 1")
 
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
+    console.log("Test 2")
 
     if (password.length < 8 || password === password.toLowerCase() || password === password.toUpperCase() || !/\d/.test(password)) {
       alert("Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number");
       return;
     }
+    console.log("Test 3")
 
-    email = email.trim();
-    firstName = firstName.trim();
-    lastName = lastName.trim();
+    const emailTrimmed = email.trim();
+    const firstNameTrimmed = firstName.trim();
+    const lastNameTrimmed = lastName.trim();
 
     try {
+      console.log("Registering user with email:", email);
       const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, "firstName": firstName, "lastName": lastName, password, confirmPassword }),
+        body: JSON.stringify({ "email": emailTrimmed, "firstName": firstNameTrimmed, "lastName": lastNameTrimmed, password, confirmPassword }),
       });
       const data = await response.json();
 
