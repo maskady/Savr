@@ -79,8 +79,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
 
       if (response.ok) {
         console.log("User created successfully");
-        // TODO: Remove the comment when the API is ready
-        // storeToken(data.token);
+        storeToken(data.token);
         setIsAuthenticated(true);
       } else {
         console.error(data);

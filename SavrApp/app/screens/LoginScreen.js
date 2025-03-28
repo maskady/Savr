@@ -61,8 +61,7 @@ const LoginScreen = ({setIsAuthenticated}) => {
       const data = await response.json();
       if (response.ok) {
         console.log("User logged in successfully");
-        // TODO: Remove comment when API is ready
-        // storeToken(data.token);
+        storeToken(data.token);
         setIsAuthenticated(true);
       } else {
         console.error(data);
