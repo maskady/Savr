@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { ArrowLeft } from "lucide-react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
-import _token from "../utils/token";
+import { storeToken } from "../utils/token";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 
 const RegisterScreen = ({setIsAuthenticated}) => {
@@ -67,10 +67,9 @@ const RegisterScreen = ({setIsAuthenticated}) => {
       return;
     }
 
-    if (password.length < 8 || password === password.toLowerCase() || password === password.toUpperCase() || !/\d/.test(password)) {
-      alert("Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number");
-      return;
-    }
+    email = email.trim();
+    firstName = firstName.trim();
+    lastName = lastName.trim();
 
     try {
       const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/register", {
@@ -84,7 +83,8 @@ const RegisterScreen = ({setIsAuthenticated}) => {
 
       if (response.ok) {
         console.log("User created successfully");
-        _token.storeToken(data.data.token);
+        // TODO: Remove the comment when the API is ready
+        // storeToken(data.token);
         setIsAuthenticated(true);
       } else {
         console.error(data);
