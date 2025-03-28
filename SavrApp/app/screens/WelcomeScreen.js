@@ -95,7 +95,7 @@ const WelcomeScreen = () => {
       />
       <View style={styles.content}>
         <Text style={[styles.title, { color: isDarkMode ? "white" : "black" }]}>
-          Savr
+          Good2Rescue
         </Text>
 
         <View style={styles.formContainer}>
