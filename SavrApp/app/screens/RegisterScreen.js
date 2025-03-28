@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { ArrowLeft } from "lucide-react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { storeToken } from "../utils/token";
+import _token from "../utils/token";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 
 const RegisterScreen = ({setIsAuthenticated}) => {
@@ -84,7 +84,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
 
       if (response.ok) {
         console.log("User created successfully");
-        storeToken(data.token);
+        _token.storeToken(data.token);
         setIsAuthenticated(true);
       } else {
         console.error(data);
