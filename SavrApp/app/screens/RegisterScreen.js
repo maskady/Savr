@@ -84,7 +84,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
 
       if (response.ok) {
         console.log("User created successfully");
-        _token.storeToken(data.token);
+        _token.storeToken(data.data.token);
         setIsAuthenticated(true);
       } else {
         console.error(data);

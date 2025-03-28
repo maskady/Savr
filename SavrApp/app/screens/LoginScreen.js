@@ -61,12 +61,13 @@ const LoginScreen = ({setIsAuthenticated}) => {
       const data = await response.json();
       if (response.ok) {
         console.log("User logged in successfully");
-        _token.storeToken(data.token);
+        _token.storeToken(data.data.token);
         setIsAuthenticated(true);
       } else {
         console.error(data);
         if(response.status === 401){
           alert("Incorrect username or password");
+          return;
         }
       }
     }
