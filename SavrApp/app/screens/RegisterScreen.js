@@ -37,7 +37,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
   const inputAccessoryRegisterPassword = "inputAccessoryRegisterPassword";
   const inputAccessoryRegisterConfirmPassword = "inputAccessoryRegisterConfirmPassword";
 
-  console.log("RegisterScreen | email:", email);
+  //console.log("RegisterScreen | email:", email);
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {

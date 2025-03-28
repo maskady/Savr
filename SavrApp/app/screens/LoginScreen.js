@@ -26,7 +26,7 @@ const LoginScreen = ({setIsAuthenticated}) => {
   const { email } = route.params;
   const inputAccessoryLoginPassword = "inputAccessoryLoginPassword";
 
-  console.log("LoginScreen | email:", email);
+  //console.log("LoginScreen | email:", email);
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
