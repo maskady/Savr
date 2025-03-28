@@ -103,7 +103,7 @@ const LoginScreen = ({setIsAuthenticated}) => {
           </TouchableOpacity>
         )}
         <Text style={[styles.title, { color: isDarkMode ? "white" : "black" }]}>
-          Savr
+          Good2Rescue
         </Text>
         
 

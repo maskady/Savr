@@ -20,7 +20,7 @@ const DashboardScreen = () => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Savr</Text>
+        <Text style={styles.title}>Good2Rescue</Text>
         <TouchableOpacity style={styles.settingsButton}>
           <Ionicons name="settings-sharp" size={24} color="#000" />
         </TouchableOpacity>
