@@ -67,6 +67,11 @@ const RegisterScreen = ({setIsAuthenticated}) => {
       return;
     }
 
+    if (password.length < 8 || password === password.toLowerCase() || password === password.toUpperCase() || !/\d/.test(password)) {
+      alert("Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number");
+      return;
+    }
+
     email = email.trim();
     firstName = firstName.trim();
     lastName = lastName.trim();
