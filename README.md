@@ -1,1 +1,1 @@
-Readme for our project.
+Good2Rescue v1.0.0
