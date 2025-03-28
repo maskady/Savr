@@ -67,6 +67,11 @@ const RegisterScreen = ({setIsAuthenticated}) => {
       return;
     }
 
+    if (password.length < 8) {
+      alert("Password must be at least 8 characters long");
+      return;
+    }
+
     try {
       const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/register", {
         method: "POST",
