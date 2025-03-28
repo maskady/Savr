@@ -44,6 +44,11 @@ const WelcomeScreen = () => {
       alert("Please enter your email address");
       return;
     }
+
+    if (!email.includes("@") || !email.includes(".")) {
+      alert("Please enter a valid email address");
+      return;
+    }
   
     try {
       const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/exists", {

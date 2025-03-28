@@ -15,7 +15,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useRoute,  useNavigation } from '@react-navigation/native';
-import { storeToken } from "../utils/token";
+import _token from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 
@@ -61,13 +61,13 @@ const LoginScreen = ({setIsAuthenticated}) => {
       const data = await response.json();
       if (response.ok) {
         console.log("User logged in successfully");
-        // TODO: Remove comment when API is ready
-        // storeToken(data.token);
+        _token.storeToken(data.data.token);
         setIsAuthenticated(true);
       } else {
         console.error(data);
         if(response.status === 401){
           alert("Incorrect username or password");
+          return;
         }
       }
     }

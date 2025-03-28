@@ -4,7 +4,7 @@ const storeToken = async (token) => {
     try {
         await AsyncStorage.setItem('userToken', token);
     } catch (error) {
-        console.error("Erreur lors de l'enregistrement du token :", error);
+        console.error("Error during token storage:", error);
     }
 };
 
@@ -13,7 +13,7 @@ const getToken = async () => {
         const token = await AsyncStorage.getItem('userToken');
         return token;
     } catch (error) {
-        console.error("Erreur lors de la récupération du token :", error);
+        console.error("Error during token retrieval:", error);
         return null;
     }
 };
@@ -22,7 +22,7 @@ const removeToken = async () => {
     try {
         await AsyncStorage.removeItem('userToken');
     } catch (error) {
-        console.error("Erreur lors de la suppression du token :", error);
+        console.error("Error during token removal:", error);
     }
 };
 
