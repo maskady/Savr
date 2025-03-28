@@ -1,5 +1,5 @@
 // screens/MainScreen.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,9 @@ import {
   TouchableOpacity,
   Image,
   Appearance,
+  Dimensions,
+  Animated,
+  PanResponder,
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -17,12 +20,13 @@ import * as Location from 'expo-location';
 const MainScreen = () => {
   const [theme, setTheme] = useState(Appearance.getColorScheme());
   const [region, setRegion] = useState({
-    latitude: 37.7749, // Default coordinates (San Francisco)
+    latitude: 37.7749,
     longitude: -122.4194,
     latitudeDelta: 0.09,
     longitudeDelta: 0.04,
   });
 
+  // Detect dark mode changes
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setTheme(colorScheme);
@@ -30,29 +34,28 @@ const MainScreen = () => {
     return () => subscription.remove();
   }, []);
 
+  // Request location
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission to access location was denied');
-        return;
-      }
-      let currentLocation = await Location.getCurrentPositionAsync({});
-      if (currentLocation) {
-        setRegion({
-          latitude: currentLocation.coords.latitude,
-          longitude: currentLocation.coords.longitude,
-          latitudeDelta: 0.09,
-          longitudeDelta: 0.04,
-        });
+      if (status === 'granted') {
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        if (currentLocation) {
+          setRegion({
+            latitude: currentLocation.coords.latitude,
+            longitude: currentLocation.coords.longitude,
+            latitudeDelta: 0.09,
+            longitudeDelta: 0.04,
+          });
+        }
       }
     })();
   }, []);
 
   const isDarkMode = theme === 'dark';
 
+  // Sample data
   const categories = [
-    // uses MaterialIcons from @expo/vector-icons
     { id: '1', name: 'Restaurant', icon: 'local-restaurant' },
     { id: '2', name: 'Bakery', icon: 'bakery-dining' },
     { id: '3', name: 'Flowers', icon: 'local-florist' },
@@ -67,7 +70,7 @@ const MainScreen = () => {
       rating: 4.8,
       distance: 1.2,
       price: 3,
-      image: "./assets/images/businesses/restaurant-1.jpg",
+      image: './assets/images/businesses/restaurant-1.jpg',
     },
     {
       id: '2',
@@ -76,9 +79,41 @@ const MainScreen = () => {
       rating: 4.6,
       distance: 2.5,
       price: 5.5,
-      image: "./assets/images/businesses/bakery.jpg",
+      image: './assets/images/businesses/bakery.jpg',
     },
   ];
+
+  // Bottom sheet logic
+  const screenHeight = Dimensions.get('window').height;
+  const SHEET_HEIGHT = screenHeight * 0.45; // height of the bottom sheet
+  const PEEK_HEIGHT = 60; // always visible portion when "hidden"
+  const sheetAnim = useRef(new Animated.Value(0)).current; // from 0 to (SHEET_HEIGHT - PEEK_HEIGHT)
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gs) => Math.abs(gs.dy) > 5,
+      onPanResponderMove: (_, gs) => {
+        const newVal = Math.min(Math.max(gs.dy, 0), SHEET_HEIGHT - PEEK_HEIGHT);
+        sheetAnim.setValue(newVal);
+      },
+      onPanResponderRelease: (_, gs) => {
+        const halfway = (SHEET_HEIGHT - PEEK_HEIGHT) / 2;
+        if (gs.dy > halfway) {
+          Animated.timing(sheetAnim, {
+            toValue: SHEET_HEIGHT - PEEK_HEIGHT,
+            duration: 200,
+            useNativeDriver: false,
+          }).start();
+        } else {
+          Animated.timing(sheetAnim, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: false,
+          }).start();
+        }
+      },
+    })
+  ).current;
 
   const handleSelect = (item) => {
     console.log('Selected:', item.title);
@@ -117,14 +152,11 @@ const MainScreen = () => {
             style={{ marginRight: 8 }}
           />
           <TextInput
-            placeholder="San Francisco"
+            placeholder="Oulu"
             placeholderTextColor={isDarkMode ? '#888' : '#666'}
             style={[styles.searchInput, { color: isDarkMode ? '#fff' : '#000' }]}
           />
         </View>
-        <Text style={[styles.dateText, { color: isDarkMode ? '#ccc' : '#888' }]}>
-          Sep 12 - 15 | 1 room | 2 guests
-        </Text>
       </View>
 
       {/* Category Filter */}
@@ -136,27 +168,24 @@ const MainScreen = () => {
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.categoryButton}>
-              <MaterialIcons
-                name={item.icon}
-                size={20}
-                color={isDarkMode ? '#ccc' : '#333'}
-              />
+              <MaterialIcons name={item.icon} size={20} color={isDarkMode ? '#ccc' : '#333'} />
               <Text style={[styles.categoryText, { color: isDarkMode ? '#ccc' : '#000' }]}>{item.name}</Text>
             </TouchableOpacity>
           )}
         />
       </View>
 
-      {/* Map Section */}
-      <View style={styles.mapContainer}>
-        <MapView style={styles.map} region={region} onRegionChangeComplete={setRegion}>
+      {/* Full-screen Map */}
+      <View style={StyleSheet.absoluteFillObject}>
+        <MapView
+          style={styles.map}
+          region={region}
+          onRegionChangeComplete={setRegion}
+        >
           {listings.map((loc) => (
             <Marker
               key={loc.id}
-              coordinate={{
-                latitude: region.latitude,
-                longitude: region.longitude,
-              }}
+              coordinate={{ latitude: region.latitude, longitude: region.longitude }}
               title={loc.title}
               description={`${loc.rating} stars`}
             >
@@ -168,14 +197,28 @@ const MainScreen = () => {
         </MapView>
       </View>
 
-      {/* Listings */}
-      <FlatList
-        data={listings}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        style={styles.listingsContainer}
-        showsVerticalScrollIndicator={false}
-      />
+      {/* Bottom sheet */}
+      <Animated.View
+        {...panResponder.panHandlers}
+        style={[
+          styles.bottomSheet,
+          {
+            backgroundColor: isDarkMode ? '#121212' : '#fff',
+            height: SHEET_HEIGHT,
+            transform: [{ translateY: sheetAnim }],
+          },
+        ]}
+      >
+        {/* Drag handle */}
+        <View style={styles.handleBar} />
+        <FlatList
+          data={listings}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 16 }}
+        />
+      </Animated.View>
     </View>
   );
 };
@@ -188,6 +231,8 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 16,
+    zIndex: 20,
+    backgroundColor: 'transparent',
   },
   searchBar: {
     flexDirection: 'row',
@@ -207,6 +252,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderBottomWidth: 0.5,
+    zIndex: 20,
   },
   categoryButton: {
     flexDirection: 'row',
@@ -216,10 +262,6 @@ const styles = StyleSheet.create({
   categoryText: {
     marginLeft: 4,
     fontSize: 14,
-  },
-  mapContainer: {
-    width: '100%',
-    height: 200,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -232,13 +274,27 @@ const styles = StyleSheet.create({
   markerText: {
     fontWeight: 'bold',
   },
-  listingsContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
-    marginTop: 8,
+  bottomSheet: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 30,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    overflow: 'hidden',
+  },
+  handleBar: {
+    alignSelf: 'center',
+    width: 40,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: '#888',
+    marginVertical: 8,
   },
   listItem: {
     flexDirection: 'row',
+    marginHorizontal: 16,
     marginBottom: 16,
     borderRadius: 8,
     overflow: 'hidden',

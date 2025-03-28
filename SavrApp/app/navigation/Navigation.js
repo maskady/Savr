@@ -8,7 +8,7 @@ import ErrorScreen from "../screens/ErrorScreen";
 const RootStack = createStackNavigator();
 
 const Navigation = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   return (
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
