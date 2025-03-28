@@ -50,13 +50,16 @@ const LoginScreen = ({setIsAuthenticated}) => {
       alert("Please enter your email address and password");
       return;
     }
+
+    const emailTrimmed = email.trim();
+
     try{
       const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: emailTrimmed, password: password }),
       });
       const data = await response.json();
       if (response.ok) {
