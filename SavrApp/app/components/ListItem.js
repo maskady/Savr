@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 const ListItem = ({ item, isDarkMode, onSelect }) => {
   return (
     <View style={[styles.listItem, { backgroundColor: isDarkMode ? '#1e1e1e' : '#fff' }]}>
-      <Image source={{ uri: item.image }} style={styles.listItemImage} />
+      <Image source={item.image} style={styles.listItemImage} />
       <View style={styles.listItemInfo}>
         <Text style={[styles.listItemTitle, { color: isDarkMode ? '#fff' : '#000' }]}>{item.title}</Text>
         <Text style={[styles.listItemSubtitle, { color: isDarkMode ? '#bbb' : '#666' }]}>
