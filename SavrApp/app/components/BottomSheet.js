@@ -1,10 +1,11 @@
 import React, { useRef } from 'react';
 import { Animated, PanResponder, Dimensions, StyleSheet, View } from 'react-native';
 
+const PEEK_HEIGHT = 40;
+
 const BottomSheet = ({ children, isDarkMode }) => {
   const screenHeight = Dimensions.get('window').height;
   const SHEET_HEIGHT = screenHeight * 0.35;
-  const PEEK_HEIGHT = 50;
   const sheetAnim = useRef(new Animated.Value(0)).current; // 0 = fully open; max = SHEET_HEIGHT - PEEK_HEIGHT
   const lastOffset = useRef(0);
   const HIDE_THRESHOLD = 1 / 4;
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   handleContainer: {
-    height: 40, // Increase this value to make the grab area taller
+    height: PEEK_HEIGHT, // Increase this value to make the grab area taller
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#d5d5d5',

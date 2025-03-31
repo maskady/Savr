@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
+import { checkUserExists } from "../utils/api";
+import { APP_NAME } from "../constants/strings";
 
 const WelcomeScreen = () => {
   const [email, setEmail] = useState("");
@@ -49,31 +51,25 @@ const WelcomeScreen = () => {
       alert("Please enter a valid email address");
       return;
     }
-
-    const emailTrimmed = email.trim();
   
     try {
-      const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/exists", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: emailTrimmed }),
-      });
+      const { response, data } = await checkUserExists(email);
   
       if (response.status != 500) {  
         if (response.status === 200) {
+          console.log("User exists, navigating to Login screen");
           navigation.navigate("Login", { email });
         } else {
+          console.log("User does not exist, navigating to Register screen");
           navigation.navigate("Register", { email });
         }
       } else {
-        console.error("Erreur dans la réponse de la requête :", data);
+        console.error("Error in WelcomeScreen:", data);
         navigation.navigate("Error");
       }
   
     } catch (error) {
-      console.error("Erreur lors de la requête :", error);
+      console.error("Error in WelcomeScreen:", error);
       navigation.navigate("Error");
     }
   };
@@ -97,7 +93,7 @@ const WelcomeScreen = () => {
       />
       <View style={styles.content}>
         <Text style={[styles.title, { color: isDarkMode ? "white" : "black" }]}>
-          Good2Rescue
+          {APP_NAME}
         </Text>
 
         <View style={styles.formContainer}>

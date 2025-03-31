@@ -6,15 +6,15 @@ import RegisterScreen from "../screens/RegisterScreen";
 
 const Stack = createStackNavigator();
 
-const AuthStack = ({setIsAuthenticated}) => {
+const AuthStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Welcome">
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Login">
-        {props => <LoginScreen {...props} setIsAuthenticated={setIsAuthenticated} />}
+        {props => <LoginScreen {...props} />}
       </Stack.Screen>
       <Stack.Screen name="Register">
-        {props => <RegisterScreen {...props} setIsAuthenticated={setIsAuthenticated} />}
+        {props => <RegisterScreen {...props} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

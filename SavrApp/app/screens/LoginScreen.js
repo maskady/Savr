@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -18,30 +18,20 @@ import { useRoute,  useNavigation } from '@react-navigation/native';
 import _token from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
+import { loginUser } from "../utils/api"; 
+import { AuthContext } from "../contexts/AuthContext"; 
+import { ThemeContext } from "../contexts/ThemeContext"; 
+import { APP_NAME } from "../constants/strings";
 
-const LoginScreen = ({setIsAuthenticated}) => {
+const LoginScreen = () => {
   const [password, setPassword] = useState("");
-  const [theme, setTheme] = useState(Appearance.getColorScheme()); 
   const route = useRoute();
+  
   const { email } = route.params;
   const inputAccessoryLoginPassword = "inputAccessoryLoginPassword";
-
-  //console.log("LoginScreen | email:", email);
-
-  useEffect(() => {
-    const handleThemeChange = ({ colorScheme }) => {
-      console.log("Theme changed:", colorScheme);
-      if (colorScheme) {
-        setTheme(colorScheme); 
-      }
-    };
-
-    const subscription = Appearance.addChangeListener(handleThemeChange);
-
-    return () => {
-      subscription.remove(); 
-    };
-  }, []); 
+  
+  const { login } = useContext(AuthContext);
+  const { darkMode } = useContext(ThemeContext);
 
   const navigation = useNavigation();
 
@@ -50,48 +40,34 @@ const LoginScreen = ({setIsAuthenticated}) => {
       alert("Please enter your email address and password");
       return;
     }
-
-    const emailTrimmed = email.trim();
-
-    try{
-      const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: emailTrimmed, password: password }),
-      });
-      const data = await response.json();
+    try {
+      const { response, data } = await loginUser(email, password);
       if (response.ok) {
         console.log("User logged in successfully");
         _token.storeToken(data.data.token);
-        setIsAuthenticated(true);
+        login();
       } else {
-        console.error(data);
-        if(response.status === 401){
+        if (response.status === 401) {
           alert("Incorrect username or password");
-          return;
         }
+        console.error(data);
       }
-    }
-    catch(error){
+    } catch (error) {
       console.error(error);
       navigation.navigate("Error");
     }
-  }
-
-  const isDarkMode = theme === "dark";
+  };
 
   return (
     <SafeAreaView
       style={[
         styles.container,
-        { backgroundColor: isDarkMode ? "#121212" : "white" },
+        { backgroundColor: darkMode ? "#121212" : "white" },
       ]}
     >
       <StatusBar
-        barStyle={isDarkMode ? "light-content" : "dark-content"}
-        backgroundColor={isDarkMode ? "#333" : "white"}
+        barStyle={darkMode ? "light-content" : "dark-content"}
+        backgroundColor={darkMode ? "#333" : "white"}
       />
       <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -102,17 +78,17 @@ const LoginScreen = ({setIsAuthenticated}) => {
       <View style={styles.content}>
         {Platform.OS === "ios" && (
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ArrowLeft size={24} color={isDarkMode ? "white" : "black"} />
+            <ArrowLeft size={24} color={darkMode ? "white" : "black"} />
           </TouchableOpacity>
         )}
-        <Text style={[styles.title, { color: isDarkMode ? "white" : "black" }]}>
-          Good2Rescue
+        <Text style={[styles.title, { color: darkMode ? "white" : "black" }]}>
+          {APP_NAME}
         </Text>
         
 
         <View style={styles.formContainer}>
           <Text
-            style={[styles.heading, { color: isDarkMode ? "white" : "black" }]}
+            style={[styles.heading, { color: darkMode ? "white" : "black" }]}
           >
             Enter your master password
           </Text>
@@ -122,9 +98,9 @@ const LoginScreen = ({setIsAuthenticated}) => {
             style={[
               styles.input,
               {
-                borderColor: isDarkMode ? "#444" : "#ddd",
+                borderColor: darkMode ? "#444" : "#ddd",
                 backgroundColor: "#f1f1f1",
-                color: isDarkMode ? "white" : "black",
+                color: darkMode ? "white" : "black",
               },
             ]}
             value={email}
@@ -135,16 +111,16 @@ const LoginScreen = ({setIsAuthenticated}) => {
             style={[
               styles.input,
               {
-                borderColor: isDarkMode ? "#444" : "#ddd",
-                backgroundColor: isDarkMode ? "#333" : "white",
-                color: isDarkMode ? "white" : "black",
+                borderColor: darkMode ? "#444" : "#ddd",
+                backgroundColor: darkMode ? "#333" : "white",
+                color: darkMode ? "white" : "black",
               },
             ]}
             placeholder="Master Password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
-            placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            placeholderTextColor={darkMode ? "#bbb" : "#666"}
             autoCapitalize="none"
             inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryLoginPassword : undefined}
             returnKeyType="done"
@@ -154,7 +130,7 @@ const LoginScreen = ({setIsAuthenticated}) => {
           <TouchableOpacity
             style={[
               styles.continueButton,
-              { backgroundColor: isDarkMode ? "#6200ea" : "black" },
+              { backgroundColor: darkMode ? "#6200ea" : "black" },
             ]}
             onPress={handleSignin}
           >

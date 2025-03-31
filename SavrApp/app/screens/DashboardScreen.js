@@ -8,9 +8,9 @@ import {
   Dimensions,
 } from 'react-native';
 
-import { Ionicons } from '@expo/vector-icons';
+import { APP_NAME } from '../constants/strings';
 
-// Chart components (optional)
+import { Ionicons } from '@expo/vector-icons';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 
 const screenWidth = Dimensions.get('window').width;
@@ -20,7 +20,7 @@ const DashboardScreen = () => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Good2Rescue</Text>
+        <Text style={styles.title}>{APP_NAME}</Text>
         <TouchableOpacity style={styles.settingsButton}>
           <Ionicons name="settings-sharp" size={24} color="#000" />
         </TouchableOpacity>

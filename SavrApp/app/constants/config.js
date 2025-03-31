@@ -1,0 +1,1 @@
+export const API_URI = "https://www.sevr.polaris.marek-mraz.com/api";

@@ -4,19 +4,23 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
 import ErrorScreen from "../screens/ErrorScreen";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 const RootStack = createStackNavigator();
 
 const Navigation = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const { isLoggedIn } = useContext(AuthContext);
 
   return (
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
-        {isAuthenticated ? (
+        {isLoggedIn ? (
           <RootStack.Screen name="App" component={AppStack} />
         ) : (
           <RootStack.Screen name="Auth">
-            {(props) => <AuthStack {...props} setIsAuthenticated={setIsAuthenticated} />}
+            {(props) => <AuthStack {...props} />}
           </RootStack.Screen>
         )}
         <RootStack.Screen name="Error" component={ErrorScreen} />

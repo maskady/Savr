@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -18,13 +18,18 @@ import { ArrowLeft } from "lucide-react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
 import _token from "../utils/token";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
+import { registerUser } from "../utils/api";
+import { APP_NAME } from "../constants/strings";
+import { ThemeContext } from "../contexts/ThemeContext";
+import { AuthContext } from "../contexts/AuthContext";
 
-const RegisterScreen = ({setIsAuthenticated}) => {
+const RegisterScreen = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [theme, setTheme] = useState(Appearance.getColorScheme()); 
+  const { darkMode } = useContext(ThemeContext);
+  const { login } = useContext(AuthContext);
   const route = useRoute();
   const { email } = route.params;
   const firstNameRef = useRef(null);
@@ -37,64 +42,34 @@ const RegisterScreen = ({setIsAuthenticated}) => {
   const inputAccessoryRegisterPassword = "inputAccessoryRegisterPassword";
   const inputAccessoryRegisterConfirmPassword = "inputAccessoryRegisterConfirmPassword";
 
-  //console.log("RegisterScreen | email:", email);
-
-  useEffect(() => {
-    const handleThemeChange = ({ colorScheme }) => {
-      console.log("Theme changed:", colorScheme);
-      if (colorScheme) {
-        setTheme(colorScheme); 
-      }
-    };
-
-    const subscription = Appearance.addChangeListener(handleThemeChange);
-
-    return () => {
-      subscription.remove(); 
-    };
-  }, []); 
-
   const navigation = useNavigation();
   
   const handleSignup = async () => {
-    console.log("Test")
+
     if (email === "" || firstName === "" || lastName == "" || password === "" || confirmPassword === "") {
       alert("Please fill in all fields");
       return;
     }
-    console.log("Test 1")
 
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
-    console.log("Test 2")
 
     if (password.length < 8 || password === password.toLowerCase() || password === password.toUpperCase() || !/\d/.test(password)) {
       alert("Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number");
       return;
     }
-    console.log("Test 3")
-
-    const emailTrimmed = email.trim();
-    const firstNameTrimmed = firstName.trim();
-    const lastNameTrimmed = lastName.trim();
 
     try {
       console.log("Registering user with email:", email);
-      const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ "email": emailTrimmed, "firstName": firstNameTrimmed, "lastName": lastNameTrimmed, password, confirmPassword }),
-      });
-      const data = await response.json();
+
+      const { response, data } = await registerUser(email, password, firstName, lastName);
 
       if (response.ok) {
         console.log("User created successfully");
         _token.storeToken(data.data.token);
-        setIsAuthenticated(true);
+        login();
       } else {
         console.error(data);
         navigation.navigate("Error");
@@ -105,18 +80,16 @@ const RegisterScreen = ({setIsAuthenticated}) => {
     }
   };
 
-  const isDarkMode = theme === "dark";
-
   return (
     <SafeAreaView
       style={[
         styles.container,
-        { backgroundColor: isDarkMode ? "#121212" : "white" },
+        { backgroundColor: darkMode ? "#121212" : "white" },
       ]}
     >
       <StatusBar
-        barStyle={isDarkMode ? "light-content" : "dark-content"}
-        backgroundColor={isDarkMode ? "#333" : "white"}
+        barStyle={darkMode ? "light-content" : "dark-content"}
+        backgroundColor={darkMode ? "#333" : "white"}
       />
       <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -127,23 +100,23 @@ const RegisterScreen = ({setIsAuthenticated}) => {
       <View style={styles.content}>
         {Platform.OS === "ios" && (
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ArrowLeft size={24} color={isDarkMode ? "white" : "black"} />
+            <ArrowLeft size={24} color={darkMode ? "white" : "black"} />
           </TouchableOpacity>
         )}
-        <Text style={[styles.title, { color: isDarkMode ? "white" : "black" }]}>
-          Good2Rescue
+        <Text style={[styles.title, { color: darkMode ? "white" : "black" }]}>
+          {APP_NAME}
         </Text>
 
         <View style={styles.formContainer}>
           <Text
-            style={[styles.heading, { color: isDarkMode ? "white" : "black" }]}
+            style={[styles.heading, { color: darkMode ? "white" : "black" }]}
           >
             Create an account
           </Text>
           <Text
             style={[
               styles.subheading,
-              { color: isDarkMode ? "#bbb" : "#666" },
+              { color: darkMode ? "#bbb" : "#666" },
             ]}
           >
             Enter your full name and set up your master password
@@ -153,9 +126,9 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             style={[
               styles.input,
               {
-                borderColor: isDarkMode ? "#444" : "#ddd",
-                backgroundColor: isDarkMode ? "grey" : "#f1f1f1",
-                color: isDarkMode ? "white" : "black",
+                borderColor: darkMode ? "#444" : "#ddd",
+                backgroundColor: darkMode ? "grey" : "#f1f1f1",
+                color: darkMode ? "white" : "black",
               },
             ]}
             value={email}
@@ -167,9 +140,9 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             style={[
               styles.input,
               {
-                borderColor: isDarkMode ? "#444" : "#ddd",
-                backgroundColor: isDarkMode ? "#333" : "white",
-                color: isDarkMode ? "white" : "black",
+                borderColor: darkMode ? "#444" : "#ddd",
+                backgroundColor: darkMode ? "#333" : "white",
+                color: darkMode ? "white" : "black",
               },
             ]}
             placeholder="First Name"
@@ -179,7 +152,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             returnKeyType="next"
             autoCapitalize="words"
             submitBehavior="submit" 
-            placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            placeholderTextColor={darkMode ? "#bbb" : "#666"}
             inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterFirstName : undefined}
           />
 
@@ -188,16 +161,16 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             style={[
               styles.input,
               {
-                borderColor: isDarkMode ? "#444" : "#ddd",
-                backgroundColor: isDarkMode ? "#333" : "white",
-                color: isDarkMode ? "white" : "black",
+                borderColor: darkMode ? "#444" : "#ddd",
+                backgroundColor: darkMode ? "#333" : "white",
+                color: darkMode ? "white" : "black",
               },
             ]}
             placeholder="Last Name"
             value={lastName}
             onChangeText={setLastName}
             autoCapitalize="words"
-            placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            placeholderTextColor={darkMode ? "#bbb" : "#666"}
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current.focus()} 
             submitBehavior="submit" 
@@ -209,16 +182,16 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             style={[
               styles.input,
               {
-                borderColor: isDarkMode ? "#444" : "#ddd",
-                backgroundColor: isDarkMode ? "#333" : "white",
-                color: isDarkMode ? "white" : "black",
+                borderColor: darkMode ? "#444" : "#ddd",
+                backgroundColor: darkMode ? "#333" : "white",
+                color: darkMode ? "white" : "black",
               },
             ]}
             placeholder="Master Password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
-            placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            placeholderTextColor={darkMode ? "#bbb" : "#666"}
             returnKeyType="next"
             autoCapitalize="none"
             onSubmitEditing={() => confirmPasswordRef.current.focus()} 
@@ -231,16 +204,16 @@ const RegisterScreen = ({setIsAuthenticated}) => {
             style={[
               styles.input,
               {
-                borderColor: isDarkMode ? "#444" : "#ddd",
-                backgroundColor: isDarkMode ? "#333" : "white",
-                color: isDarkMode ? "white" : "black",
+                borderColor: darkMode ? "#444" : "#ddd",
+                backgroundColor: darkMode ? "#333" : "white",
+                color: darkMode ? "white" : "black",
               },
             ]}
             placeholder="Confirm Master Password"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
-            placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            placeholderTextColor={darkMode ? "#bbb" : "#666"}
             returnKeyType="done"
             autoCapitalize="none"
             onSubmitEditing={handleSignup}
@@ -250,7 +223,7 @@ const RegisterScreen = ({setIsAuthenticated}) => {
           <TouchableOpacity
             style={[
               styles.continueButton,
-              { backgroundColor: isDarkMode ? "#6200ea" : "black" },
+              { backgroundColor: darkMode ? "#6200ea" : "black" },
             ]}
             onPress={handleSignup}
           >
