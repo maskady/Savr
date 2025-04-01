@@ -13,7 +13,7 @@ export const listings = [
       rating: 4.8,
       distance: 1.2,
       price: 3,
-      image: require('/Users/tomibozak/Projects/Savr/SavrApp/assets/images/businesses/restaurant-1.jpg'),
+      image: require('../../assets/images/businesses/restaurant-1.jpg'),
     },
     {
       id: '2',
@@ -22,7 +22,7 @@ export const listings = [
       rating: 4.6,
       distance: 2.5,
       price: 5.5,
-      image: require('/Users/tomibozak/Projects/Savr/SavrApp/assets/images/businesses/bakery.jpeg'),
+      image: require('../../assets/images/businesses/bakery.jpeg'),
     },
     {
         id: '3',
@@ -31,7 +31,7 @@ export const listings = [
         rating: 2.8,
         distance: 10.3,
         price: 3,
-        image: require('/Users/tomibozak/Projects/Savr/SavrApp/assets/images/businesses/restaurant-1.jpg'),
+        image: require('../../assets/images/businesses/restaurant-1.jpg'),
     },
     {
         id: '4',
@@ -40,7 +40,7 @@ export const listings = [
         rating: 4.3,
         distance: 12.2,
         price: 71,
-        image: require('/Users/tomibozak/Projects/Savr/SavrApp/assets/images/businesses/restaurant-1.jpg'),
+        image: require('../../assets/images/businesses/restaurant-1.jpg'),
       },
       {
         id: '5',
@@ -49,6 +49,6 @@ export const listings = [
         rating: 4.0,
         distance: 0.2,
         price: 0.5,
-        image: require('/Users/tomibozak/Projects/Savr/SavrApp/assets/images/businesses/bakery.jpeg'),
+        image: require('../../assets/images/businesses/bakery.jpeg'),
       },
 ];
