@@ -14,7 +14,8 @@ import {
 } from "react-native";
 import { ArrowLeft } from "lucide-react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
-import _token from "../utils/token";
+import { storeToken } from "../utils/token";
+
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { registerUser } from "../utils/api";
 
@@ -71,7 +72,7 @@ const RegisterScreen = () => {
 
       if (response.ok) {
         console.log("User created successfully");
-        _token.storeToken(data.data.token);
+        storeToken(data.data.token);
         login();
       } else {
         console.error(data);

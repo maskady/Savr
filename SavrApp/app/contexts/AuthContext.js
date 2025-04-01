@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-
+import { removeToken } from '../utils/token';
 // Create the context
 export const AuthContext = createContext();
 
@@ -12,7 +12,11 @@ export const AuthProvider = ({ children }) => {
     console.log("AuthProvider: User logged in");
     setIsLoggedIn(true)
   };
-  const logout = () => setIsLoggedIn(false);
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    removeToken();
+  };
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, login, logout }}>

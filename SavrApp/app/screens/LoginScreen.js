@@ -14,7 +14,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useRoute,  useNavigation } from '@react-navigation/native';
-import _token from "../utils/token";
+import { storeToken } from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { loginUser } from "../utils/api"; 
@@ -47,7 +47,7 @@ const LoginScreen = () => {
       const { response, data } = await loginUser(email, password);
       if (response.ok) {
         console.log("User logged in successfully");
-        _token.storeToken(data.data.token);
+        storeToken(data.data.token);
         login();
       } else {
         if (response.status === 401) {
