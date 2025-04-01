@@ -87,7 +87,7 @@ const RegisterScreen = () => {
   return (
     <SafeAreaView
       style={[
-        styles.container,
+        styles.flexContainer,
         { backgroundColor: darkMode ? "#121212" : "white" },
       ]}
     >
