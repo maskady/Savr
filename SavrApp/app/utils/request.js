@@ -1,3 +1,4 @@
+import { API_URI } from '@env';
 import { getToken } from './token';
 
 export const request = async (endpoint, method, body) => {
@@ -5,8 +6,8 @@ export const request = async (endpoint, method, body) => {
 
   let token = await getToken();
   if (token) headers["Authorization"] = `Bearer ${token}`;
-
-  const response = await fetch(`${process.env.API_URI}${endpoint}`, {
+  console.log("request--------", `${API_URI}${endpoint}`);
+  const response = await fetch(`${API_URI}${endpoint}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : null,
