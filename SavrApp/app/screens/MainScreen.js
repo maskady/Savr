@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, FlatList, Appearance } from 'react-native';
+import { View, FlatList, Appearance } from 'react-native';
 import * as Location from 'expo-location';
 import Header from '../components/Header';
 import CategoryFilter from '../components/CategoryFilter';
@@ -8,6 +8,7 @@ import BottomSheet from '../components/BottomSheet';
 import ListItem from '../components/ListItem';
 import { categories, listings } from '../temp_DB/data';
 import { SettingsContext } from '../contexts/SettingsContext';
+import styles from '../styles/AppStyles';
 
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
@@ -45,7 +46,7 @@ const MainScreen = () => {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
+    <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
       <Header/>
       <CategoryFilter categories={categories}/>
       <MapSection region={region} listings={listings} setRegion={setRegion} />
@@ -64,8 +65,3 @@ const MainScreen = () => {
 
 export default MainScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
