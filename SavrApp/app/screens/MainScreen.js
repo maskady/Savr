@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, FlatList, Appearance } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import * as Location from 'expo-location';
 import Header from '../components/Header';
 import CategoryFilter from '../components/CategoryFilter';

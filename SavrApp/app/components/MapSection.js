@@ -1,8 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-
-import { useContext } from 'react';
 import { SettingsContext } from '../contexts/SettingsContext';
 
 const MapSection = ({ region, listings, setRegion }) => {

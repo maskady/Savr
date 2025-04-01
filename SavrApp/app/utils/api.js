@@ -1,4 +1,3 @@
-
 import { API_URI } from '../constants/config';
 
 export const loginUser = async (email, password) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,14 +8,12 @@ import {
   TouchableOpacity,
   StatusBar,
   Image,
-  Appearance,
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { checkUserExists } from "../utils/api";
-import { useTranslation } from 'react-i18next';
-import { Trans } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { SettingsContext } from "../contexts/SettingsContext";
 
 const WelcomeScreen = () => {
