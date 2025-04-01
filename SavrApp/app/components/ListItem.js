@@ -1,18 +1,21 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { SettingsContext } from '../contexts/SettingsContext';
 
-const ListItem = ({ item, isDarkMode, onSelect }) => {
+const ListItem = ({ item, onSelect }) => {
+  const {darkMode} = useContext(SettingsContext);
+
   return (
-    <View style={[styles.listItem, { backgroundColor: isDarkMode ? '#1e1e1e' : '#fff' }]}>
+    <View style={[styles.listItem, { backgroundColor: darkMode ? '#1e1e1e' : '#fff' }]}>
       <Image source={item.image} style={styles.listItemImage} />
       <View style={styles.listItemInfo}>
-        <Text style={[styles.listItemTitle, { color: isDarkMode ? '#fff' : '#000' }]}>{item.title}</Text>
-        <Text style={[styles.listItemSubtitle, { color: isDarkMode ? '#bbb' : '#666' }]}>
+        <Text style={[styles.listItemTitle, { color: darkMode ? '#fff' : '#000' }]}>{item.title}</Text>
+        <Text style={[styles.listItemSubtitle, { color: darkMode ? '#bbb' : '#666' }]}>
           {item.rating} ({item.reviews} reviews) • {item.distance} km
         </Text>
-        <Text style={[styles.listItemPrice, { color: isDarkMode ? '#fff' : '#000' }]}>${item.price}</Text>
+        <Text style={[styles.listItemPrice, { color: darkMode ? '#fff' : '#000' }]}>${item.price}</Text>
       </View>
-      <TouchableOpacity style={[styles.selectButton, { backgroundColor: isDarkMode ? '#6200ea' : '#007AFF' }]} onPress={() => onSelect(item)}>
+      <TouchableOpacity style={[styles.selectButton, { backgroundColor: darkMode ? '#6200ea' : '#007AFF' }]} onPress={() => onSelect(item)}>
         <Text style={styles.selectButtonText}>Select</Text>
       </TouchableOpacity>
     </View>

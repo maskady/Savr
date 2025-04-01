@@ -1,16 +1,19 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { FlatList, TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { SettingsContext } from '../contexts/SettingsContext';
 
-const CategoryFilter = ({ categories, isDarkMode }) => {
+const CategoryFilter = ({ categories }) => {
+  const { darkMode } = useContext(SettingsContext);
+
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.categoryButton}>
-      <MaterialIcons name={item.icon} size={20} color={isDarkMode ? '#ccc' : '#333'} />
-      <Text style={[styles.categoryText, { color: isDarkMode ? '#ccc' : '#000' }]}>{item.name}</Text>
+      <MaterialIcons name={item.icon} size={20} color={darkMode ? '#ccc' : '#333'} />
+      <Text style={[styles.categoryText, { color: darkMode ? '#ccc' : '#000' }]}>{item.name}</Text>
     </TouchableOpacity>
   );
   return (
-    <View style={[styles.categoryContainer, { borderBottomColor: isDarkMode ? '#555' : '#ccc', backgroundColor: isDarkMode ? '#121212' : '#fff' }]}>
+    <View style={[styles.categoryContainer, { borderBottomColor: darkMode ? '#555' : '#ccc', backgroundColor: darkMode ? '#121212' : '#fff' }]}>
       <FlatList
         horizontal
         data={categories}

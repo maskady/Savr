@@ -2,7 +2,11 @@ import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
-const MapSection = ({ region, listings, isDarkMode, setRegion }) => {
+import { useContext } from 'react';
+import { SettingsContext } from '../contexts/SettingsContext';
+
+const MapSection = ({ region, listings, setRegion }) => {
+
   return (
     <MapView style={StyleSheet.absoluteFillObject} region={region} onRegionChangeComplete={setRegion}>
       {listings.map((loc) => (
@@ -12,18 +16,26 @@ const MapSection = ({ region, listings, isDarkMode, setRegion }) => {
           title={loc.title}
           description={`${loc.rating} stars`}
         >
-          <MarkerView isDarkMode={isDarkMode} price={loc.price} />
+          <MarkerView price={loc.price} />
         </Marker>
       ))}
     </MapView>
   );
 };
 
-const MarkerView = ({ isDarkMode, price }) => (
-  <React.Fragment>
-    <Text style={[styles.markerText, { color: isDarkMode ? '#fff' : '#000' }]}>${price}</Text>
-  </React.Fragment>
-);
+const MarkerView = ({ price }) => {
+  const { currency } = useContext(SettingsContext)
+  const { darkMode } = useContext(SettingsContext);
+  const currencySymbol = currency.symbol;
+
+  return (
+    <React.Fragment>
+      <Text style={[styles.markerText, { color: darkMode ? '#fff' : '#000' }]}>
+        {`${price}${currencySymbol}`}
+      </Text>
+    </React.Fragment>
+  );
+};
 
 const styles = StyleSheet.create({
   markerText: {

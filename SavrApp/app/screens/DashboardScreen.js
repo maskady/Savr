@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 
-import { APP_NAME } from '../constants/strings';
+import { useTranslation } from 'react-i18next';
 
 import { Ionicons } from '@expo/vector-icons';
 import { LineChart, BarChart } from 'react-native-chart-kit';
@@ -16,11 +16,13 @@ import { LineChart, BarChart } from 'react-native-chart-kit';
 const screenWidth = Dimensions.get('window').width;
 
 const DashboardScreen = () => {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>{APP_NAME}</Text>
+        <Text style={styles.title}>{t("appName")}</Text>
         <TouchableOpacity style={styles.settingsButton}>
           <Ionicons name="settings-sharp" size={24} color="#000" />
         </TouchableOpacity>
@@ -29,16 +31,16 @@ const DashboardScreen = () => {
       {/* Category Tabs */}
       <View style={styles.tabContainer}>
         <TouchableOpacity style={styles.tabButton}>
-          <Text style={styles.tabButtonText}>All</Text>
+          <Text style={styles.tabButtonText}>{t("dashboard.tab1")}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tabButton}>
-          <Text style={styles.tabButtonText}>Food</Text>
+          <Text style={styles.tabButtonText}>{t("dashboard.tab2")}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tabButton}>
-          <Text style={styles.tabButtonText}>Flowers</Text>
+          <Text style={styles.tabButtonText}>{t("dashboard.tab3")}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tabButton}>
-          <Text style={styles.tabButtonText}>Clothes</Text>
+          <Text style={styles.tabButtonText}>{t("dashboard.tab4")}</Text>
         </TouchableOpacity>
       </View>
 
@@ -48,7 +50,7 @@ const DashboardScreen = () => {
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Text style={styles.statValue}>185€</Text>
-            <Text style={styles.statLabel}>Amount saved</Text>
+            <Text style={styles.statLabel}>{t("dashboard.amountSaved")}</Text>
             <Text style={styles.statSubLabel}>32€ this month</Text>
           </View>
           <View style={styles.statCard}>
@@ -58,7 +60,7 @@ const DashboardScreen = () => {
         </View>
 
         {/* Line Chart: "Amount saved" */}
-        <Text style={styles.chartTitle}>Amount saved</Text>
+        <Text style={styles.chartTitle}>{t("dashboard.amountSaved")}</Text>
         <LineChart
           data={{
             labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
@@ -91,7 +93,7 @@ const DashboardScreen = () => {
         />
 
         {/* CO2 Emissions Bar Chart */}
-        <Text style={styles.chartTitle}>CO² saved</Text>
+        <Text style={styles.chartTitle}>{t("dashboard.co2Saved")}</Text>
         <BarChart
         data={{
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
