@@ -20,9 +20,8 @@ import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { loginUser } from "../utils/api"; 
 import { AuthContext } from "../contexts/AuthContext"; 
 import { SettingsContext } from "../contexts/SettingsContext";
-
+import styles from "../styles/AuthStyles";
 import { useTranslation } from 'react-i18next';
-
 
 const LoginScreen = () => {
   const { t } = useTranslation();
