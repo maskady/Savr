@@ -1,4 +1,3 @@
-// src/contexts/SettingsContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import { Appearance } from 'react-native';
 

@@ -1,4 +1,3 @@
-
 export const COLORS = {
     backgroundLight: "white",
     backgroundDark: "#121212",
