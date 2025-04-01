@@ -155,7 +155,7 @@ const WelcomeScreen = () => {
 
           <TouchableOpacity style={styles.googleButton}>
             <Image
-              source={require("/Users/tomibozak/Projects/Savr/SavrApp/assets/images/google-logo.png")}
+              source={require("assets/images/google-logo.png")}
               style={styles.googleIcon}
             />
             <Text
