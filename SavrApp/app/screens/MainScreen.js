@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, StyleSheet, FlatList, Appearance } from 'react-native';
 import * as Location from 'expo-location';
 import Header from '../components/Header';
@@ -7,22 +7,17 @@ import MapSection from '../components/MapSection';
 import BottomSheet from '../components/BottomSheet';
 import ListItem from '../components/ListItem';
 import { categories, listings } from '../temp_DB/data';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const MainScreen = () => {
-  const [theme, setTheme] = useState(Appearance.getColorScheme());
+  const { darkMode } = useContext(SettingsContext);
+
   const [region, setRegion] = useState({
       latitude: 65.0121,
       longitude: 25.4681,
       latitudeDelta: 0.09,
       longitudeDelta: 0.04
   });
-
-  useEffect(() => {
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setTheme(colorScheme);
-    });
-    return () => subscription.remove();
-  }, []);
 
   useEffect(() => {
     (async () => {
@@ -41,22 +36,20 @@ const MainScreen = () => {
     })();
   }, []);
 
-  const isDarkMode = theme === 'dark';
-
   const handleSelect = (item) => {
     console.log('Selected:', item.title);
   };
 
   const renderItem = ({ item }) => (
-    <ListItem item={item} isDarkMode={isDarkMode} onSelect={handleSelect} />
+    <ListItem item={item} onSelect={handleSelect} />
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#fff' }]}>
-      <Header isDarkMode={isDarkMode} />
-      <CategoryFilter categories={categories} isDarkMode={isDarkMode} />
-      <MapSection region={region} listings={listings} isDarkMode={isDarkMode} setRegion={setRegion} />
-      <BottomSheet isDarkMode={isDarkMode}>
+    <View style={[styles.container, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
+      <Header/>
+      <CategoryFilter categories={categories}/>
+      <MapSection region={region} listings={listings} setRegion={setRegion} />
+      <BottomSheet >
         <FlatList
           data={listings}
           keyExtractor={(item) => item.id}

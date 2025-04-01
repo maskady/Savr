@@ -19,16 +19,19 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import _token from "../utils/token";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { registerUser } from "../utils/api";
-import { APP_NAME } from "../constants/strings";
-import { ThemeContext } from "../contexts/ThemeContext";
+
 import { AuthContext } from "../contexts/AuthContext";
+import { useTranslation } from 'react-i18next';
+import { SettingsContext } from "../contexts/SettingsContext";
 
 const RegisterScreen = () => {
+  const { t } = useTranslation();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { darkMode } = useContext(ThemeContext);
+  const { darkMode } = useContext(SettingsContext);
   const { login } = useContext(AuthContext);
   const route = useRoute();
   const { email } = route.params;
@@ -104,14 +107,14 @@ const RegisterScreen = () => {
           </TouchableOpacity>
         )}
         <Text style={[styles.title, { color: darkMode ? "white" : "black" }]}>
-          {APP_NAME}
+          {t("appName")}
         </Text>
 
         <View style={styles.formContainer}>
           <Text
             style={[styles.heading, { color: darkMode ? "white" : "black" }]}
           >
-            Create an account
+            {t("register.title")}
           </Text>
           <Text
             style={[
@@ -119,7 +122,7 @@ const RegisterScreen = () => {
               { color: darkMode ? "#bbb" : "#666" },
             ]}
           >
-            Enter your full name and set up your master password
+            {t("register.subtitle")}
           </Text>
 
           <TextInput
@@ -145,7 +148,7 @@ const RegisterScreen = () => {
                 color: darkMode ? "white" : "black",
               },
             ]}
-            placeholder="First Name"
+            placeholder={t("register.firstNamePlaceholder")}
             value={firstName}
             onChangeText={setFirstName}
             onSubmitEditing={() => lastNameRef.current.focus()}
@@ -166,7 +169,7 @@ const RegisterScreen = () => {
                 color: darkMode ? "white" : "black",
               },
             ]}
-            placeholder="Last Name"
+            placeholder={t("register.lastNamePlaceholder")}
             value={lastName}
             onChangeText={setLastName}
             autoCapitalize="words"
@@ -187,7 +190,7 @@ const RegisterScreen = () => {
                 color: darkMode ? "white" : "black",
               },
             ]}
-            placeholder="Master Password"
+            placeholder={t("register.createPasswordPlaceholder")}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -209,7 +212,7 @@ const RegisterScreen = () => {
                 color: darkMode ? "white" : "black",
               },
             ]}
-            placeholder="Confirm Master Password"
+            placeholder={t("register.confirmPasswordPlaceholder")}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
@@ -230,7 +233,7 @@ const RegisterScreen = () => {
             <Text
               style={[styles.continueButtonText, { color: "white" }]}
             >
-              Register
+              {t("register.registerButton")}
             </Text>
           </TouchableOpacity>
         </View>

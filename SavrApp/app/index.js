@@ -1,14 +1,14 @@
 import React from "react";
 import Navigation from "./navigation/Navigation";
 import { AuthProvider } from './contexts/AuthContext';
-import { ThemeProvider } from './contexts/ThemeContext';
+import { SettingsProvider } from "./contexts/SettingsContext";
 
 export default function App() {
   return (
     <AuthProvider>
-      <ThemeProvider>
+      <SettingsProvider>
         <Navigation />
-      </ThemeProvider>
+      </SettingsProvider>
     </AuthProvider>
   );
 }

@@ -1,0 +1,48 @@
+export default {
+    appName: "Good2Rescue",
+    common: {
+        terms: "By clicking continue, you agree to our <0>Terms of Service</0> and <1>Privacy Policy</1>.",
+        continueButton: "Continue",
+        orText: "or",
+        emailPlaceholder: "email@domain.com",
+        passwordPlaceholder: "Password",
+        defaultCityPlaceholder: "Oulu",
+    },
+
+    welcome: {
+        title: "Welcome to Good2Rescue!",
+        subtitle: "Start your epic rescuing journey by entering your email or continue with your google account.",
+        googleButton: "Continue with Google",
+    },
+    login: {
+        title: "Login",
+        enterPassword: "Enter your password",
+        forgotPassword: "Forgot Password?",
+        continueButton: "Continue",
+        googleButton: "Continue with Google",
+        termsText: "By clicking continue, you agree to our ",
+        termsLink: "Terms of Service",
+        loginButton: "Login",
+    },
+    register: {
+        title: "Create an account",
+        subtitle: "Enter your full name and create a password.",
+        firstNamePlaceholder: "Name",
+        lastNamePlaceholder: "Surname",
+        createPasswordPlaceholder: "Create a new password",
+        confirmPasswordPlaceholder: "Confirm Password",
+        googleButton: "Continue with Google",
+        termsText: "By clicking continue, you agree to our ",
+        termsLink: "Terms of Service",
+        registerButton: "Register",
+    },
+    dashboard: {
+        title: "Dashboard",
+        tab1: "All", 
+        tab2: "Food",
+        tab3: "Clothes",
+        tab4: "Flowers",    
+        co2Saved: "CO2 Saved",
+        amountSaved: "Amount Saved",
+    },
+}

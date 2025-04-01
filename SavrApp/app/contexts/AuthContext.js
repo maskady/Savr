@@ -9,7 +9,10 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Optional helper functions
-  const login = () => setIsLoggedIn(true);
+  const login = () => {
+    console.log("AuthProvider: User logged in");
+    setIsLoggedIn(true)
+  };
   const logout = () => setIsLoggedIn(false);
 
   return (

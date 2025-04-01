@@ -20,10 +20,14 @@ import { ArrowLeft } from "lucide-react-native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { loginUser } from "../utils/api"; 
 import { AuthContext } from "../contexts/AuthContext"; 
-import { ThemeContext } from "../contexts/ThemeContext"; 
-import { APP_NAME } from "../constants/strings";
+import { SettingsContext } from "../contexts/SettingsContext";
+
+import { useTranslation } from 'react-i18next';
+
 
 const LoginScreen = () => {
+  const { t } = useTranslation();
+
   const [password, setPassword] = useState("");
   const route = useRoute();
   
@@ -31,7 +35,7 @@ const LoginScreen = () => {
   const inputAccessoryLoginPassword = "inputAccessoryLoginPassword";
   
   const { login } = useContext(AuthContext);
-  const { darkMode } = useContext(ThemeContext);
+  const { darkMode } = useContext(SettingsContext);
 
   const navigation = useNavigation();
 
@@ -40,6 +44,7 @@ const LoginScreen = () => {
       alert("Please enter your email address and password");
       return;
     }
+    
     try {
       const { response, data } = await loginUser(email, password);
       if (response.ok) {
@@ -82,7 +87,7 @@ const LoginScreen = () => {
           </TouchableOpacity>
         )}
         <Text style={[styles.title, { color: darkMode ? "white" : "black" }]}>
-          {APP_NAME}
+          {t("appName")}
         </Text>
         
 
@@ -90,7 +95,7 @@ const LoginScreen = () => {
           <Text
             style={[styles.heading, { color: darkMode ? "white" : "black" }]}
           >
-            Enter your master password
+            {t("login.title")}
           </Text>
           <Text style={styles.divider}/>
 
@@ -116,7 +121,7 @@ const LoginScreen = () => {
                 color: darkMode ? "white" : "black",
               },
             ]}
-            placeholder="Master Password"
+            placeholder={t("common.passwordPlaceholder")}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -137,7 +142,7 @@ const LoginScreen = () => {
             <Text
               style={[styles.continueButtonText, { color: "white" }]}
             >
-              Sign in 
+              {t("login.loginButton")}
             </Text>
           </TouchableOpacity>
         </View>

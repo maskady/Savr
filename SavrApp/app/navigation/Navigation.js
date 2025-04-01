@@ -6,7 +6,7 @@ import AppStack from "./AppStack";
 import ErrorScreen from "../screens/ErrorScreen";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { ThemeContext } from "../contexts/ThemeContext";
+
 
 const RootStack = createStackNavigator();
 

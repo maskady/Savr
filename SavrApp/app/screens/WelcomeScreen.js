@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,31 +14,17 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { checkUserExists } from "../utils/api";
-import { APP_NAME } from "../constants/strings";
+import { useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
+import { SettingsContext } from "../contexts/SettingsContext";
 
 const WelcomeScreen = () => {
   const [email, setEmail] = useState("");
-  const [theme, setTheme] = useState(Appearance.getColorScheme()); // Initialization with the current value
-  const inputAccessoryWelcomeEmail = "inputAccessoryWelcomeEmail";
-
-  useEffect(() => {
-    const handleThemeChange = ({ colorScheme }) => {
-      console.log("Theme changed:", colorScheme);
-      if (colorScheme) {
-        setTheme(colorScheme);
-      }
-    };
-
-    const subscription = Appearance.addChangeListener(handleThemeChange);
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  const isDarkMode = theme === "dark";
-
+  const { darkMode } = useContext(SettingsContext);
+  const { t } = useTranslation();
   const navigation = useNavigation();
+  
+  const inputAccessoryWelcomeEmail = "inputAccessoryWelcomeEmail";
 
   const handleContinue = async () => {
     // First validation
@@ -84,46 +70,46 @@ const WelcomeScreen = () => {
     <SafeAreaView
       style={[
         styles.container,
-        { backgroundColor: isDarkMode ? "#121212" : Colors.White },
+        { backgroundColor: darkMode ? "#121212" : Colors.White },
       ]}
     >
       <StatusBar
-        barStyle={isDarkMode ? "light-content" : "dark-content"}
-        backgroundColor={isDarkMode ? Colors.Grey : Colors.White}
+        barStyle={darkMode ? "light-content" : "dark-content"}
+        backgroundColor={darkMode ? Colors.Grey : Colors.White}
       />
       <View style={styles.content}>
-        <Text style={[styles.title, { color: isDarkMode ? "white" : "black" }]}>
-          {APP_NAME}
+        <Text style={[styles.title, { color: darkMode ? "white" : "black" }]}>
+          {t('appName')}
         </Text>
 
         <View style={styles.formContainer}>
-          <Text style={[styles.heading, { color: isDarkMode ? Colors.White : Colors.Black }]}>
-            Create an account
+          <Text style={[styles.heading, { color: darkMode ? Colors.White : Colors.Black }]}>
+            {t('welcome.title')}
           </Text>
           <Text
             style={[
               styles.subheading,
-              { color: isDarkMode ? "#bbb" : "#666" },
+              { color: darkMode ? "#bbb" : "#666" },
             ]}
           >
-            Enter your email to sign up for this app
+            {t('welcome.subtitle')}
           </Text>
 
           <TextInput
             style={[
               styles.input,
               {
-                borderColor: isDarkMode ? "#444" : "#ddd",
-                backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
-                color: isDarkMode ? Colors.White : Colors.Black,
+                borderColor: darkMode ? "#444" : "#ddd",
+                backgroundColor: darkMode ? Colors.Grey : Colors.White,
+                color: darkMode ? Colors.White : Colors.Black,
               },
             ]}
-            placeholder="email@domain.com"
+            placeholder={t('common.emailPlaceholder')}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
-            placeholderTextColor={isDarkMode ? "#bbb" : "#666"}
+            placeholderTextColor={darkMode ? "#bbb" : "#666"}
             inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryWelcomeEmail : undefined}
             returnKeyType="done"
             onSubmitEditing={handleContinue}
@@ -132,7 +118,7 @@ const WelcomeScreen = () => {
           <TouchableOpacity
             style={[
               styles.continueButton,
-              { backgroundColor: isDarkMode ? "#6200ea" : Colors.Black },
+              { backgroundColor: darkMode ? "#6200ea" : Colors.Black },
             ]}
             onPress={handleContinue}   
           >
@@ -142,7 +128,7 @@ const WelcomeScreen = () => {
                 { color: Colors.White },
               ]}
             >
-              Continue
+              {t('common.continueButton')}
             </Text>
           </TouchableOpacity>
 
@@ -150,30 +136,28 @@ const WelcomeScreen = () => {
             <View
               style={[
                 styles.divider,
-                { backgroundColor: isDarkMode ? "#666" : "#ccc" },
+                { backgroundColor: darkMode ? "#666" : "#ccc" },
               ]}
             />
             <Text
               style={[
                 styles.orText,
-                { color: isDarkMode ? "#bbb" : "#666" },
+                { color: darkMode ? "#bbb" : "#666" },
               ]}
             >
-              or
+              {t('common.orText')}
             </Text>
             <View
               style={[
                 styles.divider,
-                { backgroundColor: isDarkMode ? "#666" : "#ccc" },
+                { backgroundColor: darkMode ? "#666" : "#ccc" },
               ]}
             />
           </View>
 
           <TouchableOpacity style={styles.googleButton}>
             <Image
-              source={{
-                uri: "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
-              }}
+              source={require("/Users/tomibozak/Projects/Savr/SavrApp/assets/images/google-logo.png")}
               style={styles.googleIcon}
             />
             <Text
@@ -182,19 +166,18 @@ const WelcomeScreen = () => {
                 { color: Colors.Black },
               ]}
             >
-              Continue with Google
+              {t('welcome.googleButton')}
             </Text>
           </TouchableOpacity>
 
-          <Text
-            style={[
-              styles.termsText,
-              { color: isDarkMode ? "#bbb" : "#666" },
-            ]}
-          >
-            By clicking continue, you agree to our{" "}
-            <Text style={[styles.link, {color: isDarkMode ? "#fff" : "#000"}]}>Terms of Service</Text> and{" "}
-            <Text style={[styles.link, {color: isDarkMode ? "#fff" : "#000"}]}>Privacy Policy</Text>
+          <Text style={[styles.termsText, { color: darkMode ? "#bbb" : "#666" }]}>
+            <Trans
+              i18nKey="common.terms"
+              components={[
+                <Text style={[styles.link, { color: darkMode ? "#fff" : "#000" }]} />,
+                <Text style={[styles.link, { color: darkMode ? "#fff" : "#000" }]} />,
+              ]}
+            />
           </Text>
           
         </View>

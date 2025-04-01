@@ -1,15 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { Animated, PanResponder, Dimensions, StyleSheet, View } from 'react-native';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const PEEK_HEIGHT = 40;
 
-const BottomSheet = ({ children, isDarkMode }) => {
+const BottomSheet = ({ children }) => {
   const screenHeight = Dimensions.get('window').height;
   const SHEET_HEIGHT = screenHeight * 0.35;
   const sheetAnim = useRef(new Animated.Value(0)).current; // 0 = fully open; max = SHEET_HEIGHT - PEEK_HEIGHT
   const lastOffset = useRef(0);
   const HIDE_THRESHOLD = 1 / 4;
   const SHOW_THRESHOLD = 1 / 6;
+
+  const { darkMode } = useContext(SettingsContext);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -82,7 +85,7 @@ const BottomSheet = ({ children, isDarkMode }) => {
         {
           height: SHEET_HEIGHT,
           transform: [{ translateY: sheetAnim }],
-          backgroundColor: isDarkMode ? '#121212' : '#fff',
+          backgroundColor: darkMode ? '#121212' : '#fff',
         },
       ]}
     >
