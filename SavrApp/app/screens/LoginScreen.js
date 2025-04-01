@@ -86,7 +86,7 @@ const LoginScreen = () => {
             <ArrowLeft size={24} color={darkMode ? "white" : "black"} />
           </TouchableOpacity>
         )}
-        <Text style={[styles.title, { color: darkMode ? "white" : "black" }]}>
+        <Text style={[styles.titleLogin, { color: darkMode ? "white" : "black" }]}>
           {t("appName")}
         </Text>
         
@@ -155,110 +155,5 @@ const LoginScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  divider: {
-    height: 1,
-    width: "40%",
-    marginVertical: 10,
-  },
-  lineDivider: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    marginVertical: 20,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-    justifyContent: "space-around",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginTop: 40,
-    marginBottom: 30,
-  },
-  formContainer: {
-    width: "100%",
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  subheading: {
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 24,
-  },
-  input: {
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 20,
-    fontSize: 15,
-  },
-  continueButton: {
-    height: 50,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  continueButtonText: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  googleButton: {
-    flexDirection: "row",
-    height: 50,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f5f5f5",
-    marginBottom: 20,
-  },
-  googleIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-  googleButtonText: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  termsText: {
-    fontSize: 12,
-    textAlign: "center",
-  },
-  link: {
-    color: "#000",
-    textDecorationLine: "underline",
-  },
-  bottomBar: {
-    height: 5,
-    width: 40,
-    backgroundColor: "#000",
-    borderRadius: 3,
-    alignSelf: "center",
-    marginBottom: 8,
-  },
-  icon: {
-    marginRight: 8,
-    marginBottom: 12,
-  },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default LoginScreen;

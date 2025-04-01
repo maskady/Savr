@@ -107,6 +107,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  titleLogin: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 40,
+    marginBottom: 30,
+  },
 });
 
 export default styles;
