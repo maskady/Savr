@@ -28,9 +28,9 @@ const MarkerView = ({ price }) => {
 
   return (
     <React.Fragment>
-      <Text style={[styles.markerText, { color: darkMode ? '#fff' : '#000' }]}>
+      {/*<Text style={[styles.markerText, { color: darkMode ? '#fff' : '#000' }]}>
         {`${price}${currencySymbol}`}
-      </Text>
+      </Text>*/}
     </React.Fragment>
   );
 };

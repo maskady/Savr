@@ -1,19 +1,33 @@
 import React, {useContext} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { SettingsContext } from '../contexts/SettingsContext';
+import { getDistance } from 'geolib';
 
-const ListItem = ({ item, onSelect }) => {
+const ListItem = ({ item, onSelect, region }) => {
   const {darkMode} = useContext(SettingsContext);
+
+  let distance = null;
+  let distanceUnit = null;
+  if (region.latitude && item.latitude && region.longitude && item.longitude) {
+    distance = getDistance({latitude: region.latitude, longitude: region.longitude}, {latitude: item.latitude, longitude: item.longitude});
+    if (distance > 1000) {
+      distance = (distance / 1000).toFixed(1); // Convert to km and round to 1 decimal place
+      distanceUnit = 'km';
+    } else {
+      distance = distance.toFixed(0); // Keep in meters
+      distanceUnit = 'm';
+    }
+  }
 
   return (
     <View style={[styles.listItem, { backgroundColor: darkMode ? '#1e1e1e' : '#fff' }]}>
-      <Image source={item.image} style={styles.listItemImage} />
+      {item.image && <Image source={item.image} style={styles.listItemImage} />}
       <View style={styles.listItemInfo}>
-        <Text style={[styles.listItemTitle, { color: darkMode ? '#fff' : '#000' }]}>{item.title}</Text>
+        <Text style={[styles.listItemTitle, { color: darkMode ? '#fff' : '#000' }]}>{item.name}</Text>
         <Text style={[styles.listItemSubtitle, { color: darkMode ? '#bbb' : '#666' }]}>
-          {item.rating} ({item.reviews} reviews) • {item.distance} km
+          {item.rating ? `${item.rating} (${item.ratings} reviews) • ` : "(0 reviews) • "}{distance && `${distance} ${distanceUnit}`}
         </Text>
-        <Text style={[styles.listItemPrice, { color: darkMode ? '#fff' : '#000' }]}>${item.price}</Text>
+        {/*<Text style={[styles.listItemPrice, { color: darkMode ? '#fff' : '#000' }]}>${item.price}</Text>*/}
       </View>
       <TouchableOpacity style={[styles.selectButton, { backgroundColor: darkMode ? '#6200ea' : '#007AFF' }]} onPress={() => onSelect(item)}>
         <Text style={styles.selectButtonText}>Select</Text>
