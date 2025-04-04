@@ -230,6 +230,12 @@ import getStyles from "../styles/SettingsStyles";
   };
   return (
     <SafeAreaView style={styles.safeArea}>
+        <View style={styles.titleContainer}>
+          <FontAwesome6 name="user" size={styles.settingsIcon.size} color={styles.settingsIcon.color} style={styles.settingsIcon} />
+          <Text style={styles.settingsTitle}>
+            Personal information
+          </Text>
+        </View>
           {
             editablePassword ? (
               <View style={styles.editablePasswordContainer}>
