@@ -1,3 +1,21 @@
+  const [user, setUser] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [actualPassword, setActualPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  const [editableFirstName, setEditableFirstName] = useState(false);
+  const [editableLastName, setEditableLastName] = useState(false);
+  const [editableEmail, setEditableEmail] = useState(false);
+  const [editablePassword, setEditablePassword] = useState(false);
+
+  const [styles, setStyles] = useState(getStyles());
+
+  const [showActualPassword, setShowActualPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
