@@ -6,6 +6,7 @@ import { getToken, storeToken, removeToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 
+const SettingsScreen = ( ) => {
   const [user, setUser] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -228,14 +229,17 @@ import getStyles from "../styles/SettingsStyles";
     setNewPassword("");
     setConfirmNewPassword("");
   };
+
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={styles.settingsGlobalContainer}>
         <View style={styles.titleContainer}>
           <FontAwesome6 name="user" size={styles.settingsIcon.size} color={styles.settingsIcon.color} style={styles.settingsIcon} />
           <Text style={styles.settingsTitle}>
             Personal information
           </Text>
         </View>
+        <View style={styles.settingsFormContainer}>
           <View style={[styles.input, styles.editableInputContainer]}>
             <TextInput
               value={firstName}
@@ -371,6 +375,9 @@ import getStyles from "../styles/SettingsStyles";
               </View>
             )
           }
+        </View>
+        <View />
+      </View>
     </SafeAreaView>
   );
 };
