@@ -230,6 +230,7 @@ import getStyles from "../styles/SettingsStyles";
   };
   return (
     <SafeAreaView style={styles.safeArea}>
+          {
             editablePassword ? (
               <View style={styles.editablePasswordContainer}>
                 {renderPasswordInput("Actual Password", actualPassword, setActualPassword, showActualPassword, () => togglePasswordVisibility("actual"), actualPasswordRef, newPasswordRef)}
