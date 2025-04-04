@@ -1,3 +1,11 @@
+import React, { useState, useEffect, useRef } from "react";
+import { View, Appearance, SafeAreaView, Text, ActivityIndicator, TouchableOpacity, Linking } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { TextInput } from "react-native-gesture-handler";
+import { getToken, storeToken, removeToken } from "../utils/token";
+import { FontAwesome6 } from "@expo/vector-icons";
+import getStyles from "../styles/SettingsStyles";
+
   const [user, setUser] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
