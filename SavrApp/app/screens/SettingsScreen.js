@@ -39,6 +39,22 @@
         navigation.navigate("Error", { error: "Failed to load user data" });
       }
     };
+
+    const handleThemeChange = ({ colorScheme }) => {
+      console.log("Theme changed:", colorScheme);
+      if (colorScheme) {
+        setStyles(getStyles()); 
+      }
+    };
+
+    loadUserData();
+    const subscription = Appearance.addChangeListener(handleThemeChange);
+
+    return () => {
+      subscription.remove();
+    };
+
+  }, []);
 };
 
 export default SettingsScreen;
