@@ -230,10 +230,59 @@ import getStyles from "../styles/SettingsStyles";
   };
   return (
     <SafeAreaView style={styles.safeArea}>
+            editablePassword ? (
+              <View style={styles.editablePasswordContainer}>
                 {renderPasswordInput("Actual Password", actualPassword, setActualPassword, showActualPassword, () => togglePasswordVisibility("actual"), actualPasswordRef, newPasswordRef)}
                 {renderPasswordInput("New Password", newPassword, setNewPassword, showNewPassword, () => togglePasswordVisibility("new"), newPasswordRef, confirmNewPasswordRef)}
                 {renderPasswordInput("Confirm Password", confirmNewPassword, setConfirmNewPassword, showConfirmNewPassword, () => togglePasswordVisibility("confirm"), confirmNewPasswordRef, null, handleSavePassword)}
 
+                <View style={{width: "80%", flexDirection: "row", justifyContent: "space-between"}}>
+                  <TouchableOpacity
+                    onPress={
+                      () => {setEditablePassword(false);}
+                    }
+                    style={[styles.input, styles.cancelButton]}
+                  >
+                    <Text style={styles.cancelButtonText}>
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={
+                      handleSavePassword
+                    }
+                    style={[styles.input, styles.submitButton]}
+                  >
+                    <Text style={styles.submitButtonText}>
+                      Submit
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <View style={[styles.input, styles.editableInputContainer]}>
+                <TextInput
+                  value={"●".repeat(10)}
+                  editable={false}
+                  style={styles.editableInput}
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    setEditablePassword(true);
+                  }}
+                  style={styles.editIconContainer}
+                  hitSlop={styles.editIconContainer.hitSlop}
+                >
+                  {editablePassword ? (
+                    <FontAwesome6 name="check" size={styles.editIcon.size} color={styles.editIcon.color} />
+                  ) : (
+                    <FontAwesome6 name="pen" size={styles.editIcon.size} color={styles.editIcon.color} />
+                  )}
+                </TouchableOpacity>
+              </View>
+            )
+          }
     </SafeAreaView>
   );
 };
