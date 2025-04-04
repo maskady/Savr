@@ -69,7 +69,7 @@ const MainScreen = () => {
     <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
       <Header />
       <CategoryFilter categories={businessCategories} />
-      <MapSection region={region} listings={shops} setRegion={setRegion} />
+      <MapSection region={region} setRegion={setRegion} shops={shops} />
       <BottomSheet> 
         <FlatList
           data={shops}

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
-import { checkUserExists } from "../utils/api";
+import { checkUserExists } from "../utils/authApi";
 import { useTranslation, Trans } from 'react-i18next';
 import { SettingsContext } from "../contexts/SettingsContext";
 import styles from "../styles/AuthStyles";

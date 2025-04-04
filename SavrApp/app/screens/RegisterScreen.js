@@ -17,7 +17,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { storeToken } from "../utils/token";
 
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
-import { registerUser } from "../utils/api";
+import { registerUser } from "../utils/authApi";
 
 import { AuthContext } from "../contexts/AuthContext";
 import { useTranslation } from 'react-i18next';

@@ -1,22 +1,5 @@
 import { request } from './request';
 
-export const loginUser = (email, password) =>
-  request('/auth/login', 'POST', { email: email.trim(), password });
-
-export const logoutUser = (token) =>
-  request('/auth/logout', 'POST', null, token);
-
-export const registerUser = (email, password, firstName, lastName) =>
-  request('/auth/register', 'POST', {
-    email: email.trim(),
-    firstName: firstName.trim(),
-    lastName: lastName.trim(),
-    password,
-  });
-
-export const checkUserExists = (email) =>
-  request('/auth/exists', 'POST', { email: email.trim() });
-
 export const getShops = async (latitude, longitude, radius) => {
   try {
     const response = await request('/shop', 'GET', null, null, { latitude, longitude, radius });
@@ -27,6 +10,23 @@ export const getShops = async (latitude, longitude, radius) => {
   }
 };
 
+export const getProducts = async () => {
+  try {
+    const response = await request(`/product`, 'GET');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    throw error;
+  }
+};
 
-
+export const getCategories = async () => {
+  try {
+    const response = await request(`/category`, 'GET');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    throw error;
+  }
+}
 
