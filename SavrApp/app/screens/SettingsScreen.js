@@ -236,6 +236,32 @@ import getStyles from "../styles/SettingsStyles";
             Personal information
           </Text>
         </View>
+          <View style={[styles.input, styles.editableInputContainer]}>
+            <TextInput
+              value={firstName}
+              onChangeText={setFirstName}
+              editable={editableFirstName}
+              placeholder="First Name"
+              style={styles.editableInput}
+            />
+            <TouchableOpacity
+              onPress={() => {
+                if (editableFirstName) {
+                  handleSave();
+                } else {
+                  setEditableFirstName(true);
+                }
+              }}
+              style={styles.editIconContainer}
+              hitSlop={styles.editIconContainer.hitSlop}
+            >
+              {editableFirstName ? (
+                <FontAwesome6 name="check" size={styles.editIcon.size} color={styles.editIcon.color} />
+              ) : (
+                <FontAwesome6 name="pen" size={styles.editIcon.size} color={styles.editIcon.color} />
+              )}
+            </TouchableOpacity>
+          </View>
           {
             editablePassword ? (
               <View style={styles.editablePasswordContainer}>
