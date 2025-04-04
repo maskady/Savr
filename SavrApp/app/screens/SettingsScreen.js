@@ -289,6 +289,34 @@ import getStyles from "../styles/SettingsStyles";
               )}
             </TouchableOpacity>
           </View>
+          
+          <View style={[styles.input, styles.editableInputContainer]}>
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              editable={editableEmail}
+              placeholder="Email"
+              style={styles.editableInput}
+            />
+            <TouchableOpacity
+              onPress={() => {
+                if (editableEmail) {
+                  handleSave();
+                } else {
+                  setEditableEmail(true);
+                }
+              }}
+              style={styles.editIconContainer}
+              hitSlop={styles.editIconContainer.hitSlop}
+            >
+              {editableEmail ? (
+                <FontAwesome6 name="check" size={styles.editIcon.size} color={styles.editIcon.color}/>
+              ) : (
+                <FontAwesome6 name="pen" size={styles.editIcon.size} color={styles.editIcon.color}/>
+              )}
+            </TouchableOpacity>
+          </View>
+
           {
             editablePassword ? (
               <View style={styles.editablePasswordContainer}>
