@@ -4,6 +4,7 @@ import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
 import ErrorScreen from "../screens/ErrorScreen";
 import { AuthContext } from "../contexts/AuthContext";
+import SettingsScreen from "../screens/SettingsScreen";
 
 
 const RootStack = createStackNavigator();
@@ -22,6 +23,7 @@ const Navigation = () => {
           </RootStack.Screen>
         )}
         <RootStack.Screen name="Error" component={ErrorScreen} />
+        <RootStack.Screen name="Settings" component={SettingsScreen} />
       </RootStack.Navigator>
   );
 };
