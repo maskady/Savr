@@ -55,6 +55,15 @@
     };
 
   }, []);
+
+  if (!user) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color={styles.loader.color}/>
+      </View>
+    );
+  }
+
 };
 
 export default SettingsScreen;
