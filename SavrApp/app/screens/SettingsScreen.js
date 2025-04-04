@@ -129,6 +129,61 @@ import getStyles from "../styles/SettingsStyles";
     setEditableLastName(false);
     setEditableEmail(false);
   };
+
+  const handleSavePassword = async () => {
+    if (!actualPassword || !newPassword || !confirmNewPassword) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    // Verify that the password is strong enough
+    // At least 8 characters long, at least one uppercase letter, one lowercase letter, and one number
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@#$%^&+=!]{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      alert("Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one number.");
+      return;
+    }
+
+    try {
+      // TODO : Replace with our API endpoint
+      // const response = await fetch("", {
+      //   method: "PUT",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${await getToken()}`,
+      //   },
+      //   body: JSON.stringify({ "oldPassword": actualPassword, "newPassword": newPassword }),
+      // });
+
+      // Fake response for demonstration purposes
+      const response = {
+        status: 200,
+        ok: true,
+      }
+
+      if (response.status === 401) {
+        alert("Incorrect password");
+        return;
+      }
+      if (!response.ok) {
+        throw new Error("Failed to update password");
+      }
+
+      console.log("Mise à jour avec succès");
+    } catch (error) {
+      console.error("Erreur de mise à jour :", error);
+    }
+
+    setEditablePassword(false);
+    setActualPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+  };
 };
 
 export default SettingsScreen;
