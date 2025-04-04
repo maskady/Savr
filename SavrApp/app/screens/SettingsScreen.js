@@ -64,6 +64,45 @@
     );
   }
 
+  const handleSave = async () => {
+    try {
+      // TODO : Replace with our API endpoint
+      // const response = await fetch("", {
+      //   method: "PUT",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${await getToken()}`,
+      //   },
+      //   body: JSON.stringify({ fullName, email }),
+      // });
+      //
+      // const data = await response.json();
+
+      const response = {
+        ok: true,
+        data: {
+          token: "new_token",
+        },
+      }
+      const data = response.data;
+
+      if (!response.ok) {
+        throw new Error("Failed to update user data");
+      }
+
+      // Update the token with the new data
+      await removeToken();
+      await storeToken(data.token);
+      console.log("Mise à jour avec succès");
+    } catch (error) {
+      console.error("Erreur de mise à jour :", error);
+    }
+
+    // After saving, set the editable states to false
+    setEditableFirstName(false);
+    setEditableLastName(false);
+    setEditableEmail(false);
+  };
 };
 
 export default SettingsScreen;
