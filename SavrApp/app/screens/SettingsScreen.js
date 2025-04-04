@@ -24,6 +24,50 @@ import getStyles from "../styles/SettingsStyles";
   const [showActualPassword, setShowActualPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+
+  const actualPasswordRef = useRef(null);
+  const newPasswordRef = useRef(null);
+  const confirmNewPasswordRef = useRef(null);
+
+  const togglePasswordVisibility = (field) => {
+    if (field === "actual") {
+      setShowActualPassword(!showActualPassword);
+    } else if (field === "new") {
+      setShowNewPassword(!showNewPassword);
+    } else if (field === "confirm") {
+      setShowConfirmNewPassword(!showConfirmNewPassword);
+    }
+  };
+
+  const renderPasswordInput = (placeholder, value, onChangeText, isPasswordVisible, toggleVisibility, ref, nextRef = null, handleSavePassword = null) => (
+    <View style={[styles.input, styles.editableInputContainer]}>
+      <TextInput
+        ref={ref}
+        style={styles.editableInput}
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={!isPasswordVisible}
+        placeholderTextColor={styles.editableInput.placeholderTextColor}
+        autoCapitalize="none"
+        autoCorrect={false}
+        returnKeyType={ nextRef ? "next" : "done" }
+        onSubmitEditing={() => {
+          if (nextRef) {
+            nextRef.current.focus();
+          }
+          else{
+            handleSavePassword?.();
+          }
+        }}
+        submitBehavior="submit"
+      />
+      <TouchableOpacity onPress={toggleVisibility} style={styles.eyeIconContainer}>
+        <FontAwesome6 name={isPasswordVisible ? "eye-slash" : "eye"} size={styles.eyeIcon.size} color={styles.eyeIcon.color} />
+      </TouchableOpacity>
+    </View>
+  );
+
   const navigation = useNavigation();
 
   useEffect(() => {
