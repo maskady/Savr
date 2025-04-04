@@ -62,17 +62,38 @@ const MainScreen = () => {
   };
 
   const renderItem = ({ item }) => (
-    <ListItem item={item} onSelect={handleSelect} region={region} />
+    <ListItem item={item} onSelect={handleSelect} region={region}/>
   );
+
+  const tempShops = [
+    {
+      rating: 4.5,
+      id: 1,
+      longitude: 25.2681,
+      latitude: 65.0221,
+    },
+    {
+      rating: 3.8,
+      id: 2,
+      longitude: 25.5681,
+      latitude: 65.0141,
+    },
+    {
+      rating: 4.0,
+      id: 3,
+      longitude: 25.4681,
+      latitude: 65.0121,
+    },
+  ]
 
   return (
     <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
       <Header />
       <CategoryFilter categories={businessCategories} />
-      <MapSection region={region} setRegion={setRegion} shops={shops} />
+      <MapSection region={region} setRegion={setRegion} shops={tempShops} />
       <BottomSheet> 
         <FlatList
-          data={shops}
+          data={tempShops}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}

@@ -3,14 +3,16 @@ import ClusteredMapView from 'react-native-map-clustering';
 import { StyleSheet, View, Text } from 'react-native';
 import { Marker } from 'react-native-maps';
 
-
 const MapSection = ({ region, setRegion, shops }) => {
   // Render a custom marker for clusters
   const renderCluster = (cluster, onPress) => {
-    const { coordinate, pointCount } = cluster;
-    // You could also sum product counts for all shops in the cluster if needed.
+    const { coordinate, pointCount, clusterId } = cluster;
     return (
-      <Marker coordinate={coordinate} onPress={onPress}>
+      <Marker
+        key={`cluster-${clusterId}`}
+        coordinate={coordinate}
+        onPress={onPress}
+      >
         <View style={[styles.clusterContainer, { backgroundColor: 'darkgreen' }]}>
           <Text style={styles.clusterText}>{pointCount}</Text>
         </View>
@@ -18,28 +20,35 @@ const MapSection = ({ region, setRegion, shops }) => {
     );
   };
 
-  
-
   return (
     <ClusteredMapView
       style={StyleSheet.absoluteFillObject}
       region={region}
       onRegionChangeComplete={setRegion}
-      clusteringEnabled
-      renderCluster={renderCluster}  // Use our custom cluster renderer
+      clusteringEnabled={true}
+      renderCluster={renderCluster}
+      showsUserLocation={true}
+      provider="google"
+      // Configure clustering behavior
+      radius={40} // Cluster radius
+      extent={512} // Cluster calculation area
+      minZoom={1} // Min zoom level for clustering
+      maxZoom={20} // Max zoom level for clustering
+      spiralEnabled={true} // For overlapping markers
     >
       {shops.map((shop) => {
-        const productCount = shop.rating || 0; {/*Replace rating with product count when available*/}
+        const productCount = shop.rating || 0;
         return (
           <Marker
             key={shop.id}
             coordinate={{ latitude: shop.latitude, longitude: shop.longitude }}
           >
             <View style={[styles.clusterContainer, { backgroundColor: 'lightgreen' }]}>
-              <Text style={styles.clusterText}>{productCount}</Text> 
+              <Text style={styles.clusterText}>{productCount}</Text>
             </View>
           </Marker>
-        )})}
+        );
+      })}
     </ClusteredMapView>
   );
 };
