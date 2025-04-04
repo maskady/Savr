@@ -16,16 +16,6 @@ const getStyles = () => {
   }
 
   return StyleSheet.create({
-    safeArea: {
-      flex: 1,
-      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
-    },
-    settingsGlobalContainer: {
-      flex: 1,
-      justifyContent: "space-around",
-      alignItems: "center",
-      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
-    },
     passwordInput: {
       width: "80%",
       flexDirection: "row",
@@ -51,7 +41,22 @@ const getStyles = () => {
     loader: {
       color: "#0000ff",
     },
-    settingsIcon: {
+    safeArea: {
+      flex: 1,
+      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
+    },
+    settingsGlobalContainer: {
+      flex: 1,
+      justifyContent: "space-around",
+      alignItems: "center",
+      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
+    },
+    titleContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    gearIcon: {
       color: isDarkMode ? Colors.White : Colors.Black,
       size: 24,
       marginRight: 20,
@@ -64,6 +69,19 @@ const getStyles = () => {
     settingsFormContainer: {
       width: "100%",
       alignItems: "center",
+    },
+    input: {
+      height: 50,
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingHorizontal: 15,
+      marginBottom: 20,
+      fontSize: 14,
+      fontFamily: "PoppinsRegular",
+      borderColor: isDarkMode ? "#444" : "#ddd",
+      backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
+      color: isDarkMode ? Colors.White : Colors.Black,
+      placeholderTextColor: isDarkMode ? Colors.lightGrey : Colors.darkGrey,
     },
     editableInputContainer: {
       flexDirection: "row",

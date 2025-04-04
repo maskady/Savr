@@ -234,7 +234,7 @@ const SettingsScreen = ( ) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.settingsGlobalContainer}>
         <View style={styles.titleContainer}>
-          <FontAwesome6 name="user" size={styles.settingsIcon.size} color={styles.settingsIcon.color} style={styles.settingsIcon} />
+          <FontAwesome6 name="gear" size={styles.gearIcon.size} color={styles.gearIcon.color} style={styles.gearIcon} />
           <Text style={styles.settingsTitle}>
             Personal information
           </Text>
