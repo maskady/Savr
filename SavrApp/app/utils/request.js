@@ -1,13 +1,16 @@
 import { API_URI } from '@env';
 import { getToken } from './token';
 
-export const request = async (endpoint, method, body) => {
+export const request = async (endpoint, method, body, query={}) => {
   const headers = { "Content-Type": "application/json" };
 
   let token = await getToken();
   if (token) headers["Authorization"] = `Bearer ${token}`;
-  console.log("REQUEST", `${API_URI}${endpoint}`, "method", method, "body", body, "TokenIsAvailable", token ? "Yes" : "No");
-  const response = await fetch(`${API_URI}${endpoint}`, {
+  let URL = `${API_URI}${endpoint}`;
+  if (query) URL += `?${new URLSearchParams(query)}`;
+  
+  console.log("REQUEST", URL, "method", method, "body", body, "TokenIsAvailable", token ? "Yes" : "No", "query", query);
+  const response = await fetch(URL, {
     method,
     headers,
     body: body ? JSON.stringify(body) : null,
