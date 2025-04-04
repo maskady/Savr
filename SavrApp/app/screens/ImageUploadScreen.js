@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, Button, Image, ActivityIndicator, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
-import { IMAGE_URI } from '@env';
+import { API_URI } from '@env';
 import { getToken } from '../utils/token';
 
-const API_URL = `${IMAGE_URI}/api/image/upload`;
+const imageUploadUrl = `${API_URI}/image/upload`;
 
 export default function ImageUploadScreen() {
   const [image, setImage] = useState(null);
@@ -39,12 +39,13 @@ export default function ImageUploadScreen() {
     formData.append('image', {
       uri: image.uri,
       name: `upload-${Date.now()}.jpg`,
-      type: 'image/jpeg', // adjust type as necessary
+      type: 'image/jpeg',
     });
 
     try {
       const token = await getToken();
-      const response = await axios.post(API_URL, formData, {
+
+      const response = await axios.post(imageUploadUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,

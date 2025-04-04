@@ -24,7 +24,7 @@ module.exports = function (api) {
           moduleName: "@env",
           path: ".env",
           blacklist: null,
-          whitelist: ["API_URI", "IMAGE_URI"],
+          whitelist: ["API_URI", "HOST_URL"],
           safe: true,
           allowUndefined: false
         }

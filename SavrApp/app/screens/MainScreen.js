@@ -48,6 +48,8 @@ const MainScreen = () => {
       // Now fetch the shops using the current region.
       // Adjust the radius value as necessary.
       try {
+        console.log('Fetching shops with radius:', FETCH_RADIUS);
+        console.log('Current region:', currentRegion);
         const data = await getShops(currentRegion.latitude, currentRegion.longitude, FETCH_RADIUS);
         setShops(data);
         console.log('Fetched shops (only 3rd one):', data[2]);
