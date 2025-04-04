@@ -228,6 +228,14 @@ import getStyles from "../styles/SettingsStyles";
     setNewPassword("");
     setConfirmNewPassword("");
   };
+  return (
+    <SafeAreaView style={styles.safeArea}>
+                {renderPasswordInput("Actual Password", actualPassword, setActualPassword, showActualPassword, () => togglePasswordVisibility("actual"), actualPasswordRef, newPasswordRef)}
+                {renderPasswordInput("New Password", newPassword, setNewPassword, showNewPassword, () => togglePasswordVisibility("new"), newPasswordRef, confirmNewPasswordRef)}
+                {renderPasswordInput("Confirm Password", confirmNewPassword, setConfirmNewPassword, showConfirmNewPassword, () => togglePasswordVisibility("confirm"), confirmNewPasswordRef, null, handleSavePassword)}
+
+    </SafeAreaView>
+  );
 };
 
 export default SettingsScreen;
