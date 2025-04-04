@@ -6,7 +6,7 @@ export const request = async (endpoint, method, body) => {
 
   let token = await getToken();
   if (token) headers["Authorization"] = `Bearer ${token}`;
-  console.log("request--------", `${API_URI}${endpoint}`);
+  console.log("REQUEST", `${API_URI}${endpoint}`, "method", method, "body", body, "TokenIsAvailable", token ? "Yes" : "No");
   const response = await fetch(`${API_URI}${endpoint}`, {
     method,
     headers,
