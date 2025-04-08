@@ -2,7 +2,7 @@ import { request } from './request';
 
 export const getShops = async (latitude, longitude, radius) => {
   try {
-    const response = await request('/shop', 'GET', null, null, { latitude, longitude, radius });
+    const response = await request('/shop', 'GET', null, { latitude, longitude, radius });
     data = response.data.data; // .data.data is not a mistake - api is defined this way
     if (!data) {
       data = [];
