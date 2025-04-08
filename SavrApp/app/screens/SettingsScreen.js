@@ -247,7 +247,6 @@ const SettingsScreen = ( ) => {
           <RoleDropdown
             selectedRole={role}
             onSelectRole={setRole}
-            isDarkMode={styles.isDarkMode}
           />
 
           <View style={[styles.input, styles.editableInputContainer]}>
