@@ -79,29 +79,19 @@ const SettingsScreen = ( ) => {
   useEffect(() => {
     const loadUserData = async () => {
       try {
-        // TODO : Replace with our API endpoint
-        // const response = await fetch("", {
-        //   method: "GET",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //     Authorization: `Bearer ${await getToken()}`,
-        //   },
-        // });
-        // const data = await response.json();
-
-        // Fake response for demonstration purposes
-        const response = {
-          data: {
-            role: "user",
-            firstName: "John",
-            lastName: "Doe",
-            email: "john.doe@domain.com",
+        const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/user/me", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${await getToken()}`,
           },
-          ok: true,
-        }
-        const data = response.data;
+        });
+        const dataResponse = await response.json();
+        const data = dataResponse.data;
 
         if (!response.ok) {
+          console.log("Response not ok:", await getToken());
+          console.log("Response not ok:", response.status, response.statusText);
           throw new Error("Failed to fetch user data");
         }
 
