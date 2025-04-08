@@ -54,7 +54,9 @@ const MainScreen = () => {
         console.log('Current region:', currentRegion);
         const data = await getShops(currentRegion.latitude, currentRegion.longitude, FETCH_RADIUS);
         setShops(data);
-        console.log('Fetched shops (only 3rd one):', data[2]);
+        if (data && data.length > 0) {
+          console.log('Fetched shops (only 1st one):', data[0]);
+        }
       } catch (error) {
         console.error('Error fetching shops:', error);
       }
