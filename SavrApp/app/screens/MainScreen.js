@@ -40,6 +40,7 @@ const MainScreen = () => {
             latitudeDelta: 0.09,
             longitudeDelta: 0.04,
           };
+          console.log('Updating current location...');
           setRegion(currentRegion);
         }
       }

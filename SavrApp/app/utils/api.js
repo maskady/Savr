@@ -3,7 +3,11 @@ import { request } from './request';
 export const getShops = async (latitude, longitude, radius) => {
   try {
     const response = await request('/shop', 'GET', null, null, { latitude, longitude, radius });
-    return response.data.data; // .data.data is not a mistake - api is defined this way
+    data = response.data.data; // .data.data is not a mistake - api is defined this way
+    if (!data) {
+      data = [];
+    }
+    return data; 
   } catch (error) {
     console.error('Error fetching shops:', error);
     throw error;

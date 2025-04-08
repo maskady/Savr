@@ -1,43 +1,20 @@
 import React from 'react';
-import ClusteredMapView from 'react-native-map-clustering';
+import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View, Text } from 'react-native';
-import { Marker } from 'react-native-maps';
 
 const MapSection = ({ region, setRegion, shops }) => {
-  // Render a custom marker for clusters
-  const renderCluster = (cluster, onPress) => {
-    const { coordinate, pointCount, clusterId } = cluster;
-    return (
-      <Marker
-        key={`cluster-${clusterId}`}
-        coordinate={coordinate}
-        onPress={onPress}
-      >
-        <View style={[styles.clusterContainer, { backgroundColor: 'darkgreen' }]}>
-          <Text style={styles.clusterText}>{pointCount}</Text>
-        </View>
-      </Marker>
-    );
-  };
-
   return (
-    <ClusteredMapView
+    <MapView
       style={StyleSheet.absoluteFillObject}
       region={region}
       onRegionChangeComplete={setRegion}
-      clusteringEnabled={true}
-      renderCluster={renderCluster}
       showsUserLocation={true}
-      provider="google"
-      // Configure clustering behavior
-      radius={40} // Cluster radius
-      extent={512} // Cluster calculation area
-      minZoom={1} // Min zoom level for clustering
-      maxZoom={20} // Max zoom level for clustering
-      spiralEnabled={true} // For overlapping markers
     >
-      {shops.map((shop) => {
-        const productCount = shop.rating || 0;
+      {shops && shops.map((shop) => {
+        const productCount = shop.rating || 0; // Temporary placeholder for product count
+        if (shop.latitude === null || shop.longitude === null) {
+          return null; // Skip markers with null coordinates
+        }
         return (
           <Marker
             key={shop.id}
@@ -49,7 +26,7 @@ const MapSection = ({ region, setRegion, shops }) => {
           </Marker>
         );
       })}
-    </ClusteredMapView>
+    </MapView>
   );
 };
 
