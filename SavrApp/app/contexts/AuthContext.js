@@ -5,7 +5,7 @@ export const AuthContext = createContext();
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Optional helper functions
   const login = () => {
