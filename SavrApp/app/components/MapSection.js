@@ -6,11 +6,13 @@ import Supercluster from 'supercluster';
 const MapSection = ({ region, setRegion, shops }) => {
   const [clusters, setClusters] = useState([]);
 
-  const radiusThreshold = 30; // Radius for clustering
-  const maxZoom = 20; // Maximum zoom level for clustering
+  // Clustering configuration
+  const radiusThreshold = 30; // in pixels, for how close pins should be to cluster
+  const maxZoom = 20; // maximum zoom level for clustering
+  const padding = 0.5; // additional padding factor for bounds (adjust as needed)
   const superclusterRef = useRef(new Supercluster({ radius: radiusThreshold, maxZoom: maxZoom }));
 
-  // Build geoJson from shops data
+  // Build geoJSON from shops data
   const geoJson = useMemo(() => {
     return shops.map(shop => ({
       type: 'Feature',
@@ -26,7 +28,7 @@ const MapSection = ({ region, setRegion, shops }) => {
     }));
   }, [shops]);
 
-  // Load geoJson data into supercluster when data changes
+  // Load the data into Supercluster whenever the geoJSON changes
   useEffect(() => {
     superclusterRef.current.load(geoJson);
     if (region) {
@@ -34,20 +36,21 @@ const MapSection = ({ region, setRegion, shops }) => {
     }
   }, [geoJson]);
 
+  // Update clusters based on the current region with additional padding for smoother transitions
   const updateClusters = (newRegion) => {
     const { longitudeDelta, latitudeDelta, latitude, longitude } = newRegion;
     const bounds = [
-      longitude - longitudeDelta / 2,
-      latitude - latitudeDelta / 2,
-      longitude + longitudeDelta / 2,
-      latitude + latitudeDelta / 2
+      longitude - longitudeDelta * (0.5 + padding),
+      latitude - latitudeDelta * (0.5 + padding),
+      longitude + longitudeDelta * (0.5 + padding),
+      latitude + latitudeDelta * (0.5 + padding)
     ];
     const zoom = Math.floor(Math.log2(360 / longitudeDelta));
     const clusters = superclusterRef.current.getClusters(bounds, zoom);
     setClusters(clusters);
   };
 
-  // Render individual marker or cluster marker based on cluster properties
+  // Render either an individual marker or a cluster marker based on properties
   const renderMarker = (cluster) => {
     const [longitude, latitude] = cluster.geometry.coordinates;
     const { cluster: isCluster, point_count: pointCount, shopId, rating } = cluster.properties;
@@ -59,7 +62,7 @@ const MapSection = ({ region, setRegion, shops }) => {
           onPress={() => {
             const expansionZoom = Math.min(
               superclusterRef.current.getClusterExpansionZoom(cluster.id),
-              20
+              maxZoom
             );
             const newLongitudeDelta = 360 / Math.pow(2, expansionZoom);
             setRegion({
