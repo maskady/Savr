@@ -10,6 +10,7 @@ import { businessCategories } from '../constants/businessCategories';
 import { getShops } from '../utils/api'; // import the API call
 import { SettingsContext } from '../contexts/SettingsContext';
 import styles from '../styles/AppStyles';
+import MapDemo from '../components/MapDemo';
 
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
@@ -88,6 +89,7 @@ const MainScreen = () => {
   ]
 
   return (
+    //<MapDemo></MapDemo>
     <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
       <Header />
       <CategoryFilter categories={businessCategories} />
