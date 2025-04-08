@@ -176,6 +176,44 @@ const getStyles = () => {
       fontSize: 16,
       fontWeight: "600",
     },
+    dropdownContainer: {
+      width: '95%',
+      marginBottom: 20,
+    },
+    dropdownHeader: {
+      height: 50,
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingHorizontal: 15,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderColor: isDarkMode ? '#444' : '#ddd',
+      backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
+    },
+    selectedText: {
+      fontSize: 14,
+      fontFamily: 'PoppinsRegular',
+      color: isDarkMode ? Colors.White : Colors.Black,
+    },
+    dropdownList: {
+      marginTop: 5,
+      borderWidth: 1,
+      borderRadius: 8,
+      borderColor: isDarkMode ? '#444' : '#ddd',
+      backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
+      maxHeight: 150,
+      overflow: 'hidden',
+    },
+    dropdownItem: {
+      paddingVertical: 12,
+      paddingHorizontal: 15,
+    },
+    itemText: {
+      fontSize: 14,
+      fontFamily: 'PoppinsRegular',
+      color: isDarkMode ? Colors.White : Colors.Black,
+    },
   });
 }
 

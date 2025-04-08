@@ -5,6 +5,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { getToken, storeToken, removeToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
+import RoleDropdown from "../components/RoleDropdown";
 
 const SettingsScreen = ( ) => {
   const [user, setUser] = useState(null);
@@ -29,6 +30,9 @@ const SettingsScreen = ( ) => {
   const actualPasswordRef = useRef(null);
   const newPasswordRef = useRef(null);
   const confirmNewPasswordRef = useRef(null);
+
+  const [role, setRole] = useState(null);
+
 
   const togglePasswordVisibility = (field) => {
     if (field === "actual") {
@@ -240,7 +244,15 @@ const SettingsScreen = ( ) => {
           </Text>
         </View>
         <View style={styles.settingsFormContainer}>
+          <RoleDropdown
+            selectedRole={role}
+            onSelectRole={setRole}
+            isDarkMode={styles.isDarkMode}
+          />
+
           <View style={[styles.input, styles.editableInputContainer]}>
+            
+
             <TextInput
               value={firstName}
               onChangeText={setFirstName}
