@@ -2,12 +2,14 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Supercluster from 'supercluster';
+import { debounce } from 'lodash';
 
 const MapSection = ({ region, setRegion, shops }) => {
+
   const [clusters, setClusters] = useState([]);
 
   // Clustering configuration
-  const radiusThreshold = 30; // in pixels, for how close pins should be to cluster
+  const radiusThreshold = 32; // in pixels, for how close pins should be to cluster
   const maxZoom = 20; // maximum zoom level for clustering
   const padding = 0.5; // additional padding factor for bounds (adjust as needed)
   const superclusterRef = useRef(new Supercluster({ radius: radiusThreshold, maxZoom: maxZoom }));
@@ -54,6 +56,7 @@ const MapSection = ({ region, setRegion, shops }) => {
   const renderMarker = (cluster) => {
     const [longitude, latitude] = cluster.geometry.coordinates;
     const { cluster: isCluster, point_count: pointCount, shopId, rating } = cluster.properties;
+
     if (isCluster) {
       return (
         <Marker
@@ -80,27 +83,50 @@ const MapSection = ({ region, setRegion, shops }) => {
         </Marker>
       );
     }
+
+    const shop = shops.find(shop => shop.id === shopId) || {};
+    const category = shop.categories && shop.categories[0] ? shop.categories[0] : 'Unknown';
+    const categoryToColor = {
+      'Grocery': { color: 'lightblue' },
+      'Restaurant': { color: 'orange' },
+      'Cafe': { color: 'pink' },
+      'Bakery': { color: 'brown' },
+      'Florist': { color: 'purple' },
+      'Butcher': { color: 'red' },
+      'Fishmonger': { color: 'blue' },
+      'Unknown': { color: '#F08080' } // lightred
+    };
+    const color = categoryToColor[category]?.color || 'lightgreen';
+    const displayRating = rating || 0;
+
     return (
       <Marker
         key={shopId}
         coordinate={{ latitude, longitude }}
-        pinColor="lightgreen"
+        pinColor={color}
       >
-        <View style={[styles.clusterContainer, { backgroundColor: 'lightgreen' }]}> 
-          <Text style={styles.clusterText}>{rating}</Text>
+        <View style={[styles.clusterContainer, { backgroundColor: color }]}> 
+          <Text style={styles.clusterText}>{displayRating}</Text>
         </View>
       </Marker>
     );
   };
 
+  // Define the debouncedUpdateClusters function using useMemo
+  const debouncedUpdateClusters = useMemo(
+    () => debounce((rgn) => {
+      updateClusters(rgn);
+    }, 500),
+    []
+  );
+
   return (
     <MapView
       style={StyleSheet.absoluteFillObject}
       initialRegion={region}
-      region={region}
       onRegionChangeComplete={(newRegion) => {
         setRegion(newRegion);
-        updateClusters(newRegion);
+        debouncedUpdateClusters(newRegion);
       }}
       showsUserLocation={true}
     >
