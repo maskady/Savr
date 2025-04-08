@@ -10,6 +10,7 @@ import { businessCategories } from '../constants/businessCategories';
 import { getShops } from '../utils/api'; // import the API call
 import { SettingsContext } from '../contexts/SettingsContext';
 import styles from '../styles/AppStyles';
+import MapDemo from '../components/MapDemo';
 
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
@@ -40,6 +41,7 @@ const MainScreen = () => {
             latitudeDelta: 0.09,
             longitudeDelta: 0.04,
           };
+          console.log('Updating current location...');
           setRegion(currentRegion);
         }
       }
@@ -64,14 +66,15 @@ const MainScreen = () => {
   };
 
   const renderItem = ({ item }) => (
-    <ListItem item={item} onSelect={handleSelect} region={region} />
+    <ListItem item={item} onSelect={handleSelect} region={region}/>
   );
 
   return (
+    //<MapDemo></MapDemo>
     <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
       <Header />
       <CategoryFilter categories={businessCategories} />
-      <MapSection region={region} listings={shops} setRegion={setRegion} />
+      <MapSection region={region} setRegion={setRegion} shops={shops} />
       <BottomSheet> 
         <FlatList
           data={shops}
