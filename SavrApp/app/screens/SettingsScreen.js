@@ -6,6 +6,7 @@ import { getToken, storeToken, removeToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import RoleDropdown from "../components/RoleDropdown";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SettingsScreen = ( ) => {
   const [user, setUser] = useState(null);
@@ -234,6 +235,17 @@ const SettingsScreen = ( ) => {
     setConfirmNewPassword("");
   };
 
+
+  const clearStorage = async () => {
+    try {
+      await AsyncStorage.clear();
+      console.log('AsyncStorage vidé.');
+    } catch (e) {
+      console.error('Erreur lors du vidage du stockage :', e);
+    }
+  };
+
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.settingsGlobalContainer}>
@@ -386,6 +398,10 @@ const SettingsScreen = ( ) => {
               </View>
             )
           }
+
+          <TouchableOpacity onPress={clearStorage} style={styles.input}>
+            <Text>Vider le stockage</Text>
+          </TouchableOpacity>
         </View>
         <View />
       </View>
