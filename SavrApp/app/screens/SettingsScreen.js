@@ -201,21 +201,14 @@ const SettingsScreen = ( ) => {
     }
 
     try {
-      // TODO : Replace with our API endpoint
-      // const response = await fetch("", {
-      //   method: "PUT",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Bearer ${await getToken()}`,
-      //   },
-      //   body: JSON.stringify({ "oldPassword": actualPassword, "newPassword": newPassword }),
-      // });
-
-      // Fake response for demonstration purposes
-      const response = {
-        status: 200,
-        ok: true,
-      }
+      const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/user/me/password", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${await getToken()}`,
+        },
+        body: JSON.stringify({ "oldPassword": actualPassword, "newPassword": newPassword }),
+      });
 
       if (response.status === 401) {
         alert("Incorrect password");
