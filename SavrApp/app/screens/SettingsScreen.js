@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { View, Appearance, SafeAreaView, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
@@ -8,6 +8,7 @@ import getStyles from "../styles/SettingsStyles";
 import RoleDropdown from "../components/RoleDropdown";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
+import { AuthContext } from "../contexts/AuthContext";
 
 const SettingsScreen = ( ) => {
   const [user, setUser] = useState(null);
@@ -35,6 +36,7 @@ const SettingsScreen = ( ) => {
 
   const [role, setRole] = useState(null);
 
+  const { logout } = useContext(AuthContext);
 
   const togglePasswordVisibility = (field) => {
     if (field === "actual") {
@@ -231,14 +233,6 @@ const SettingsScreen = ( ) => {
   };
 
 
-  const clearStorage = async () => {
-    try {
-      await AsyncStorage.clear();
-      console.log('AsyncStorage vidé.');
-    } catch (e) {
-      console.error('Erreur lors du vidage du stockage :', e);
-    }
-  };
 
   const handleCreateShop = () => {
     alert('Create Store button pressed');
@@ -407,8 +401,8 @@ const SettingsScreen = ( ) => {
             )
           }
 
-          <TouchableOpacity onPress={clearStorage} style={styles.input}>
-            <Text>Vider le stockage</Text>
+          <TouchableOpacity onPress={logout} style={styles.input}>
+            <Text>Log out</Text>
           </TouchableOpacity>
         </View>
         <View />
