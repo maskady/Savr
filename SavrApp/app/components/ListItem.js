@@ -3,13 +3,13 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { SettingsContext } from '../contexts/SettingsContext';
 import { getDistance } from 'geolib';
 
-const ListItem = ({ item, onSelect, region }) => {
+const ListItem = ({ shop, onSelect, region }) => {
   const {darkMode} = useContext(SettingsContext);
 
   let distance = null;
   let distanceUnit = null;
-  if (region.latitude && item.latitude && region.longitude && item.longitude) {
-    distance = getDistance({latitude: region.latitude, longitude: region.longitude}, {latitude: item.latitude, longitude: item.longitude});
+  if (region.latitude && shop.latitude && region.longitude && shop.longitude) {
+    distance = getDistance({latitude: region.latitude, longitude: region.longitude}, {latitude: shop.latitude, longitude: shop.longitude});
     if (distance > 1000) {
       distance = (distance / 1000).toFixed(1); // Convert to km and round to 1 decimal place
       distanceUnit = 'km';
@@ -21,15 +21,15 @@ const ListItem = ({ item, onSelect, region }) => {
 
   return (
     <View style={[styles.listItem, { backgroundColor: darkMode ? '#1e1e1e' : '#fff' }]}>
-      {item.image && <Image source={item.image} style={styles.listItemImage} />}
+      {shop.image && <Image source={shop.image} style={styles.listItemImage} />}
       <View style={styles.listItemInfo}>
-        <Text style={[styles.listItemTitle, { color: darkMode ? '#fff' : '#000' }]}>{item.name}</Text>
+        <Text style={[styles.listItemTitle, { color: darkMode ? '#fff' : '#000' }]}>{shop.name}</Text>
         <Text style={[styles.listItemSubtitle, { color: darkMode ? '#bbb' : '#666' }]}>
-          {item.rating ? `${item.rating} (${item.ratings} reviews) • ` : "(0 reviews) • "}{distance && `${distance} ${distanceUnit}`}
+          {shop.rating ? `${shop.rating} (${shop.ratings} reviews) • ` : "(0 reviews) • "}{distance && `${distance} ${distanceUnit}`}
         </Text>
-        {/*<Text style={[styles.listItemPrice, { color: darkMode ? '#fff' : '#000' }]}>${item.price}</Text>*/}
+        {/*<Text style={[styles.listItemPrice, { color: darkMode ? '#fff' : '#000' }]}>${shop.price}</Text>*/}
       </View>
-      <TouchableOpacity style={[styles.selectButton, { backgroundColor: darkMode ? '#6200ea' : '#007AFF' }]} onPress={() => onSelect(item)}>
+      <TouchableOpacity style={[styles.selectButton, { backgroundColor: darkMode ? '#6200ea' : '#007AFF' }]} onPress={() => onSelect(shop)}>
         <Text style={styles.selectButtonText}>Select</Text>
       </TouchableOpacity>
     </View>

@@ -105,6 +105,23 @@ const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  map: {
+    flex: 1,
+  }
+});
+
+const localStyles = StyleSheet.create({
+  mapContainer: {
+    flex: 1,
+    position: 'relative'
+  },
+  searchOverlay: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    right: 10,
+    zIndex: 100,
   }
 });
 

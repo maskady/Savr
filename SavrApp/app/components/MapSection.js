@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Supercluster from 'supercluster';
-import { debounce } from 'lodash';
+import { debounce, throttle } from 'lodash';
 
-const MapSection = ({ region, setRegion, shops }) => {
+const MapSection = ({ region, setRegion, shops, onRegionChange }) => {
 
   const [clusters, setClusters] = useState([]);
 
@@ -122,13 +122,19 @@ const MapSection = ({ region, setRegion, shops }) => {
 
   return (
     <MapView
-      style={StyleSheet.absoluteFillObject}
+      style={styles.map}
       initialRegion={region}
       onRegionChangeComplete={(newRegion) => {
         setRegion(newRegion);
         debouncedUpdateClusters(newRegion);
+        onRegionChange && onRegionChange(newRegion);
       }}
       showsUserLocation={true}
+      showsCompass={true}
+      showsMyLocationButton={true}
+      showsBuildings={true}
+      showsScale={true}
+      showsMyLocation={true}
     >
       {clusters.map(cluster => renderMarker(cluster))}
     </MapView>
@@ -146,7 +152,10 @@ const styles = StyleSheet.create({
   clusterText: {
     color: '#fff',
     fontWeight: 'bold'
-  }
+  },
+  map: {
+    flex: 1,
+  },
 });
 
 export default MapSection;

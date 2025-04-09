@@ -39,6 +39,7 @@
     "expo-system-ui": "~4.0.8",
     "expo-web-browser": "~14.0.2",
     "geolib": "^3.3.4",
+    "haversine-distance": "^1.2.3",
     "i18n": "^0.15.1",
     "i18next": "^24.2.3",
     "lucide-react-native": "^0.484.0",
