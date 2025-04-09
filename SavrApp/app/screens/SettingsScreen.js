@@ -253,6 +253,7 @@ const SettingsScreen = ( ) => {
           <RoleDropdown
             selectedRole={role}
             onSelectRole={setRole}
+            highestRole={user.roleId}
           />
 
           <View style={[styles.input, styles.editableInputContainer]}>

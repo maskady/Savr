@@ -3,20 +3,20 @@ import { View, Text, TouchableOpacity, FlatList, Appearance } from 'react-native
 import { MaterialIcons } from '@expo/vector-icons'; // pour une icône de flèche
 import getStyles from '../styles/SettingsStyles';
 
-const fetchRoles = async () => {
-  // Simulate an API call to fetch roles
-  // const response = await fetch("", {
-  //   method: 'GET',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  // });
-  // const data = await response.json();
-  // return data.roles;
-  return ['admin', 'manager', 'shop owner', 'customer'];
+const whichRoles = (highestRole) => {
+  if (highestRole === 'admin') {
+    return ['admin', 'manager', 'shop owner', 'user'];
+  } else if (highestRole === 'manager') {
+    return ['manager', 'shop owner', 'user'];
+  }
+  else if (highestRole === 'shop owner') {
+    return ['shop owner', 'user'];
+  } else {
+    return ['user'];
+  }
 }
 
-export default function RoleDropdown({ selectedRole, onSelectRole }) {
+export default function RoleDropdown({ selectedRole, onSelectRole, highestRole }) {
   const [isOpen, setIsOpen] = useState(false);
   const [styles, setStyles] = useState(getStyles());
   const [roles, setRoles] = useState([]);
@@ -36,7 +36,7 @@ export default function RoleDropdown({ selectedRole, onSelectRole }) {
     };
 
     const loadRoles = async () => {
-      const fetchedRoles = await fetchRoles();
+      const fetchedRoles = whichRoles(highestRole); 
       setRoles(fetchedRoles);
     };
   
@@ -50,7 +50,7 @@ export default function RoleDropdown({ selectedRole, onSelectRole }) {
   }, []);
 
   return (
-    <View style={styles.dropdownContainer}>
+    <View style={[styles.dropdownContainer, roles[0] === 'user' ? { display: 'none' } : {}]}>
       <TouchableOpacity style={styles.dropdownHeader} onPress={toggleDropdown}>
         <Text style={styles.selectedText}>
           {selectedRole || 'Sélectionner un rôle'}
