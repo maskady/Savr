@@ -6,7 +6,7 @@ import { getToken, storeToken, removeToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import RoleDropdown from "../components/RoleDropdown";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SettingsScreen = ( ) => {
   const [user, setUser] = useState(null);
