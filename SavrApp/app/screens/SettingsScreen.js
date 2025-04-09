@@ -90,7 +90,6 @@ const SettingsScreen = ( ) => {
         const data = dataResponse.data;
 
         if (!response.ok) {
-          console.log("Response not ok:", await getToken());
           console.log("Response not ok:", response.status, response.statusText);
           throw new Error("Failed to fetch user data");
         }
@@ -132,36 +131,48 @@ const SettingsScreen = ( ) => {
 
   const handleSave = async () => {
     try {
-      // TODO : Replace with our API endpoint
-      // const response = await fetch("", {
-      //   method: "PUT",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Bearer ${await getToken()}`,
-      //   },
-      //   body: JSON.stringify({ fullName, email }),
-      // });
-      //
-      // const data = await response.json();
-
-      const response = {
-        ok: true,
-        data: {
-          token: "new_token",
+      const token = await getToken();
+      const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/user/me/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      }
-      const data = response.data;
+        body: JSON.stringify({ firstName, lastName, email}),
+      });
+    
+      const data = await response.json();
 
       if (!response.ok) {
         throw new Error("Failed to update user data");
       }
 
       // Update the token with the new data
-      await removeToken();
-      await storeToken(data.token);
-      console.log("Mise à jour avec succès");
+      const responseNewToken = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/refresh-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ token }),
+      });
+
+      const dataNewToken = await responseNewToken.json();
+      if (!responseNewToken.ok) {
+        console.error("Failed to refresh token:", dataNewToken.message);
+        console.error("Response:", responseNewToken.status, responseNewToken.statusText);
+        return;
+      }
+      console.log("Token refreshed successfully:", dataNewToken);
+      if (dataNewToken.data.token) {
+        await removeToken();
+        await storeToken(dataNewToken.data.token);
+      }
+      else{
+        throw new Error("Token not found in response data");
+      }
+      console.log("User data updated successfully:", data);
     } catch (error) {
-      console.error("Erreur de mise à jour :", error);
+      console.error("Error updating user data:", error);
     }
 
     // After saving, set the editable states to false
