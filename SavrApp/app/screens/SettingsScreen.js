@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Appearance, SafeAreaView, Text, ActivityIndicator, TouchableOpacity, Linking } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { View, Appearance, SafeAreaView, Text, ActivityIndicator, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { getToken, storeToken, removeToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
