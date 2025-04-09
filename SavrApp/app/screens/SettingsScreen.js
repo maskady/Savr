@@ -242,10 +242,12 @@ const SettingsScreen = ( ) => {
 
   const handleCreateShop = () => {
     alert('Create Store button pressed');
+    // TODO: navigate to the create store screen
   };
   
   const handleCreateCompany = () => {
     alert('Create Company button pressed');
+    // TODO: navigate to the create company screen
   };
 
   return (
