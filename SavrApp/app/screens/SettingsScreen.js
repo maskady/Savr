@@ -7,6 +7,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import RoleDropdown from "../components/RoleDropdown";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddOptionsDropdown from "../components/AddOptionsDropdown";
 
 const SettingsScreen = ( ) => {
   const [user, setUser] = useState(null);
@@ -239,6 +240,15 @@ const SettingsScreen = ( ) => {
     }
   };
 
+  const handleCreateStore = () => {
+    alert('Action', 'Création d\'un nouveau magasin');
+    // Naviguer vers l'écran de création de magasin ou ouvrir un modal
+  };
+  
+  const handleCreateBrand = () => {
+    alert('Action', 'Création d\'une nouvelle marque');
+    // Naviguer vers l'écran de création de marque ou ouvrir un modal
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -248,6 +258,11 @@ const SettingsScreen = ( ) => {
           <Text style={styles.settingsTitle}>
             Personal information
           </Text>
+          <AddOptionsDropdown 
+            onCreateStore={handleCreateStore}
+            onCreateBrand={handleCreateBrand}
+            role={user.roleId}
+          />
         </View>
         <View style={styles.settingsFormContainer}>
           <RoleDropdown
@@ -257,8 +272,6 @@ const SettingsScreen = ( ) => {
           />
 
           <View style={[styles.input, styles.editableInputContainer]}>
-            
-
             <TextInput
               value={firstName}
               onChangeText={setFirstName}
