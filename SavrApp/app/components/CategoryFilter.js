@@ -2,8 +2,9 @@ import React, {useContext} from 'react';
 import { FlatList, TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SettingsContext } from '../contexts/SettingsContext';
+import Search from './Search';
 
-const CategoryFilter = ({ categories }) => {
+const CategoryFilter = ({ categories, searchActive, setSearchActive, searchQuery, setSearchQuery }) => {
   const { darkMode } = useContext(SettingsContext);
 
   const renderItem = ({ item }) => (
@@ -13,6 +14,7 @@ const CategoryFilter = ({ categories }) => {
     </TouchableOpacity>
   );
   return (
+    
     <View style={[styles.categoryContainer, { borderBottomColor: darkMode ? '#555' : '#ccc', backgroundColor: darkMode ? '#121212' : '#fff' }]}>
       <FlatList
         horizontal
@@ -21,6 +23,12 @@ const CategoryFilter = ({ categories }) => {
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem}
       />
+      <Search 
+            searchActive={searchActive} 
+            setSearchActive={setSearchActive} 
+            searchQuery={searchQuery} 
+            setSearchQuery={setSearchQuery}
+          />
     </View>
   );
 };
@@ -31,6 +39,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderBottomWidth: 0.5,
     zIndex: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   categoryButton: {
     flexDirection: 'row',
