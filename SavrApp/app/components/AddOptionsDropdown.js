@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 
-const AddOptionsDropdown = ({ onCreateStore, onCreateBrand, role }) => {
+const AddOptionsDropdown = ({ onCreateCompany, onCreateShop, role }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownHeight = useRef(new Animated.Value(0)).current;
   
@@ -54,7 +54,7 @@ const AddOptionsDropdown = ({ onCreateStore, onCreateBrand, role }) => {
       ]}>
         <TouchableOpacity
           style={styles.option}
-          onPress={() => handleOptionSelect(onCreateStore)}
+          onPress={() => handleOptionSelect(onCreateCompany)}
         >
           <Text style={styles.optionText}>Create a new company</Text>
         </TouchableOpacity>
@@ -63,7 +63,7 @@ const AddOptionsDropdown = ({ onCreateStore, onCreateBrand, role }) => {
           role === 'admin' || role === 'company' ? (
             <TouchableOpacity
               style={[styles.option, { borderBottomWidth: 0, paddingBottom: 0 }]}
-              onPress={() => handleOptionSelect(onCreateBrand)}
+              onPress={() => handleOptionSelect(onCreateShop)}
             >
               <Text style={styles.optionText}>Create a new shop</Text>
             </TouchableOpacity>

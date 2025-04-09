@@ -240,14 +240,12 @@ const SettingsScreen = ( ) => {
     }
   };
 
-  const handleCreateStore = () => {
-    alert('Action', 'Création d\'un nouveau magasin');
-    // Naviguer vers l'écran de création de magasin ou ouvrir un modal
+  const handleCreateShop = () => {
+    alert('Create Store button pressed');
   };
   
-  const handleCreateBrand = () => {
-    alert('Action', 'Création d\'une nouvelle marque');
-    // Naviguer vers l'écran de création de marque ou ouvrir un modal
+  const handleCreateCompany = () => {
+    alert('Create Company button pressed');
   };
 
   return (
@@ -259,8 +257,8 @@ const SettingsScreen = ( ) => {
             Personal information
           </Text>
           <AddOptionsDropdown 
-            onCreateStore={handleCreateStore}
-            onCreateBrand={handleCreateBrand}
+            onCreateCompany={handleCreateCompany}
+            onCreateShop={handleCreateShop}
             role={user.roleId}
           />
         </View>
