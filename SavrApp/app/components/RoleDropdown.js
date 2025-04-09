@@ -5,12 +5,12 @@ import getStyles from '../styles/SettingsStyles';
 
 const whichRoles = (highestRole) => {
   if (highestRole === 'admin') {
-    return ['admin', 'manager', 'shop owner', 'user'];
-  } else if (highestRole === 'manager') {
-    return ['manager', 'shop owner', 'user'];
+    return ['admin', 'company', 'shop', 'user'];
+  } else if (highestRole === 'company') {
+    return ['company', 'shop', 'user'];
   }
-  else if (highestRole === 'shop owner') {
-    return ['shop owner', 'user'];
+  else if (highestRole === 'shop') {
+    return ['shop', 'user'];
   } else {
     return ['user'];
   }
