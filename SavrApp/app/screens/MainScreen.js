@@ -47,14 +47,8 @@ const MainScreen = () => {
     // Function to calculate radius (in kilometers)
   const calculateRadius = (region) => {
     const { latitude, latitudeDelta, longitudeDelta } = region;
-
-    // Approximate vertical distance in kilometers (1 deg latitude = ~111 km)
     const verticalDistanceKm = latitudeDelta * 111;
-
-    // Approximate horizontal distance, corrected by latitude (degrees longitude shrink toward poles)
     const horizontalDistanceKm = longitudeDelta * 111 * Math.cos(latitude * (Math.PI / 180));
-
-    // Choose the largest dimension to ensure full coverage
     const computedRadius = Math.min(Math.max(verticalDistanceKm, horizontalDistanceKm) / 2, 100);
 
     console.log('Computed Radius:', computedRadius, 'km');
@@ -63,7 +57,7 @@ const MainScreen = () => {
   };
 
   const fetchShopsIfNeeded = (region) => {
-    
+
     // Calculate the vertical distance of the visible map in kilometers:
     const computedRadius = calculateRadius(region);
 
