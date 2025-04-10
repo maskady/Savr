@@ -5,8 +5,6 @@ import { TextInput } from "react-native-gesture-handler";
 import { getToken, storeToken, removeToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
-import RoleDropdown from "../components/RoleDropdown";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
 import { AuthContext } from "../contexts/AuthContext";
 
@@ -33,8 +31,6 @@ const SettingsScreen = ( ) => {
   const actualPasswordRef = useRef(null);
   const newPasswordRef = useRef(null);
   const confirmNewPasswordRef = useRef(null);
-
-  const [role, setRole] = useState(null);
 
   const { logout } = useContext(AuthContext);
 
@@ -259,12 +255,6 @@ const SettingsScreen = ( ) => {
           />
         </View>
         <View style={styles.settingsFormContainer}>
-          <RoleDropdown
-            selectedRole={role}
-            onSelectRole={setRole}
-            highestRole={user.roleId}
-          />
-
           <View style={[styles.input, styles.editableInputContainer]}>
             <TextInput
               value={firstName}
