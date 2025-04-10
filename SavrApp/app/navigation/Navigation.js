@@ -6,7 +6,7 @@ import ErrorScreen from "../screens/ErrorScreen";
 import { AuthContext } from "../contexts/AuthContext";
 import SettingsScreen from "../screens/SettingsScreen";
 import CompanyListScreen from "../screens/CompanyListScreen";
-
+import ShopScreen from "../screens/ShopScreen";
 
 const RootStack = createStackNavigator();
 
@@ -26,6 +26,7 @@ const Navigation = () => {
         <RootStack.Screen name="Error" component={ErrorScreen} />
         <RootStack.Screen name="Settings" component={SettingsScreen} />
         <RootStack.Screen name="CompanyList" component={CompanyListScreen} />
+        <RootStack.Screen name="ShopScreen" component={ShopScreen} />
       </RootStack.Navigator>
   );
 };

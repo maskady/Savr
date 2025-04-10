@@ -15,7 +15,8 @@ import { checkUserExists } from "../utils/authApi";
 import { useTranslation, Trans } from 'react-i18next';
 import { SettingsContext } from "../contexts/SettingsContext";
 import styles from "../styles/AuthStyles";
-import ImageUploadScreen from "./ImageUploadScreen";
+
+
 const WelcomeScreen = () => {
   const [email, setEmail] = useState("");
   const { darkMode } = useContext(SettingsContext);
@@ -58,6 +59,8 @@ const WelcomeScreen = () => {
     }
   };
 
+
+
   const Colors = {
     Black: "black",
     White: "white",
@@ -71,7 +74,6 @@ const WelcomeScreen = () => {
         { backgroundColor: darkMode ? "#121212" : Colors.White },
       ]}
     >
-      {/* <ImageUploadScreen /> */}
 
       <StatusBar
         barStyle={darkMode ? "light-content" : "dark-content"}
@@ -86,12 +88,7 @@ const WelcomeScreen = () => {
           <Text style={[styles.heading, { color: darkMode ? Colors.White : Colors.Black }]}>
             {t('welcome.title')}
           </Text>
-          <Text
-            style={[
-              styles.subheading,
-              { color: darkMode ? "#bbb" : "#666" },
-            ]}
-          >
+          <Text style={[ styles.subheading, { color: darkMode ? "#bbb" : "#666" }, ]} >
             {t('welcome.subtitle')}
           </Text>
 

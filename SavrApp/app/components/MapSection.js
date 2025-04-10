@@ -104,6 +104,7 @@ const MapSection = ({ region, setRegion, shops, onRegionChange }) => {
         key={shopId}
         coordinate={{ latitude, longitude }}
         pinColor={color}
+        onPress={() => onShopSelect && onShopSelect(shop)}
       >
         <View style={[styles.clusterContainer, { backgroundColor: color }]}> 
           <Text style={styles.clusterText}>{displayRating}</Text>

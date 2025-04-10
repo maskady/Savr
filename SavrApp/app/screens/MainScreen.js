@@ -3,6 +3,7 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 import { throttle } from 'lodash';
 import haversine from 'haversine-distance';
+import { useNavigation } from '@react-navigation/native';
 import Search from '../components/Search';
 import CategoryFilter from '../components/CategoryFilter';
 import MapSection from '../components/MapSection';
@@ -12,9 +13,14 @@ import { businessCategories } from '../constants/businessCategories';
 import { getShops } from '../utils/api'; // import the API call
 import { SettingsContext } from '../contexts/SettingsContext';
 import styles from '../styles/AppStyles';
+import ImageUploadScreen from './ImageUploadScreen';
+import ImageUploadModal from '../components/ImageUploadModal';
+import { Button, Text } from 'react-native';
+
 
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
+  const navigation = useNavigation();
   
   // Default location (Oulu, Finland)
   const [region, setRegion] = useState({
@@ -29,6 +35,7 @@ const MainScreen = () => {
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
 
   const fetchShopsThrottled = useMemo(() => throttle(async (region, radius) => {
     const data = await getShops(region.latitude, region.longitude, radius);
@@ -80,6 +87,7 @@ const MainScreen = () => {
   // Handle shop selection
   const handleSelect = (shop) => {
     console.log('Selected:', shop.name);
+    navigation.navigate('ShopScreen', { shop });
   };
 
   const renderItem = ({ item }) => (
@@ -95,7 +103,7 @@ const MainScreen = () => {
             searchQuery={searchQuery} 
             setSearchQuery={setSearchQuery} />
       <View style={localStyles.mapContainer}>
-        <MapSection region={region} setRegion={setRegion} shops={shops} onRegionChange={fetchShopsIfNeeded} />
+        <MapSection region={region} setRegion={setRegion} shops={shops} onRegionChange={fetchShopsIfNeeded} onShopSelect={handleSelect} />
         <View style={localStyles.searchOverlay}>
           
         </View>
@@ -106,7 +114,7 @@ const MainScreen = () => {
           keyExtractor={(shop) => shop.id.toString()}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 16 }}
+          contentContainerStyle={{ paddingTop: 14, paddingHorizontal: 1 }}
         />
       </BottomSheet>
     </View>

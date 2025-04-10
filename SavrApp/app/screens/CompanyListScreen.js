@@ -10,7 +10,6 @@ const CompanyListScreen = () => {
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
-      console.log("Theme changed:", colorScheme);
       if (colorScheme) {
         setCompanyStyles(getStyles()); 
       }
