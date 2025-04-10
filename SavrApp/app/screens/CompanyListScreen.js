@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Appearance } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
+import getStyles from '../styles/CompanyStyles'; 
 
 const CompanyListScreen = () => {
   const theme = Appearance.getColorScheme();
@@ -127,7 +128,7 @@ const CompanyListScreen = () => {
                 style={companyStyles.editButton}
                 onPress={() => handleEditCompany(company.id)}
               >
-                <Feather name="edit" size={20} color={companyStyles.isDarkMode ? 'white' : '#555'} />
+                <Feather name="edit" size={20} color={companyStyles.isDarkMode ? 'white' : 'black'} />
               </TouchableOpacity>
             </View>
           ))

@@ -34,7 +34,7 @@ const getStyles = () => {
       fontWeight: 'bold',
     },
     addButton: {
-      backgroundColor: '#ff4d4d',
+      backgroundColor: '#000',
       borderRadius: 50,
       width: 40,
       height: 40,
