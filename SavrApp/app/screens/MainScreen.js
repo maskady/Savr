@@ -32,6 +32,9 @@ const MainScreen = () => {
   
   // State for the shops data from the API
   const [shops, setShops] = useState([]);
+  const [allShops, setAllShops] = useState([]);
+
+
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,6 +43,12 @@ const MainScreen = () => {
   const fetchShopsThrottled = useMemo(() => throttle(async (region, radius) => {
     const data = await getShops(region.latitude, region.longitude, radius);
     setShops(data);
+
+    const allData = [...allShops, ...data].filter((shop, index, self) =>
+      index === self.findIndex((t) => t.id === shop.id)
+    );
+    setAllShops(allData);
+
     setLastFetchedRegion(region);
     if (data?.length > 0) console.log('Fetched shops (first one):', data[0]);
   }, 500), []);
@@ -116,7 +125,7 @@ const MainScreen = () => {
             searchQuery={searchQuery} 
             setSearchQuery={setSearchQuery} />
       <View style={localStyles.mapContainer}>
-        <MapSection region={region} setRegion={setRegion} shops={shops} onRegionChange={fetchShopsIfNeeded} onShopSelect={handleSelect} />
+        <MapSection region={region} setRegion={setRegion} shops={allShops} onRegionChange={fetchShopsIfNeeded} onShopSelect={handleSelect} />
         <View style={localStyles.searchOverlay}>
           
         </View>
