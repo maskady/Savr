@@ -115,7 +115,7 @@ const SettingsDropdown = () => {
         
         <TouchableOpacity
             style={[styles.option, { borderBottomWidth: 0, paddingBottom: 0 }]}
-            onPress={() => handleOptionSelect(() => handleAlert('Company Settings'))}
+            onPress={() => handleOptionSelect(() => navigation.navigate('CompanyList'))}
         >
             <Text style={styles.optionText}>Company Settings</Text>
         </TouchableOpacity>
