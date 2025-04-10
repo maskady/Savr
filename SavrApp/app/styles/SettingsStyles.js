@@ -214,6 +214,19 @@ const getStyles = () => {
       fontFamily: 'PoppinsRegular',
       color: isDarkMode ? Colors.White : Colors.Black,
     },
+    logoutButton: {
+      backgroundColor: "#ff4d4d",
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      alignItems: "center",
+      marginVertical: 10,
+    },
+    logoutButtonText: {
+      color: "#fff",
+      fontSize: 18,
+      fontWeight: "bold",
+    },
   });
 }
 

@@ -391,8 +391,10 @@ const SettingsScreen = ( ) => {
             )
           }
 
-          <TouchableOpacity onPress={logout} style={styles.input}>
-            <Text>Log out</Text>
+          <TouchableOpacity onPress={logout} style={[styles.input, styles.logoutButton]}>
+            <Text style={styles.logoutButtonText}>
+              Log out
+            </Text>
           </TouchableOpacity>
         </View>
         <View />
