@@ -44,18 +44,38 @@ const MainScreen = () => {
     if (data?.length > 0) console.log('Fetched shops (first one):', data[0]);
   }, 500), []);
 
+    // Function to calculate radius (in kilometers)
+  const calculateRadius = (region) => {
+    const { latitude, latitudeDelta, longitudeDelta } = region;
+
+    // Approximate vertical distance in kilometers (1 deg latitude = ~111 km)
+    const verticalDistanceKm = latitudeDelta * 111;
+
+    // Approximate horizontal distance, corrected by latitude (degrees longitude shrink toward poles)
+    const horizontalDistanceKm = longitudeDelta * 111 * Math.cos(latitude * (Math.PI / 180));
+
+    // Choose the largest dimension to ensure full coverage
+    const computedRadius = Math.min(Math.max(verticalDistanceKm, horizontalDistanceKm) / 2, 100);
+
+    console.log('Computed Radius:', computedRadius, 'km');
+
+    return computedRadius;
+  };
+
   const fetchShopsIfNeeded = (region) => {
+    
     // Calculate the vertical distance of the visible map in kilometers:
-    const computedRadius = Math.min(region.latitudeDelta * 111, 100);
-    console.log('Computed radius:', region.latitudeDelta * 111, 'km');
+    const computedRadius = calculateRadius(region);
 
     // If no previous region or if the user has panned sufficiently (threshold: one-third of computed radius in meters), then fetch
-    if (!lastFetchedRegion || haversine(
-      { latitude: region.latitude, longitude: region.longitude },
-      { latitude: lastFetchedRegion.latitude, longitude: lastFetchedRegion.longitude }
-    ) > computedRadius * 1000 / 3) {
-      fetchShopsThrottled(region, computedRadius);
-    }
+    // if (!lastFetchedRegion || haversine(
+    //   { latitude: region.latitude, longitude: region.longitude },
+    //   { latitude: lastFetchedRegion.latitude, longitude: lastFetchedRegion.longitude }
+    // ) > computedRadius * 1000 / 3) {
+    //   fetchShopsThrottled(region, computedRadius);
+    // }
+
+    fetchShopsThrottled(region, computedRadius);
   };
 
   useEffect(() => {
