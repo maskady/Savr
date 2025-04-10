@@ -90,7 +90,6 @@ const MainScreen = () => {
           setRegion(currentRegion);
         }
       }
-      console.log('Current region:', currentRegion);
       
       // Now fetch the shops using the current region.
       // Adjust the radius value as necessary.
