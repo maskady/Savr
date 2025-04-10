@@ -12,18 +12,20 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import styles from '../styles/AppStyles';
+import { useNavigation } from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('window').width;
 
 const DashboardScreen = () => {
   const { t } = useTranslation();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>{t("appName")}</Text>
-        <TouchableOpacity style={styles.settingsButton}>
+        <TouchableOpacity style={styles.settingsButton} onPress={() => {navigation.navigate('Settings')}}>
           <Ionicons name="settings-sharp" size={24} color="#000" />
         </TouchableOpacity>
       </View>
