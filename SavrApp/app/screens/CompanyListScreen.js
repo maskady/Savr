@@ -57,6 +57,36 @@ const CompanyListScreen = () => {
       address: '555 Investment Place',
       city: 'Chicago, IL 60602'
     },
+    {
+      id: '6',
+      name: 'Health & Wellness Corp.',
+      address: '888 Health Drive',
+      city: 'Miami, FL 33101'
+    },
+    {
+      id: '7',
+      name: 'Travel & Leisure Group',
+      address: '222 Adventure Road',
+      city: 'Seattle, WA 98101'
+    },
+    {
+      id: '8',
+      name: 'E-commerce Solutions Ltd.',
+      address: '111 Online Plaza',
+      city: 'Boston, MA 02108'
+    },
+    {
+      id: '9',
+      name: 'Real Estate Holdings LLC',
+      address: '777 Property Lane',
+      city: 'Denver, CO 80202'
+    },
+    {
+      id: '10',
+      name: 'Food & Beverage Innovations',
+      address: '999 Culinary Court',
+      city: 'Portland, OR 97201'
+    },
   ]);
 
   // Function to handle adding a new company
