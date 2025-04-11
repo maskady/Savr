@@ -12,9 +12,6 @@ import { businessCategories } from '../constants/businessCategories';
 import { getShops } from '../utils/api';
 import { SettingsContext } from '../contexts/SettingsContext';
 import styles from '../styles/AppStyles';
-import ImageUploadScreen from './ImageUploadScreen';
-import ImageUploadModal from '../components/ImageUploadModal';
-import { Button, Text } from 'react-native';
 
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
@@ -36,7 +33,7 @@ const MainScreen = () => {
   
   // Filtering related state
   const [activeCategories, setActiveCategories] = useState(
-    businessCategories.map((cat) => cat.id)
+    businessCategories?.map((cat) => cat.id)
   );
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
