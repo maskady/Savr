@@ -6,4 +6,14 @@ export const COLORS = {
     borderDark: "#444",
     textLight: "black",
     textDark: "white",
+    businesses: {
+      "restaurant": "green",
+      "cafe": "orange",
+      "butcher": "red",
+      "bakery": "brown",
+      "florist": "purple",
+      "fishmonger": "blue",
+      "grocery": "lightblue",
+      "canteen": "lightgreen",
+    },
   };
