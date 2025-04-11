@@ -62,6 +62,7 @@ const MainScreen = () => {
     return Math.min(Math.max(verticalDistanceKm, horizontalDistanceKm) / 2, 100);
   };
 
+
   // Corrected: Compare the current region with lastFetchedRegion
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
   const fetchShopsIfNeeded = (currentRegion) => {
