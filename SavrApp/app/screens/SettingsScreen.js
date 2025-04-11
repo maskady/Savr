@@ -40,6 +40,7 @@ const SettingsScreen = ( ) => {
       navigation.navigate("Auth");
     } catch (error) {
       console.error("Error removing token:", error);
+      navigation.navigate("Error", { error: "Failed to log out" });
     }
   };
 
