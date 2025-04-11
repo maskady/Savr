@@ -10,12 +10,8 @@ const AuthStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Welcome">
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
-      <Stack.Screen name="Login">
-        {props => <LoginScreen {...props} />}
-      </Stack.Screen>
-      <Stack.Screen name="Register">
-        {props => <RegisterScreen {...props} />}
-      </Stack.Screen>
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
     </Stack.Navigator>
   );
 };
