@@ -17,8 +17,6 @@ export let businessCategoriesColors = {}; // category id -> color
     name: "Other",
   });
 
-  console.log("[businessCategories] categoriesArray=", categoriesArray);
-
   // Convert the filtered array into a dictionary keyed by category id.
   businessCategories = {};
   categoriesArray.forEach((category) => {
@@ -38,6 +36,4 @@ export let businessCategoriesColors = {}; // category id -> color
     }
   });
 
-  console.log("[businessCategories] businessCategories=", businessCategories);
-  console.log("[businessCategories] businessCategoriesColors=", businessCategoriesColors);
 })();
