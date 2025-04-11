@@ -35,7 +35,7 @@ const CategoryFilter = ({ categories, searchActive, setSearchActive, searchQuery
 
 const styles = StyleSheet.create({
   categoryContainer: {
-    paddingVertical: 10,
+    paddingVertical: 3,
     paddingHorizontal: 16,
     borderBottomWidth: 0.5,
     zIndex: 20,
