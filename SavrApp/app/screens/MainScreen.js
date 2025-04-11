@@ -35,8 +35,9 @@ const MainScreen = () => {
   const [filteredShops, setFilteredShops] = useState([]);
   
   // Filtering related state
+  // Convert businessCategories from dict to array of keys for default active categories.
   const [activeCategories, setActiveCategories] = useState(
-    businessCategories.map((cat) => cat.id)
+    Object.keys(businessCategories)
   );
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,8 +63,7 @@ const MainScreen = () => {
     return Math.min(Math.max(verticalDistanceKm, horizontalDistanceKm) / 2, 100);
   };
 
-
-  // Corrected: Compare the current region with lastFetchedRegion
+  // Compare with last fetched region to decide whether to fetch shops
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
   const fetchShopsIfNeeded = (currentRegion) => {
     const computedRadius = calculateRadius(currentRegion);
@@ -100,10 +100,10 @@ const MainScreen = () => {
     })();
   }, []);
 
-  // Toggle the active/inactive state of a category
+  // Toggle the active/inactive state of a category.
+  // Note: Use a useEffect (below) to update filteredShops when activeCategories changes.
   const toggleCategory = (categoryId) => {
     console.log('Toggle category:', categoryId);
-    // Use functional update and let the useEffect update the filtered shops
     setActiveCategories((prev) =>
       prev.includes(categoryId)
         ? prev.filter((id) => id !== categoryId)
@@ -111,7 +111,7 @@ const MainScreen = () => {
     );
   };
 
-  // Update filtered shops whenever shops or activeCategories changes
+  // Update filtered shops whenever shops or activeCategories changes.
   useEffect(() => {
     const filtered = shops.filter((shop) => activeCategories.includes(shop.primaryCategory));
     if (activeCategories.includes('other')) {
@@ -134,7 +134,8 @@ const MainScreen = () => {
   return (
     <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
       <CategoryFilter
-        categories={businessCategories}
+        // Convert dictionary to array before passing.
+        categories={Object.values(businessCategories)}
         activeCategories={activeCategories}
         toggleCategory={toggleCategory}
         searchActive={searchActive}

@@ -31,14 +31,20 @@ const CategoryFilter = ({
         <MaterialIcons
           name={item.icon}
           size={20}
-          color={activeCategories.includes(item.id) ? (darkMode ? '#ccc' : '#333') : (darkMode ? '#888' : '#777')}
+          color={
+            activeCategories.includes(item.id)
+              ? darkMode ? '#ccc' : '#333'
+              : darkMode ? '#888' : '#777'
+          }
         />
       </View>
       <Text
         style={[
           styles.categoryText,
           {
-            color: activeCategories.includes(item.id) ? (darkMode ? '#ccc' : '#000') : (darkMode ? '#888' : '#777'),
+            color: activeCategories.includes(item.id)
+              ? darkMode ? '#ccc' : '#000'
+              : darkMode ? '#888' : '#777',
             textAlign: 'center',
           },
         ]}

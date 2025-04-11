@@ -313,9 +313,13 @@ const ShopScreen = () => {
               </View>
             )}
 
-            {shop.category && (
+            {/* Category */}
+            {
+              // get primary category name from businessCategories object 
+              // const primaryCategory = businessCategories[shop.primaryCategory] || shop.primaryCategory;
+              shop.primaryCategory && (
               <Text style={[styles.categoryText, { color: colors.subtext }]}>
-                {shop.category}
+                {shop.primaryCategory}
               </Text>
             )}
 
