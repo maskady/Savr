@@ -51,7 +51,7 @@ const ListItem = ({ shop, onSelect, region }) => {
       <View style={styles.listItemInfo}>
         <Text style={[styles.listItemTitle, { color: darkMode ? '#fff' : '#000' }]}>{shop.name}</Text>
         <Text style={[styles.listItemSubtitle, { color: darkMode ? '#bbb' : '#666' }]}>
-          {shop.rating ? `${shop.rating} (${shop.ratings_count || 0} reviews) • ` : "(0 reviews) • "}{distance && `${distance} ${distanceUnit}`}
+          {shop.rating ? `${shop.rating} (${shop.ratings || 0} reviews) • ` : "(0 reviews) • "}{distance && `${distance} ${distanceUnit}`}
         </Text>
         {shop.category && (
           <Text style={[styles.categoryText, { color: darkMode ? '#aaa' : '#888' }]}>

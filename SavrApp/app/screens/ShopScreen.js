@@ -22,8 +22,7 @@ import { ArrowLeft, Phone, MapPin, Share as ShareIcon, Star, Save, Pencil, X } f
 import { SettingsContext } from '../contexts/SettingsContext';
 import MapView, { Marker } from 'react-native-maps';
 import { getShopById, updateShop } from '../utils/api';
-import ImageGallery from '../components/ImageGallery';
-import ImageUploadModal from '../components/ImageUploadModal';
+import ImageManager from '../components/ImageManager';
 const { width } = Dimensions.get('window');
 
 const ShopScreen = () => {
@@ -38,20 +37,6 @@ const ShopScreen = () => {
   const [hasChanges, setHasChanges] = useState(false);
 
   const [editMode, setEditMode] = useState('view'); // view, edit, saving
-
-  // images
-  const [modalVisible, setModalVisible] = useState(false);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
-
-  const handleUploadSuccess = ({ fileUrl }) => {
-    setUploadedImageUrl(fileUrl);
-    console.log("uploadedImageUrl", uploadedImageUrl);
-
-    // update shop
-    const updatedShop = { ...shop, images: [...shop.images, { url: fileUrl, alt: 'Uploaded Image', type: 'uploaded' }] };
-    setShop(updatedShop);
-    setHasChanges(true);
-  };
 
   const handleInputChange = (field, value) => {
     setShop(prev => ({
@@ -72,7 +57,6 @@ const ShopScreen = () => {
   };
 
   useEffect(() => {
-
     setHasChanges(true);
 
     const fetchShopDetails = async () => {
@@ -134,7 +118,7 @@ const ShopScreen = () => {
     }
   };
 
-  const handleImagePress = (image) => {
+  const handleFullScreenImage = (image) => {
     setFullScreenImage(image);
   };
 
@@ -169,6 +153,14 @@ const ShopScreen = () => {
 
   const toggleEditMode = () => {
     setEditMode(editMode === 'view' ? 'edit' : 'view');
+  };
+
+  const handleImagesChange = (updatedImages) => {
+    setShop(prev => ({
+      ...prev,
+      images: updatedImages
+    }));
+    setHasChanges(true);
   };
 
   if (!shop) {
@@ -279,23 +271,14 @@ const ShopScreen = () => {
         </View>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Image Gallery */}
-          <ImageGallery
+          {/* Image Manager Component */}
+          <ImageManager
             images={shop.images}
             height={250}
-            onImagePress={handleImagePress}
+            editMode={editMode}
+            onImagesChange={handleImagesChange}
+            onImagePress={handleFullScreenImage}
           />
-
-          {editMode !== 'view' && (
-            <Button title="Upload Image" onPress={() => setModalVisible(true)} />
-          )}
-
-          <ImageUploadModal
-            visible={modalVisible}
-            onClose={() => setModalVisible(false)}
-            onUploadSuccess={handleUploadSuccess}
-          />
-
 
           {/* Shop Info */}
           <View style={[styles.infoContainer, { backgroundColor: colors.background }]}>
@@ -325,7 +308,7 @@ const ShopScreen = () => {
                   />
                 ))}
                 <Text style={[styles.ratingText, { color: colors.subtext }]}>
-                  {shop.rating.toFixed(1)} ({shop.ratings_count || 0} ratings)
+                  {shop.rating.toFixed(1)} ({shop.ratings || 0} ratings)
                 </Text>
               </View>
             )}

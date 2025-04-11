@@ -4,7 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import Supercluster from 'supercluster';
 import { debounce, throttle } from 'lodash';
 
-const MapSection = ({ region, setRegion, shops, onRegionChange }) => {
+const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) => {
 
   const [clusters, setClusters] = useState([]);
 
