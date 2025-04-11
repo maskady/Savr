@@ -3,6 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Supercluster from 'supercluster';
 import { debounce, throttle } from 'lodash';
+import { businessCategoriesColors } from '../constants/businessCategories';
 
 const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) => {
 
@@ -75,9 +76,9 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
               longitudeDelta: newLongitudeDelta
             });
           }}
-          pinColor="darkgreen"
+
         >
-          <View style={[styles.clusterContainer, { backgroundColor: 'darkgreen' }]}> 
+          <View style={[styles.clusterContainer, { backgroundColor: 'grey', borderColor: 'black' }]}> 
             <Text style={styles.clusterText}>{pointCount}</Text>
           </View>
         </Marker>
@@ -85,18 +86,8 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
     }
 
     const shop = shops.find(shop => shop.id === shopId) || {};
-    const category = shop.categories && shop.categories[0] ? shop.categories[0] : 'Unknown';
-    const categoryToColor = {
-      'Grocery': { color: 'lightblue' },
-      'Restaurant': { color: 'orange' },
-      'Cafe': { color: 'pink' },
-      'Bakery': { color: 'brown' },
-      'Florist': { color: 'purple' },
-      'Butcher': { color: 'red' },
-      'Fishmonger': { color: 'blue' },
-      'Unknown': { color: '#F08080' } // lightred
-    };
-    const color = categoryToColor[category]?.color || 'lightgreen';
+    const category = shop.primaryCategory ? shop.primaryCategory : 'Unknown';
+    const color = businessCategoriesColors[category] || 'lightgreen';
     const displayRating = rating || 0;
 
     return (

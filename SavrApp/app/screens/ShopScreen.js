@@ -65,7 +65,7 @@ const ShopScreen = () => {
       setLoading(true);
       try {
         const details = await getShopById(shop.id);
-        console.log("details", JSON.stringify(details, null, 2));
+        //console.log("details", JSON.stringify(details, null, 2));
         const data = details.data;
 
         if (data) {
