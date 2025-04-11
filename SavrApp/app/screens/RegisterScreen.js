@@ -76,11 +76,11 @@ const RegisterScreen = () => {
         login();
       } else {
         console.error(data);
-        navigation.navigate("Error");
+        throw new Error("User registration failed");
       }
     } catch (error) {
       console.error(error);
-      navigation.navigate("Error");
+      navigation.navigate("App", { screen: "Error" });
     }
   };
 
