@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Optional helper functions
+  // Useless until we can't find a solution for the navigation issue
   const login = () => {
     console.log("AuthProvider: User logged in");
     setIsLoggedIn(true);
