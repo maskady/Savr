@@ -42,7 +42,7 @@ const SettingsDropdown = () => {
         setUser(data);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        navigation.navigate("Error", { error: "Failed to load user data" });
+        navigation.navigate("App", { screen: "Error", params: { error: error.message } });
       }
     };
 

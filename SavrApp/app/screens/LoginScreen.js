@@ -55,7 +55,7 @@ const LoginScreen = () => {
       }
     } catch (error) {
       console.error(error);
-      navigation.navigate("Error");
+      navigation.navigate("App", { screen: "Error" });
     }
   };
 
