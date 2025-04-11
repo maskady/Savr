@@ -71,12 +71,12 @@ const MainScreen = () => {
     const computedRadius = calculateRadius(region);
 
     // If no previous region or if the user has panned sufficiently (threshold: one-third of computed radius in meters), then fetch
-    // if (!lastFetchedRegion || haversine(
-    //   { latitude: region.latitude, longitude: region.longitude },
-    //   { latitude: lastFetchedRegion.latitude, longitude: lastFetchedRegion.longitude }
-    // ) > computedRadius * 1000 / 3) {
-    //   fetchShopsThrottled(region, computedRadius);
-    // }
+    if (!lastFetchedRegion || haversine(
+      { latitude: region.latitude, longitude: region.longitude },
+      { latitude: lastFetchedRegion.latitude, longitude: lastFetchedRegion.longitude }
+    ) > computedRadius * 1000 / 3) {
+      fetchShopsThrottled(region, computedRadius);
+    }
 
     fetchShopsThrottled(region, computedRadius);
   };
