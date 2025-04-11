@@ -43,19 +43,18 @@ const WelcomeScreen = () => {
       if (response.status != 500) {  
         if (response.status === 200) {
           console.log("User exists, navigating to Login screen");
-          navigation.navigate("Login", { email });
+          navigation.navigate("Auth", { screen: "Login", params: { email } });
         } else {
           console.log("User does not exist, navigating to Register screen");
-          navigation.navigate("Register", { email });
+          navigation.navigate("Auth", { screen: "Register", params: { email } });
         }
       } else {
-        console.error("Error in WelcomeScreen:", data);
-        navigation.navigate("Error");
+        throw new Error("Server error: Unable to check user existence");
       }
   
     } catch (error) {
       console.error("Error in WelcomeScreen:", error);
-      navigation.navigate("Error");
+      navigation.navigate("App", { screen: "Error" });
     }
   };
 

@@ -14,7 +14,7 @@ const ErrorScreen = () => {
       />
       <Text style={styles.title}>Whoops, there was an error</Text>
       <Text style={styles.message}>Something went wrong. Please try again later.</Text>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Auth')}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Auth")}>
         <Text style={styles.buttonText}>Home</Text>
       </TouchableOpacity>
     </View>
