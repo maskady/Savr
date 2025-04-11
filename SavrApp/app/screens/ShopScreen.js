@@ -44,7 +44,7 @@ const ShopScreen = () => {
 
   // get primary category name from businessCategories object 
   const primaryCategoryName = businessCategories[shop.primaryCategory]?.name || shop.primaryCategory;
-  console.log("primaryCategoryName", primaryCategoryName);
+  //console.log("primaryCategoryName", primaryCategoryName);
 
   const handleInputChange = (field, value) => {
     setShop(prev => ({
