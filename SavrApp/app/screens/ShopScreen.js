@@ -192,7 +192,7 @@ const ShopScreen = () => {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <ArrowLeft size={24} color={colors.text} />
+          <ArrowLeft size={24} color="#fff" />
         </TouchableOpacity>
         <View style={styles.headerButtons}>
 
@@ -249,7 +249,7 @@ const ShopScreen = () => {
             onPress={handleShare} 
             style={[styles.shareButton, { marginLeft: 8 }]} 
           >
-            <ShareIcon size={24} color={colors.text} />
+            <ShareIcon size={24} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
