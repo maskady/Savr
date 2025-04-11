@@ -18,7 +18,6 @@ import { storeToken } from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { loginUser } from "../utils/authApi";
-import { AuthContext } from "../contexts/AuthContext"; 
 import { SettingsContext } from "../contexts/SettingsContext";
 import styles from "../styles/AuthStyles";
 import { useTranslation } from 'react-i18next';
@@ -32,7 +31,6 @@ const LoginScreen = () => {
   const { email } = route.params;
   const inputAccessoryLoginPassword = "inputAccessoryLoginPassword";
   
-  const { login } = useContext(AuthContext);
   const { darkMode } = useContext(SettingsContext);
 
   const navigation = useNavigation();
@@ -48,7 +46,7 @@ const LoginScreen = () => {
       if (response.ok) {
         console.log("User logged in successfully");
         storeToken(data.data.token);
-        login();
+        navigation.navigate("App");
       } else {
         if (response.status === 401) {
           alert("Incorrect username or password");

@@ -19,7 +19,6 @@ import { storeToken } from "../utils/token";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { registerUser } from "../utils/authApi";
 
-import { AuthContext } from "../contexts/AuthContext";
 import { useTranslation } from 'react-i18next';
 import { SettingsContext } from "../contexts/SettingsContext";
 
@@ -33,7 +32,6 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { darkMode } = useContext(SettingsContext);
-  const { login } = useContext(AuthContext);
   const route = useRoute();
   const { email } = route.params;
   const firstNameRef = useRef(null);
@@ -73,7 +71,7 @@ const RegisterScreen = () => {
       if (response.ok) {
         console.log("User created successfully");
         storeToken(data.data.token);
-        login();
+        navigation.navigate("App");
       } else {
         console.error(data);
         throw new Error("User registration failed");
