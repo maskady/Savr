@@ -14,10 +14,11 @@ import {
   Dimensions,
   Modal,
   Button,
-  Alert
+  Alert,
+  TextInput
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { ArrowLeft, Phone, MapPin, Clock, Calendar, Share as ShareIcon, Star, Save } from 'lucide-react-native';
+import { ArrowLeft, Phone, MapPin, Share as ShareIcon, Star, Save, Pencil, X } from 'lucide-react-native';
 import { SettingsContext } from '../contexts/SettingsContext';
 import MapView, { Marker } from 'react-native-maps';
 import { getShopById, updateShop } from '../utils/api';
@@ -36,13 +37,15 @@ const ShopScreen = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
+  const [editMode, setEditMode] = useState('view'); // view, edit, saving
+
   // images
   const [modalVisible, setModalVisible] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
 
   const handleUploadSuccess = ({ fileUrl }) => {
     setUploadedImageUrl(fileUrl);
-    console.log("uploadedImageUrl", uploadedImageUrl);  
+    console.log("uploadedImageUrl", uploadedImageUrl);
 
     // update shop
     const updatedShop = { ...shop, images: [...shop.images, { url: fileUrl, alt: 'Uploaded Image', type: 'uploaded' }] };
@@ -50,7 +53,14 @@ const ShopScreen = () => {
     setHasChanges(true);
   };
 
-  
+  const handleInputChange = (field, value) => {
+    setShop(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    setHasChanges(true);
+  };
+
   // Define colors based on dark mode
   const colors = {
     background: darkMode ? '#121212' : '#ffffff',
@@ -67,7 +77,7 @@ const ShopScreen = () => {
 
     const fetchShopDetails = async () => {
       if (!shop?.id) return;
-      
+
       setLoading(true);
       try {
         const details = await getShopById(shop.id);
@@ -87,7 +97,7 @@ const ShopScreen = () => {
             }];
           }
 
-          setShop({...data, images: shopImages, categories});
+          setShop({ ...data, images: shopImages, categories });
         }
       } catch (err) {
         console.error('Error fetching shop details:', err);
@@ -130,7 +140,8 @@ const ShopScreen = () => {
 
   const handleSaveChanges = async () => {
     if (!hasChanges) return;
-    
+
+    setEditMode('saving');
     setIsSaving(true);
     try {
       // remove placeholder images
@@ -138,9 +149,10 @@ const ShopScreen = () => {
       setShop(updatedShop);
 
       await updateShop(shop.id, updatedShop);
-      
-      Alert.alert( "Success", "Your changes have been saved successfully.", [{ text: "OK" }]);
+
+      Alert.alert("Success", "Your changes have been saved successfully.", [{ text: "OK" }]);
       setHasChanges(false);
+      setEditMode('view');
 
     } catch (error) {
       console.error("Error saving changes:", error);
@@ -149,9 +161,14 @@ const ShopScreen = () => {
         "Failed to save your changes. Please try again.",
         [{ text: "OK" }]
       );
+      setEditMode('edit');
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const toggleEditMode = () => {
+    setEditMode(editMode === 'view' ? 'edit' : 'view');
   };
 
   if (!shop) {
@@ -176,20 +193,21 @@ const ShopScreen = () => {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
-      
+
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
           <ArrowLeft size={24} color={colors.text} />
         </TouchableOpacity>
         <View style={styles.headerButtons}>
-          {hasChanges && (
-            <TouchableOpacity 
+
+          {editMode === 'edit' && hasChanges && (
+            <TouchableOpacity
               style={[
-                styles.saveButton, 
+                styles.saveButton,
                 { backgroundColor: isSaving ? 'rgba(0,0,0,0.4)' : 'rgba(46,125,50,0.9)' }
               ]}
               onPress={handleSaveChanges}
@@ -198,16 +216,46 @@ const ShopScreen = () => {
               {isSaving ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
-                <View style={styles.saveButtonContent}>
-                  <Save size={16} color="#fff" />
-                  <Text style={styles.saveButtonText}>Save</Text>
+                <View style={styles.buttonContent}>
+                  <Save size={16} color="#fff" style={styles.buttonIcon} />
+                  <Text style={styles.buttonText}>Save</Text>
                 </View>
               )}
             </TouchableOpacity>
           )}
+
+          <TouchableOpacity
+            style={[
+              styles.saveButton,
+              { 
+                backgroundColor: 'rgba(0,0,0,0.4)',
+                marginLeft: editMode === 'edit' && hasChanges ? 8 : 0 
+              }
+            ]}
+            onPress={toggleEditMode}
+            disabled={editMode === 'saving'}
+          >
+
+
+            <View style={styles.buttonContent}>
+
+            {editMode === 'view' ? (
+              <>
+                <Pencil size={16} color="#fff" style={styles.buttonIcon} />
+                <Text style={styles.buttonText}>Edit</Text>
+              </>
+            ) : (
+              <>
+                <X size={16} color="#fff" style={styles.buttonIcon} />
+                <Text style={styles.buttonText}>Cancel</Text>
+              </>
+            )}
+            </View>
+          </TouchableOpacity>
+
           <TouchableOpacity 
-            onPress={handleShare}
-            style={[styles.shareButton, { marginLeft: hasChanges ? 8 : 0 }]}
+            onPress={handleShare} 
+            style={[styles.shareButton, { marginLeft: 8 }]} 
           >
             <ShareIcon size={24} color={colors.text} />
           </TouchableOpacity>
@@ -232,13 +280,15 @@ const ShopScreen = () => {
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Image Gallery */}
-          <ImageGallery 
+          <ImageGallery
             images={shop.images}
             height={250}
             onImagePress={handleImagePress}
           />
 
-          <Button title="Upload Image" onPress={() => setModalVisible(true)} />
+          {editMode !== 'view' && (
+            <Button title="Upload Image" onPress={() => setModalVisible(true)} />
+          )}
 
           <ImageUploadModal
             visible={modalVisible}
@@ -249,8 +299,21 @@ const ShopScreen = () => {
 
           {/* Shop Info */}
           <View style={[styles.infoContainer, { backgroundColor: colors.background }]}>
-            <Text style={[styles.shopName, { color: colors.text }]}>{shop.name}</Text>
-            
+            {editMode === 'view' ? (
+              <Text style={[styles.shopName, { color: colors.text }]}>{shop.name}</Text>
+            ) : (
+              <>
+                <TextInput
+                  style={[styles.shopName, styles.input, { color: colors.text, borderColor: colors.border }]}
+                  value={shop.name}
+                  onChangeText={(text) => handleInputChange('name', text)}
+                  placeholder="Shop Name"
+                  placeholderTextColor={colors.subtext}
+                />
+                <Text style={[styles.inputLabel, { color: colors.subtext }]}>Shop Name (displayed to customers)</Text>
+              </>
+            )}
+
             {shop.rating && (
               <View style={styles.ratingContainer}>
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -276,42 +339,116 @@ const ShopScreen = () => {
             {/* Description */}
             <View style={[styles.sectionContainer, { borderColor: colors.border }]}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>Description</Text>
-              <Text style={[styles.descriptionText, { color: colors.subtext }]}>
-                {shop.description || 'No description available for this shop.'}
-              </Text>
+              
+              {editMode === 'view' ? (
+                <Text style={[styles.descriptionText, { color: colors.subtext }]}>
+                  {shop.description || 'No description available for this shop.'}
+                </Text>
+              ) : (
+                <>
+                  <TextInput
+                    style={[styles.descriptionText, styles.input, { color: colors.text, borderColor: colors.border, textAlignVertical: 'top' }]}
+                    value={shop.description || ''}
+                    onChangeText={(text) => handleInputChange('description', text)}
+                    placeholder="Enter shop description"
+                    placeholderTextColor={colors.subtext}
+                    multiline
+                    numberOfLines={4}
+                  />
+                  <Text style={[styles.inputLabel, { color: colors.subtext }]}>Describe your shop to attract customers</Text>
+                </>
+              )}
             </View>
 
             {/* Contact & Location */}
             <View style={[styles.sectionContainer, { borderColor: colors.border }]}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>Contact & Location</Text>
-              
+
               {shop.phone && (
-                <TouchableOpacity style={styles.contactItem} onPress={handleCall}>
+                <View style={styles.contactItem}>
                   <Phone size={20} color={colors.primary} />
-                  <Text style={[styles.contactText, { color: colors.text }]}>{shop.phone}</Text>
-                </TouchableOpacity>
+                  {editMode === 'view' ? (
+                    <TouchableOpacity onPress={handleCall}>
+                      <Text style={[styles.contactText, { color: colors.text }]}>{shop.phone}</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <View style={{ marginLeft: 12, flex: 1 }}>
+                      <TextInput
+                        style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
+                        value={shop.phone || ''}
+                        onChangeText={(text) => handleInputChange('phone', text)}
+                        placeholder="Phone number"
+                        placeholderTextColor={colors.subtext}
+                        keyboardType="phone-pad"
+                      />
+                      <Text style={[styles.inputLabel, { color: colors.subtext }]}>Phone Number (e.g., +49 123 456 7890)</Text>
+                    </View>
+                  )}
+                </View>
               )}
-              
+
               {(shop.address || shop.postalCode || shop.city || shop.country) && (
-                <TouchableOpacity style={styles.contactItem} onPress={handleNavigate}>
+                <View style={styles.contactItem}>
                   <MapPin size={20} color={colors.primary} />
-                  <View >
-                    {shop.address && (
-                      <Text style={[styles.contactText, { color: colors.text }]}>{shop.address}</Text>
-                    )}
-                    {(shop.postalCode || shop.city) && (
-                      <Text style={[styles.contactText, { color: colors.text }]}>
-                        {[
-                          shop.postalCode || '',
-                          shop.city || ''
-                        ].filter(Boolean).join(' ')}
-                      </Text>
-                    )}
-                    {shop.country && (
-                      <Text style={[styles.contactText, { color: colors.text }]}>{shop.country}</Text>
+                  <View style={{ marginLeft: 12 }}>
+                    {editMode === 'view' ? (
+                      <TouchableOpacity onPress={handleNavigate}>
+                        {shop.address && (
+                          <Text style={[styles.contactText, { color: colors.text }]}>{shop.address}</Text>
+                        )}
+                        {(shop.postalCode || shop.city) && (
+                          <Text style={[styles.contactText, { color: colors.text }]}>
+                            {[
+                              shop.postalCode || '',
+                              shop.city || ''
+                            ].filter(Boolean).join(' ')}
+                          </Text>
+                        )}
+                        {shop.country && (
+                          <Text style={[styles.contactText, { color: colors.text }]}>{shop.country}</Text>
+                        )}
+                      </TouchableOpacity>
+                    ) : (
+                      <>
+                        <TextInput
+                          style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
+                          value={shop.address || ''}
+                          onChangeText={(text) => handleInputChange('address', text)}
+                          placeholder="Street address"
+                          placeholderTextColor={colors.subtext}
+                        />
+                        <Text style={[styles.inputLabel, { color: colors.subtext }]}>Street Address (e.g., 123 Main St)</Text>
+                        
+                        <TextInput
+                          style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
+                          value={shop.postalCode || ''}
+                          onChangeText={(text) => handleInputChange('postalCode', text)}
+                          placeholder="Postal code"
+                          placeholderTextColor={colors.subtext}
+                        />
+                        <Text style={[styles.inputLabel, { color: colors.subtext }]}>Postal Code (e.g., 10115)</Text>
+                        
+                        <TextInput
+                          style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
+                          value={shop.city || ''}
+                          onChangeText={(text) => handleInputChange('city', text)}
+                          placeholder="City"
+                          placeholderTextColor={colors.subtext}
+                        />
+                        <Text style={[styles.inputLabel, { color: colors.subtext }]}>City (e.g., Berlin)</Text>
+                        
+                        <TextInput
+                          style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
+                          value={shop.country || ''}
+                          onChangeText={(text) => handleInputChange('country', text)}
+                          placeholder="Country"
+                          placeholderTextColor={colors.subtext}
+                        />
+                        <Text style={[styles.inputLabel, { color: colors.subtext }]}>Country (e.g., Germany)</Text>
+                      </>
                     )}
                   </View>
-                </TouchableOpacity>
+                </View>
               )}
 
             </View>
@@ -350,14 +487,14 @@ const ShopScreen = () => {
               <View style={[styles.sectionContainer, { borderColor: colors.border }]}>
                 <Text style={[styles.sectionTitle, { color: colors.text }]}>Available Products</Text>
                 {shop.products.map((product, index) => (
-                  <View 
-                    key={index} 
+                  <View
+                    key={index}
                     style={[styles.productCard, { backgroundColor: colors.card }]}
                   >
                     {product.image && (
-                      <Image 
-                        source={{ uri: product.image }} 
-                        style={styles.productImage} 
+                      <Image
+                        source={{ uri: product.image }}
+                        style={styles.productImage}
                       />
                     )}
                     <View style={styles.productInfo}>
@@ -396,7 +533,7 @@ const ShopScreen = () => {
         onRequestClose={() => setFullScreenImage(null)}
       >
         <View style={styles.fullScreenModal}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.closeButton}
             onPress={() => setFullScreenImage(null)}
           >
@@ -453,15 +590,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 2,
   },
-  saveButtonContent: {
+  buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  saveButtonText: {
+  buttonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 14,
     marginLeft: 6,
+    marginRight: 6,
+  },
+  buttonIcon: {
+    marginRight: 6,
   },
   shareButton: {
     padding: 8,
@@ -620,6 +761,19 @@ const styles = StyleSheet.create({
   addressContainer: {
     marginLeft: 12,
     flex: 1,
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 8,
+    marginBottom: 4,
+    fontSize: 16,
+  },
+  inputLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 12,
+    marginLeft: 4,
   },
 });
 
