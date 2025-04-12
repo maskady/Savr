@@ -15,6 +15,8 @@ import styles from '../styles/AppStyles';
 import ImageUploadScreen from './ImageUploadScreen';
 import ImageUploadModal from '../components/ImageUploadModal';
 import { Button, Text } from 'react-native';
+import { ShopContext } from '../contexts/ShopContext';
+
 
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
@@ -27,77 +29,46 @@ const MainScreen = () => {
     latitudeDelta: 0.09,
     longitudeDelta: 0.04,
   });
+
+  const {
+    shops,
+    allShops,
+    filteredShops,
+    activeCategories,
+    fetchShopsIfNeeded,
+    setActiveCategories,
+  } = useContext(ShopContext);
+
   
-  // State for the shops data from the API
-  const [shops, setShops] = useState([]);
-  const [allShops, setAllShops] = useState([]);
-  // Filter shops based on active categories.
-  const [filteredShops, setFilteredShops] = useState([]);
-  
-  // Filtering related state
-  // Convert businessCategories from dict to array of keys for default active categories.
-  const [activeCategories, setActiveCategories] = useState(
-    Object.keys(businessCategories)
-  );
+
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  
-  const fetchShopsThrottled = useMemo(
-    () =>
-      throttle(async (region, radius) => {
-        const data = await getShops(region.latitude, region.longitude, radius);
-        setShops(data);
-        const allData = [...allShops, ...data].filter((shop, index, self) =>
-          index === self.findIndex((t) => t.id === shop.id)
-        );
-        setAllShops(allData);
-      }, 500),
-    [allShops]
-  );
-  
-  // Function to calculate radius (in kilometers)
-  const calculateRadius = (region) => {
-    const { latitude, latitudeDelta, longitudeDelta } = region;
-    const verticalDistanceKm = latitudeDelta * 111;
-    const horizontalDistanceKm = longitudeDelta * 111 * Math.cos(latitude * (Math.PI / 180));
-    return Math.min(Math.max(verticalDistanceKm, horizontalDistanceKm) / 2, 100);
-  };
 
-  // Compare with last fetched region to decide whether to fetch shops
-  const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
-  const fetchShopsIfNeeded = (currentRegion) => {
-    const computedRadius = calculateRadius(currentRegion);
-    if (
-      !lastFetchedRegion ||
-      haversine(
-        { latitude: currentRegion.latitude, longitude: currentRegion.longitude },
-        { latitude: lastFetchedRegion.latitude, longitude: lastFetchedRegion.longitude }
-      ) > computedRadius * 1000 / 3
-    ) {
-      fetchShopsThrottled(currentRegion, computedRadius);
-      setLastFetchedRegion(currentRegion);
+  const getUserLocation = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    let currentRegion = region;
+    if (status === 'granted') {
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      if (currentLocation) {
+        currentRegion = {
+          latitude: currentLocation.coords.latitude,
+          longitude: currentLocation.coords.longitude,
+          latitudeDelta: 0.09,
+          longitudeDelta: 0.04,
+        };
+        console.log('Updating current location...');
+        setRegion(currentRegion);
+      }
     }
+    return currentRegion;
   };
 
   useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      let currentRegion = region;
-      if (status === 'granted') {
-        let currentLocation = await Location.getCurrentPositionAsync({});
-        if (currentLocation) {
-          currentRegion = {
-            latitude: currentLocation.coords.latitude,
-            longitude: currentLocation.coords.longitude,
-            latitudeDelta: 0.09,
-            longitudeDelta: 0.04,
-          };
-          console.log('Updating current location...');
-          setRegion(currentRegion);
-        }
-      }
+    const f = async () => {
+      const currentRegion = await getUserLocation();
       fetchShopsIfNeeded(currentRegion);
-    })();
+    };
+    f();
   }, []);
 
   // Toggle the active/inactive state of a category.
@@ -111,16 +82,6 @@ const MainScreen = () => {
     );
   };
 
-  // Update filtered shops whenever shops or activeCategories changes.
-  useEffect(() => {
-    const filtered = shops.filter((shop) => activeCategories.includes(shop.primaryCategory));
-    if (activeCategories.includes('other')) {
-      const otherShops = shops.filter((shop) => !shop.primaryCategory);
-      setFilteredShops([...filtered, ...otherShops]);
-    } else {
-      setFilteredShops(filtered);
-    }
-  }, [activeCategories, shops]);
 
   const handleSelect = (shop) => {
     console.log('Selected:', shop.name);

@@ -25,12 +25,13 @@ import { getShopById, updateShop } from '../utils/api';
 import ImageManager from '../components/ImageManager';
 const { width } = Dimensions.get('window');
 import { businessCategories } from '../constants/businessCategories';
-import { Picker } from '@react-native-picker/picker';
+import { ShopContext } from '../contexts/ShopContext';
 
 const ShopScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { darkMode } = useContext(SettingsContext);
+  const { updateShopInContext } = useContext(ShopContext);
   const [shop, setShop] = useState(route.params?.shop || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -110,7 +111,7 @@ const ShopScreen = () => {
 
   const handleNavigate = () => {
     if (shop?.latitude && shop?.longitude) {
-      const url = `https://maps.apple.com/?daddr=${shop.latitude},${shop.longitude}`;
+      const url = `https://maps.apple.com/?daddr=${shop.latitude},${shop.longitude}`; // TODO: Use default map and export to string constants
       Linking.openURL(url);
     }
   };
@@ -138,10 +139,16 @@ const ShopScreen = () => {
     try {
       // remove placeholder images
       const updatedShop = { ...shop, images: shop.images.filter(image => image.type !== 'placeholder') };
+      
+      // Update the shop in local state
       setShop(updatedShop);
-
+      
+      // Update the shop in the backend
       await updateShop(shop.id, updatedShop);
 
+      // Update the shop in context
+      updateShopInContext(updatedShop);
+      
       Alert.alert("Success", "Your changes have been saved successfully.", [{ text: "OK" }]);
       setHasChanges(false);
       setEditMode('view');
