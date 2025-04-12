@@ -13,7 +13,6 @@ import {
   ActivityIndicator,
   Dimensions,
   Modal,
-  Button,
   Alert,
   TextInput
 } from 'react-native';
