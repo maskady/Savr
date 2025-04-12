@@ -39,7 +39,6 @@ const MainScreen = () => {
     setActiveCategories,
   } = useContext(ShopContext);
 
-  
 
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

@@ -6,7 +6,6 @@ import { getToken, storeToken, removeToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
-import { AuthContext } from "../contexts/AuthContext";
 
 const SettingsScreen = ( ) => {
   const [user, setUser] = useState(null);
@@ -32,7 +31,18 @@ const SettingsScreen = ( ) => {
   const newPasswordRef = useRef(null);
   const confirmNewPasswordRef = useRef(null);
 
-  const { logout } = useContext(AuthContext);
+  const navigation = useNavigation();
+
+  const logout = async () => {
+    try {
+      removeToken();
+      console.log("Token removed successfully");
+      navigation.navigate("Auth");
+    } catch (error) {
+      console.error("Error removing token:", error);
+      navigation.navigate("Error", { error: "Failed to log out" });
+    }
+  };
 
   const togglePasswordVisibility = (field) => {
     if (field === "actual") {
@@ -72,8 +82,6 @@ const SettingsScreen = ( ) => {
       </TouchableOpacity>
     </View>
   );
-
-  const navigation = useNavigation();
 
   useEffect(() => {
     const loadUserData = async () => {
