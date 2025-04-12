@@ -1,35 +1,39 @@
 import { getCategories } from "../utils/api";
 import { COLORS } from "./colors";
 
-export let businessCategories = [];
-export let businessCategoriesColors = {};
+export let businessCategories = {}; // category id -> category object
+export let businessCategoriesColors = {}; // category id -> color
 
 (async () => {
+  // Fetch categories array from API and filter out removed/deleted categories.
   const response = await getCategories();
-  businessCategories = response.data;
-  // filter out removed and deleted categories
-  businessCategories = businessCategories.filter((category) => {
-      return !category.dtremoved && !category.dtdeleted;
+  let categoriesArray = response.data.filter((category) => {
+    return !category.dtremoved && !category.dtdeleted;
   });
-  // add "other" category
-  businessCategories.push({
+
+  // Add "other" category directly into the array.
+  categoriesArray.push({
     id: "other",
     name: "Other",
   });
-  console.log("[businessCategories] businessCategories=", businessCategories);
 
-  // Assign random colors to each category (so that the app still works if a new category is added)
-  businessCategories.forEach((category, index) => {
-    const color = `hsl(${Math.floor(Math.random() * 360)}, 100%, 50%)`;
-    businessCategoriesColors[category.id] = color;
+  // Convert the filtered array into a dictionary keyed by category id.
+  businessCategories = {};
+  categoriesArray.forEach((category) => {
+    businessCategories[category.id] = category;
   });
 
-  // Assign intended colors to caategories
-  businessCategories.forEach((category) => {
-    if (COLORS.businesses[category.id]) {
-      businessCategoriesColors[category.id] = COLORS.businesses[category.id];
+  // Assign random colors to each category.
+  Object.keys(businessCategories).forEach((id) => {
+    const color = `hsl(${Math.floor(Math.random() * 360)}, 100%, 50%)`;
+    businessCategoriesColors[id] = color;
+  });
+
+  // Re-assign intended colors to categories if available in COLORS.businesses.
+  Object.keys(businessCategories).forEach((id) => {
+    if (COLORS.businesses[id]) {
+      businessCategoriesColors[id] = COLORS.businesses[id];
     }
   });
-  console.log("[businessCategories] businessCategoriesColors=", businessCategoriesColors);
-})();
 
+})();

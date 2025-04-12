@@ -24,11 +24,14 @@ import MapView, { Marker } from 'react-native-maps';
 import { getShopById, updateShop } from '../utils/api';
 import ImageManager from '../components/ImageManager';
 const { width } = Dimensions.get('window');
+import { businessCategories } from '../constants/businessCategories';
+import { ShopContext } from '../contexts/ShopContext';
 
 const ShopScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { darkMode } = useContext(SettingsContext);
+  const { updateShopInContext } = useContext(ShopContext);
   const [shop, setShop] = useState(route.params?.shop || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -37,6 +40,12 @@ const ShopScreen = () => {
   const [hasChanges, setHasChanges] = useState(false);
 
   const [editMode, setEditMode] = useState('view'); // view, edit, saving
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+
+
+  // get primary category name from businessCategories object 
+  const primaryCategoryName = businessCategories[shop.primaryCategory]?.name || shop.primaryCategory;
+  //console.log("primaryCategoryName", primaryCategoryName);
 
   const handleInputChange = (field, value) => {
     setShop(prev => ({
@@ -102,7 +111,7 @@ const ShopScreen = () => {
 
   const handleNavigate = () => {
     if (shop?.latitude && shop?.longitude) {
-      const url = `https://maps.apple.com/?daddr=${shop.latitude},${shop.longitude}`;
+      const url = `https://maps.apple.com/?daddr=${shop.latitude},${shop.longitude}`; // TODO: Use default map and export to string constants
       Linking.openURL(url);
     }
   };
@@ -130,10 +139,16 @@ const ShopScreen = () => {
     try {
       // remove placeholder images
       const updatedShop = { ...shop, images: shop.images.filter(image => image.type !== 'placeholder') };
+      
+      // Update the shop in local state
       setShop(updatedShop);
-
+      
+      // Update the shop in the backend
       await updateShop(shop.id, updatedShop);
 
+      // Update the shop in context
+      updateShopInContext(updatedShop);
+      
       Alert.alert("Success", "Your changes have been saved successfully.", [{ text: "OK" }]);
       setHasChanges(false);
       setEditMode('view');
@@ -280,7 +295,9 @@ const ShopScreen = () => {
             onImagePress={handleFullScreenImage}
           />
 
+          {/* /////////////////////////////// */}
           {/* Shop Info */}
+          {/* /////////////////////////////// */}
           <View style={[styles.infoContainer, { backgroundColor: colors.background }]}>
             {editMode === 'view' ? (
               <Text style={[styles.shopName, { color: colors.text }]}>{shop.name}</Text>
@@ -297,6 +314,7 @@ const ShopScreen = () => {
               </>
             )}
 
+            {/* Rating */}
             {shop.rating && (
               <View style={styles.ratingContainer}>
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -313,13 +331,56 @@ const ShopScreen = () => {
               </View>
             )}
 
-            {shop.category && (
-              <Text style={[styles.categoryText, { color: colors.subtext }]}>
-                {shop.category}
-              </Text>
+            {/* Category */}
+            {editMode === 'view' ? (
+              primaryCategoryName && (
+                <Text style={[styles.categoryText, { color: colors.subtext }]}>
+                  {primaryCategoryName}
+                </Text>
+              )
+            ) : (
+              <View>
+                <TouchableOpacity
+                  style={styles.dropdownTrigger}
+                  onPress={() => setShowCategoryDropdown(true)}
+                >
+                  <Text style={[styles.dropdownTriggerText, { color: colors.text }]}>
+                    {businessCategories[shop.primaryCategory]?.name || 'Select Category'}
+                  </Text>
+                </TouchableOpacity>
+                {showCategoryDropdown && (
+                  <Modal
+                    transparent
+                    animationType="fade"
+                    onRequestClose={() => setShowCategoryDropdown(false)}
+                  >
+                    <TouchableOpacity
+                      style={styles.modalOverlay}
+                      activeOpacity={1}
+                      onPress={() => setShowCategoryDropdown(false)}
+                    >
+                      <View style={styles.dropdownMenu}>
+                        {Object.keys(businessCategories).map((key) => (
+                          <TouchableOpacity
+                            key={key}
+                            style={styles.dropdownItem}
+                            onPress={() => {
+                              handleInputChange('primaryCategory', key);
+                              setShowCategoryDropdown(false);
+                            }}
+                          >
+                            <Text style={styles.dropdownItemText}>
+                              {businessCategories[key].name}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </TouchableOpacity>
+                  </Modal>
+                )}
+              </View>
             )}
 
-            {/* Description */}
             <View style={[styles.sectionContainer, { borderColor: colors.border }]}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>Description</Text>
               
@@ -757,6 +818,50 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 12,
     marginLeft: 4,
+  },
+  dropdownContainer: {
+    width: 150,
+    borderWidth: 1,
+    borderColor: '#ccc', // You can adjust this or use colors.border if accessible
+    borderRadius: 4,
+    marginVertical: 8,
+    overflow: 'hidden'
+  },
+  dropdownPicker: {
+    height: 40,
+    width: '100%',
+  },
+  dropdownTrigger: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    marginVertical: 8,
+  },
+  dropdownTriggerText: {
+    fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dropdownMenu: {
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    width: 250,
+    maxHeight: 300,
+    paddingVertical: 8,
+  },
+  dropdownItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: '#000',
   },
 });
 
