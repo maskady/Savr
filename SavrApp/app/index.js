@@ -2,6 +2,7 @@ import React from "react";
 import Navigation from "./navigation/Navigation";
 import { AuthProvider } from './contexts/AuthContext';
 import { SettingsProvider } from "./contexts/SettingsContext";
+import { ShopProvider } from "./contexts/ShopContext";
 
 export default function App() {
   // Show only the first line of console.error messages
@@ -20,7 +21,9 @@ export default function App() {
   return (
     <AuthProvider>
       <SettingsProvider>
-        <Navigation />
+        <ShopProvider>
+          <Navigation />
+        </ShopProvider>
       </SettingsProvider>
     </AuthProvider>
   );
