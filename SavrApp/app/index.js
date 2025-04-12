@@ -10,8 +10,9 @@ export default function App() {
   const originalConsoleError = console.error;
   console.error = (...args) => {
     if (typeof args[0] === 'string') {
-      const n_lines = 10
-      const firstLines = args[0].split('\n').slice(0, n_lines).join('\n'); // Get only the first n lines
+      let n_lines = 10
+      n_lines = Math.min(n_lines, args[0].split('\n').length)
+      const firstLines = args[0].split('\n').slice(0, n_lines).join('\n'); 
       originalConsoleError(firstLines);
     } else {
       originalConsoleError(...args);
