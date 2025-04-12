@@ -84,7 +84,7 @@ const MainScreen = () => {
 
   const handleSelect = (shop) => {
     console.log('Selected:', shop.name);
-    navigation.navigate('ShopScreen', { shop });
+    navigation.navigate('Shop', { shop });
   };
 
   const renderItem = ({ item }) => (
