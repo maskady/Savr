@@ -6,7 +6,7 @@ const PEEK_HEIGHT = 40;
 
 const BottomSheet = ({ children }) => {
   const screenHeight = Dimensions.get('window').height;
-  const SHEET_HEIGHT = screenHeight * 0.35;
+  const SHEET_HEIGHT = screenHeight * 0.30;
   const sheetAnim = useRef(new Animated.Value(0)).current; // 0 = fully open; max = SHEET_HEIGHT - PEEK_HEIGHT
   const lastOffset = useRef(0);
   const HIDE_THRESHOLD = 1 / 4;
