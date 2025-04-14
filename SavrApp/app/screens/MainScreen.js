@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-import { View, FlatList, StyleSheet, ActivityIndicator, Text, Appearance, StatusBar } from 'react-native';
+import { View, FlatList, ActivityIndicator, Text, Appearance, StatusBar } from 'react-native';
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
 import CategoryFilter from '../components/CategoryFilter';
@@ -56,6 +56,7 @@ const MainScreen = () => {
       }
     } catch (error) {
       console.error('Error getting user location:', error);
+      alert('Unable to fetch your location. Please check your location settings.');
     }
     // Fallback to default region if permission is not granted or an error occurs.
     return initialRegion;
@@ -149,6 +150,7 @@ const MainScreen = () => {
             fetchShopsIfNeeded(newRegion);
           }}
           onShopSelect={handleSelect}
+          getUserLocation={getUserLocation}
         />
         <View style={styles.searchOverlay}></View>
       </View>
