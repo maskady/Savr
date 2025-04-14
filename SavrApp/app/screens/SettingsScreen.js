@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
-import { View, Appearance, SafeAreaView, Text, ActivityIndicator, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { View, Appearance, SafeAreaView, Text, ActivityIndicator, TouchableOpacity, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { getToken, storeToken, removeToken } from "../utils/token";
@@ -250,6 +250,9 @@ const SettingsScreen = ( ) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+        backgroundColor={styles.statusBar.backgroundColor}
+      />
       <View style={styles.settingsGlobalContainer}>
         <View style={styles.titleContainer}>
           <FontAwesome6 name="gear" size={styles.gearIcon.size} color={styles.gearIcon.color} style={styles.gearIcon} />

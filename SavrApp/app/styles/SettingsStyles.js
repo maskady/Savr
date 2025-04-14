@@ -227,6 +227,9 @@ const getStyles = () => {
       fontSize: 18,
       fontWeight: "bold",
     },
+    statusBar: {
+      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
+    }
   });
 }
 
