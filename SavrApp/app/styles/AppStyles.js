@@ -115,16 +115,47 @@ const getStyles = () => {
       flex: 1,
       backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
     },
+    clusterMarker: {
+      width: 60,
+      height: 60,
+      alignItems: 'center',
+      justifyContent: 'center',
+
+    },
     clusterContainer: {
       width: 40,
       height: 40,
-      borderRadius: 20,
+      borderRadius: 10,
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      backgroundColor: Colors.lightGrey,
+      borderWidth: 2,
+      borderColor: Colors.Black,
+
     },
     clusterText: {
-      color: '#fff',
-      fontWeight: 'bold'
+      color: Colors.Black,
+      fontWeight: 'bold',
+      fontSize: 14,
+    },
+    pinContainer: { 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      position: 'relative' 
+    },
+    locationPin: {
+      
+    },
+    pinText: {
+      color: Colors.White,
+      fontWeight: 'bold',
+      fontSize: 12,
+      marginBottom: -10,
+      position: 'absolute', 
+      top: '40%', 
+      transform: [{ translateY: -8 }], 
+      width: '100%', 
+      textAlign: 'center',
     },
     map: {
       flex: 1,

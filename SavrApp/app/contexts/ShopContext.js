@@ -28,7 +28,7 @@ export const ShopProvider = ({ children }) => {
     const { latitude, latitudeDelta, longitudeDelta } = region;
     const verticalDistanceKm = latitudeDelta * 111;
     const horizontalDistanceKm = longitudeDelta * 111 * Math.cos(latitude * (Math.PI / 180));
-    return Math.min(Math.max(verticalDistanceKm, horizontalDistanceKm) / 2, MAX_RADIUS);
+    return Math.min(Math.max(verticalDistanceKm, horizontalDistanceKm) / 2 * 4, MAX_RADIUS); // multiply by 4 to get a larger radius for smoother UX
   };
 
   const fetchShopsThrottled = useMemo(
