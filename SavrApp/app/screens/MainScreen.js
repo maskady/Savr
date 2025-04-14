@@ -77,8 +77,11 @@ const MainScreen = () => {
       setStyles(getStyles());
     });
 
-    subscription.remove();
+    
     setIsLoading(false);
+    return () => {
+      subscription.remove();
+    }
   }, []);
 
   // While loading, display the activity indicator with a message.

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Appearance,
 } from "react-native";
 import { ArrowLeft } from "lucide-react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -20,9 +21,8 @@ import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { registerUser } from "../utils/authApi";
 
 import { useTranslation } from 'react-i18next';
-import { SettingsContext } from "../contexts/SettingsContext";
 
-import styles from "../styles/AuthStyles";
+import getStyles from "../styles//AuthStyles";
 
 const RegisterScreen = () => {
   const { t } = useTranslation();
@@ -31,7 +31,6 @@ const RegisterScreen = () => {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { darkMode } = useContext(SettingsContext);
   const route = useRoute();
   const { email } = route.params;
   const firstNameRef = useRef(null);
@@ -45,6 +44,8 @@ const RegisterScreen = () => {
   const inputAccessoryRegisterConfirmPassword = "inputAccessoryRegisterConfirmPassword";
 
   const navigation = useNavigation();
+
+  const [styles, setStyles] = useState(getStyles());
   
   const handleSignup = async () => {
 
@@ -82,169 +83,131 @@ const RegisterScreen = () => {
     }
   };
 
+  useEffect(() => {
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setStyles(getStyles());  
+    });
+  
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   return (
-    <SafeAreaView
-      style={[
-        styles.flexContainer,
-        { backgroundColor: darkMode ? "#121212" : "white" },
-      ]}
-    >
+    <SafeAreaView style={styles.flexContainer}>
       <StatusBar
-        barStyle={darkMode ? "light-content" : "dark-content"}
-        backgroundColor={darkMode ? "#333" : "white"}
+        barStyle={styles.statusBar.barStyle}
+        backgroundColor={styles.statusBar.backgroundColor}
       />
       <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={styles.content}>
-        {Platform.OS === "ios" && (
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ArrowLeft size={24} color={darkMode ? "white" : "black"} />
-          </TouchableOpacity>
-        )}
-        <Text style={[styles.title, { color: darkMode ? "white" : "black" }]}>
-          {t("appName")}
-        </Text>
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoidingView}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.content}>
+              {Platform.OS === "ios" && (
+                <TouchableOpacity 
+                  style={styles.backButton}
+                  onPress={() => navigation.goBack()}
+                >
+                  <ArrowLeft size={24} color={styles.backIcon.color} />
+                </TouchableOpacity>
+              )}  
 
-        <View style={styles.formContainer}>
-          <Text
-            style={[styles.heading, { color: darkMode ? "white" : "black" }]}
-          >
-            {t("register.title")}
-          </Text>
-          <Text
-            style={[
-              styles.subheading,
-              { color: darkMode ? "#bbb" : "#666" },
-            ]}
-          >
-            {t("register.subtitle")}
-          </Text>
+              <Text style={styles.title}>
+                {t("appName")}
+              </Text>
 
-          <TextInput
-            style={[
-              styles.input,
-              {
-                borderColor: darkMode ? "#444" : "#ddd",
-                backgroundColor: darkMode ? "grey" : "#f1f1f1",
-                color: darkMode ? "white" : "black",
-              },
-            ]}
-            value={email}
-            editable={false}
-          />
+              <View style={styles.formContainer}>
+                <Text style={styles.heading}>
+                  {t("register.title")}
+                </Text>
+                <Text style={styles.subheading}>
+                  {t("register.subtitle")}
+                </Text>
 
-          <TextInput
-            ref={firstNameRef}
-            style={[
-              styles.input,
-              {
-                borderColor: darkMode ? "#444" : "#ddd",
-                backgroundColor: darkMode ? "#333" : "white",
-                color: darkMode ? "white" : "black",
-              },
-            ]}
-            placeholder={t("register.firstNamePlaceholder")}
-            value={firstName}
-            onChangeText={setFirstName}
-            onSubmitEditing={() => lastNameRef.current.focus()}
-            returnKeyType="next"
-            autoCapitalize="words"
-            submitBehavior="submit" 
-            placeholderTextColor={darkMode ? "#bbb" : "#666"}
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterFirstName : undefined}
-          />
+                <TextInput
+                  style={[styles.input, styles.disabledInput]}
+                  value={email}
+                  editable={false}
+                />
 
-          <TextInput
-            ref={lastNameRef}
-            style={[
-              styles.input,
-              {
-                borderColor: darkMode ? "#444" : "#ddd",
-                backgroundColor: darkMode ? "#333" : "white",
-                color: darkMode ? "white" : "black",
-              },
-            ]}
-            placeholder={t("register.lastNamePlaceholder")}
-            value={lastName}
-            onChangeText={setLastName}
-            autoCapitalize="words"
-            placeholderTextColor={darkMode ? "#bbb" : "#666"}
-            returnKeyType="next"
-            onSubmitEditing={() => passwordRef.current.focus()} 
-            submitBehavior="submit" 
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterLastName : undefined}
-          />
+                <TextInput
+                  ref={firstNameRef}
+                  style={styles.input}
+                  placeholderTextColor={styles.placeholderText.color}
+                  placeholder={t("register.firstNamePlaceholder")}
+                  value={firstName}
+                  onChangeText={setFirstName}
+                  onSubmitEditing={() => lastNameRef.current.focus()}
+                  returnKeyType="next"
+                  autoCapitalize="words"
+                  submitBehavior="submit" 
+                  inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterFirstName : undefined}
+                />
 
-          <TextInput
-            ref={passwordRef}
-            style={[
-              styles.input,
-              {
-                borderColor: darkMode ? "#444" : "#ddd",
-                backgroundColor: darkMode ? "#333" : "white",
-                color: darkMode ? "white" : "black",
-              },
-            ]}
-            placeholder={t("register.createPasswordPlaceholder")}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            placeholderTextColor={darkMode ? "#bbb" : "#666"}
-            returnKeyType="next"
-            autoCapitalize="none"
-            onSubmitEditing={() => confirmPasswordRef.current.focus()} 
-            submitBehavior="submit"
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterPassword : undefined}
-          />
+                <TextInput
+                  ref={lastNameRef}
+                  style={styles.input}
+                  placeholder={t("register.lastNamePlaceholder")}
+                  value={lastName}
+                  onChangeText={setLastName}
+                  autoCapitalize="words"
+                  placeholderTextColor={styles.placeholderText.color}
+                  returnKeyType="next"
+                  onSubmitEditing={() => passwordRef.current.focus()} 
+                  submitBehavior="submit" 
+                  inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterLastName : undefined}
+                />
 
-          <TextInput
-            ref={confirmPasswordRef}
-            style={[
-              styles.input,
-              {
-                borderColor: darkMode ? "#444" : "#ddd",
-                backgroundColor: darkMode ? "#333" : "white",
-                color: darkMode ? "white" : "black",
-              },
-            ]}
-            placeholder={t("register.confirmPasswordPlaceholder")}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-            placeholderTextColor={darkMode ? "#bbb" : "#666"}
-            returnKeyType="done"
-            autoCapitalize="none"
-            onSubmitEditing={handleSignup}
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterConfirmPassword : undefined}
-          />
+                <TextInput
+                  ref={passwordRef}
+                  style={[styles.input, styles.passwordInput]}
+                  placeholder={t("register.createPasswordPlaceholder")}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  placeholderTextColor={styles.placeholderText.color}
+                  returnKeyType="next"
+                  autoCapitalize="none"
+                  onSubmitEditing={() => confirmPasswordRef.current.focus()} 
+                  submitBehavior="submit"
+                  inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterPassword : undefined}
+                />
 
-          <TouchableOpacity
-            style={[
-              styles.continueButton,
-              { backgroundColor: darkMode ? "#6200ea" : "black" },
-            ]}
-            onPress={handleSignup}
-          >
-            <Text
-              style={[styles.continueButtonText, { color: "white" }]}
-            >
-              {t("register.registerButton")}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View />
-        </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
-    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterFirstName} />}
-    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterLastName} />}
-    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterPassword} />}
-    {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterConfirmPassword} />}
+                <TextInput
+                  ref={confirmPasswordRef}
+                  style={[styles.input, styles.passwordInput]}
+                  placeholder={t("register.confirmPasswordPlaceholder")}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  secureTextEntry
+                  placeholderTextColor={styles.placeholderText.color}
+                  returnKeyType="done"
+                  autoCapitalize="none"
+                  onSubmitEditing={handleSignup}
+                  inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryRegisterConfirmPassword : undefined}
+                />
+
+                <TouchableOpacity
+                  style={styles.continueButton}
+                  onPress={handleSignup}
+                >
+                  <Text style={styles.continueButtonText}>
+                    {t("register.registerButton")}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View />
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterFirstName} />}
+      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterLastName} />}
+      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterPassword} />}
+      {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryRegisterConfirmPassword} />}
     </SafeAreaView>
   );
 };
