@@ -1,11 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Supercluster from 'supercluster';
-import { debounce, throttle } from 'lodash';
+import { debounce } from 'lodash';
 import { businessCategoriesColors } from '../constants/businessCategories';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import getStyles from '../styles/AppStyles';
 
-const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) => {
+const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, getUserLocation }) => {
+
+  const [styles, setStyles] = useState(getStyles());
 
   const [clusters, setClusters] = useState([]);
 
@@ -76,9 +81,9 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
               longitudeDelta: newLongitudeDelta
             });
           }}
-
+          style={styles.clusterMarker}
         >
-          <View style={[styles.clusterContainer, { backgroundColor: 'grey', borderColor: 'black' }]}> 
+          <View style={[styles.clusterContainer]}> 
             <Text style={styles.clusterText}>{pointCount}</Text>
           </View>
         </Marker>
@@ -87,18 +92,20 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
 
     const shop = shops.find(shop => shop.id === shopId) || {};
     const category = shop.primaryCategory ? shop.primaryCategory : 'Unknown';
-    const color = businessCategoriesColors[category] || 'lightgreen';
-    const displayRating = rating || 0;
+    const color = businessCategoriesColors[category] || businessCategoriesColors['other'] || 'lightgrey';
+    const displayRating = rating || 0; // TODO: Change with number of product variants
 
     return (
       <Marker
         key={shopId}
         coordinate={{ latitude, longitude }}
-        pinColor={color}
         onPress={() => onShopSelect && onShopSelect(shop)}
       >
-        <View style={[styles.clusterContainer, { backgroundColor: color }]}> 
-          <Text style={styles.clusterText}>{displayRating}</Text>
+        <View style={styles.pinContainer}>
+          <FontAwesome6 name="location-pin" size={40} style={styles.locationPin} color={color} />
+          <Text style={[styles.pinText]}>
+            {displayRating}
+          </Text>
         </View>
       </Marker>
     );
@@ -112,42 +119,39 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
     []
   );
 
+  const locateMyself = async () => {
+    const newRegion = await getUserLocation();
+    if (onRegionChange) {
+      onRegionChange(newRegion);
+    }
+    updateClusters(newRegion);
+  };
+
   return (
-    <MapView
-      style={styles.map}
-      initialRegion={region}
-      onRegionChangeComplete={(newRegion) => {
-        setRegion(newRegion);
-        debouncedUpdateClusters(newRegion);
-        onRegionChange && onRegionChange(newRegion);
-      }}
-      showsUserLocation={true}
-      showsCompass={true}
-      showsMyLocationButton={true}
-      showsBuildings={true}
-      showsScale={true}
-      showsMyLocation={true}
-    >
-      {clusters.map(cluster => renderMarker(cluster))}
-    </MapView>
+    <View style={{ flex: 1 }}>
+      <MapView
+        style={styles.map}
+        region={region}
+        onRegionChangeComplete={(newRegion) => {
+          setRegion(newRegion);
+          debouncedUpdateClusters(newRegion);
+          onRegionChange && onRegionChange(newRegion);
+        }}
+        showsUserLocation={true}
+        showsCompass={true}
+        showsMyLocationButton={true}
+        showsBuildings={true}
+        showsScale={true}
+        showsMyLocation={true}
+      >
+        {clusters.map(cluster => renderMarker(cluster))}
+      </MapView>
+      <TouchableOpacity style={styles.locateButton} onPress={locateMyself}>
+        <MaterialIcons name="my-location" style={styles.myLocationIcon} />
+      </TouchableOpacity>
+    </View>
   );
 };
 
-const styles = StyleSheet.create({
-  clusterContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  clusterText: {
-    color: '#fff',
-    fontWeight: 'bold'
-  },
-  map: {
-    flex: 1,
-  },
-});
 
 export default MapSection;

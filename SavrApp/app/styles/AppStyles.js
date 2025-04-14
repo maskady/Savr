@@ -1,19 +1,9 @@
 import { StyleSheet, Appearance } from "react-native";
+import { Colors } from "./Common";
 
 const getStyles = () => {
   const theme = Appearance.getColorScheme();
   const isDarkMode = theme === "dark";
-
-  const Colors = {
-    Black: "black",
-    White: "white",
-    Grey: "#333",
-    lightGrey: "#bbb",
-    darkGrey: "#666",
-    classicGrey: "grey",
-    disableGreyDarkMode: "#c1c1c1",
-    disableGreyLightMode: "#f1f1f1",
-  }
 
   return StyleSheet.create({
     container: {
@@ -125,12 +115,72 @@ const getStyles = () => {
       flex: 1,
       backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
     },
+    clusterMarker: {
+      width: 60,
+      height: 60,
+      alignItems: 'center',
+      justifyContent: 'center',
+
+    },
+    clusterContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: Colors.lightGrey,
+      borderWidth: 2,
+      borderColor: Colors.Black,
+
+    },
+    clusterText: {
+      color: Colors.Black,
+      fontWeight: 'bold',
+      fontSize: 14,
+    },
+    pinContainer: { 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      position: 'relative' 
+    },
+    locationPin: {
+      
+    },
+    pinText: {
+      color: Colors.White,
+      fontWeight: 'bold',
+      fontSize: 12,
+      marginBottom: -10,
+      position: 'absolute', 
+      top: '40%', 
+      transform: [{ translateY: -8 }], 
+      width: '100%', 
+      textAlign: 'center',
+    },
     map: {
       flex: 1,
     },
     mapContainer: {
       flex: 1,
       position: 'relative',
+    },
+    locateButton: {
+      position: 'absolute',
+      top: '7%',
+      right: 10,
+      transform: [{ translateY: -25 }],
+      backgroundColor: NaN,
+      padding: 10,
+      borderRadius: 5,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+    },
+    myLocationIcon: {
+      fontSize: 20,
+      color: isDarkMode ? Colors.White : Colors.Black,
     },
     searchOverlay: {
       position: 'absolute',
@@ -169,7 +219,8 @@ const getStyles = () => {
         strokeWidth: '2',
         stroke: '#1976D2'
       },
-    }
+    },
+    
   });
 }
 
