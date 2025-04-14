@@ -153,12 +153,6 @@ const getStyles = () => {
       backgroundColor: isDarkMode ? "#333" : "white",
       color: isDarkMode ? "white" : "black",
     },
-    loginButton: {
-      backgroundColor: isDarkMode ? "#6200ea" : "black",
-    },
-    loginButtonText: {
-      color: "white",
-    },
     keyboardAvoidingView: {
       flex: 1,
     },
