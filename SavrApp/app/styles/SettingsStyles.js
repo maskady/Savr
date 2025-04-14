@@ -229,6 +229,7 @@ const getStyles = () => {
     },
     statusBar: {
       backgroundColor: isDarkMode ? Colors.Black : Colors.White,
+      barStyle: isDarkMode ? "light-content" : "dark-content",
     }
   });
 }
