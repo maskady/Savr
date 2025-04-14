@@ -94,6 +94,10 @@ const MainScreen = () => {
           },
         ]}
       >
+        <StatusBar
+          barStyle={styles.statusBar.barStyle}
+          backgroundColor={styles.statusBar.backgroundColor}
+        />
         <ActivityIndicator size="large" color={darkMode ? '#fff' : '#121212'} />
         <View style={{ marginTop: 10 }}>
           <Text style={{ color: darkMode ? '#fff' : '#121212', fontSize: 16 }}>
