@@ -28,7 +28,8 @@ export const ShopProvider = ({ children }) => {
     const { latitude, latitudeDelta, longitudeDelta } = region;
     const verticalDistanceKm = latitudeDelta * 111;
     const horizontalDistanceKm = longitudeDelta * 111 * Math.cos(latitude * (Math.PI / 180));
-    return Math.min(Math.max(verticalDistanceKm, horizontalDistanceKm) / 2 * 4, MAX_RADIUS); // multiply by 4 to get a larger radius for smoother UX
+    const r = Math.min(Math.max(verticalDistanceKm, horizontalDistanceKm) / 2, MAX_RADIUS); 
+    return r;
   };
 
   const fetchShopsThrottled = useMemo(
@@ -61,7 +62,7 @@ export const ShopProvider = ({ children }) => {
         { latitude: lastFetchedRegion.latitude, longitude: lastFetchedRegion.longitude }
       ) > (computedCurrentRadius * 1000) / 3
     ) {
-      fetchShopsThrottled(currentRegion, computedCurrentRadius);
+      fetchShopsThrottled(currentRegion, computedCurrentRadius * 4); // multiply by 4 to get a larger radius for smoother UX
     }
   };
 
