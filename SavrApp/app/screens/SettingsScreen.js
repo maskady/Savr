@@ -251,6 +251,7 @@ const SettingsScreen = ( ) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar
+        barStyle={styles.statusBar.barStyle}
         backgroundColor={styles.statusBar.backgroundColor}
       />
       <View style={styles.settingsGlobalContainer}>
