@@ -63,15 +63,7 @@ const SettingsDropdown = () => {
     alert(message);
   }
 
-  if (isLoading) {
-    return (
-      <TouchableOpacity style={styles.settingsButton} onPress={() => {navigation.navigate('Settings')}}>
-        <Ionicons name="settings-sharp" size={24} color="#000" />
-      </TouchableOpacity>
-    )
-  }
-
-  if (user.roleId === 'user') {
+  if (isLoading || user.roleId === 'user') {
     return (
       <TouchableOpacity style={styles.settingsButton} onPress={() => {navigation.navigate('Settings')}}>
         <Ionicons name="settings-sharp" size={24} color="#000" />
