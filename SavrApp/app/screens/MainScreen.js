@@ -22,7 +22,8 @@ const initialRegion = {
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
   const navigation = useNavigation();
-
+  const [styles, setStyles] = useState(getStyles());
+  
   // Start with region as null while we fetch the user's location.
   const [region, setRegion] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
