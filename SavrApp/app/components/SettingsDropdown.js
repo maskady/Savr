@@ -66,7 +66,7 @@ const SettingsDropdown = () => {
   if (isLoading || user.roleId === 'user') {
     return (
       <TouchableOpacity style={styles.settingsButton} onPress={() => {navigation.navigate('Settings')}}>
-        <Ionicons name="settings-sharp" size={24} color="#000" />
+        <Ionicons name="settings-sharp" size={styles.settingsIcon.size} color={styles.settingsIcon.color} />
       </TouchableOpacity>
     )
   }
@@ -179,6 +179,10 @@ const styles = StyleSheet.create({
     bottom: -1000,
     zIndex: 999,
   },
+  settingsIcon: {
+    size: 24,
+    color: '#000',
+  }
 });
 
 export default SettingsDropdown;
