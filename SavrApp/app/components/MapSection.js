@@ -5,6 +5,7 @@ import Supercluster from 'supercluster';
 import { debounce } from 'lodash';
 import { businessCategoriesColors } from '../constants/businessCategories';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import getStyles from '../styles/AppStyles';
 
 const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, getUserLocation }) => {
@@ -80,9 +81,9 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, ge
               longitudeDelta: newLongitudeDelta
             });
           }}
-
+          style={styles.clusterMarker}
         >
-          <View style={[styles.clusterContainer, { backgroundColor: 'grey', borderColor: 'black' }]}> 
+          <View style={[styles.clusterContainer]}> 
             <Text style={styles.clusterText}>{pointCount}</Text>
           </View>
         </Marker>
@@ -91,18 +92,20 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, ge
 
     const shop = shops.find(shop => shop.id === shopId) || {};
     const category = shop.primaryCategory ? shop.primaryCategory : 'Unknown';
-    const color = businessCategoriesColors[category] || 'lightgreen';
-    const displayRating = rating || 0;
+    const color = businessCategoriesColors[category] || businessCategoriesColors['other'] || 'lightgrey';
+    const displayRating = rating || 0; // TODO: Change with number of product variants
 
     return (
       <Marker
         key={shopId}
         coordinate={{ latitude, longitude }}
-        pinColor={color}
         onPress={() => onShopSelect && onShopSelect(shop)}
       >
-        <View style={[styles.clusterContainer, { backgroundColor: color }]}> 
-          <Text style={styles.clusterText}>{displayRating}</Text>
+        <View style={styles.pinContainer}>
+          <FontAwesome6 name="location-pin" size={40} style={styles.locationPin} color={color} />
+          <Text style={[styles.pinText]}>
+            {displayRating}
+          </Text>
         </View>
       </Marker>
     );
