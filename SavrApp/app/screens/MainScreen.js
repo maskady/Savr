@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, FlatList, StyleSheet, ActivityIndicator, Text } from 'react-native';
+
+import { View, FlatList, StyleSheet, ActivityIndicator, Text, Appearance, StatusBar } from 'react-native';
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
 import CategoryFilter from '../components/CategoryFilter';
@@ -8,7 +9,7 @@ import BottomSheet from '../components/BottomSheet';
 import ListItem from '../components/ListItem';
 import { businessCategories } from '../constants/businessCategories';
 import { SettingsContext } from '../contexts/SettingsContext';
-import styles from '../styles/AppStyles';
+import getStyles from '../styles/AppStyles';
 import { ShopContext } from '../contexts/ShopContext';
 
 const initialRegion = {
@@ -70,6 +71,13 @@ const MainScreen = () => {
     };
 
     initializeLocation();
+
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setStyles(getStyles());
+    });
+
+    subscription.remove();
+    setIsLoading(false);
   }, []);
 
   // While loading, display the activity indicator with a message.
@@ -114,6 +122,10 @@ const MainScreen = () => {
 
   return (
     <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
+      <StatusBar
+        barStyle={styles.statusBar.barStyle}
+        backgroundColor={styles.statusBar.backgroundColor}
+      />
       <CategoryFilter
         categories={Object.values(businessCategories)}
         activeCategories={activeCategories}
@@ -123,7 +135,7 @@ const MainScreen = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-      <View style={localStyles.mapContainer}>
+      <View style={styles.mapContainer}>
         <MapSection
           region={region}
           setRegion={(newRegion) => {
@@ -137,7 +149,7 @@ const MainScreen = () => {
           }}
           onShopSelect={handleSelect}
         />
-        <View style={localStyles.searchOverlay}></View>
+        <View style={styles.searchOverlay}></View>
       </View>
       <BottomSheet>
         <FlatList
@@ -151,19 +163,5 @@ const MainScreen = () => {
     </View>
   );
 };
-
-const localStyles = StyleSheet.create({
-  mapContainer: {
-    flex: 1,
-    position: 'relative',
-  },
-  searchOverlay: {
-    position: 'absolute',
-    top: 30,
-    left: 5,
-    right: 5,
-    zIndex: 100,
-  },
-});
 
 export default MainScreen;
