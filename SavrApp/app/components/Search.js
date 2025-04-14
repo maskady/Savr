@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const Search = () => {
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const { darkMode } = useContext(SettingsContext);
 
   const handleSubmit = () => {
     if (!searchQuery.trim()) {
@@ -46,7 +48,7 @@ const Search = () => {
         />
       ) : (
         <TouchableOpacity onPress={() => setSearchActive(true)} style={styles.searchIconContainer}>
-          <Ionicons name="search" size={24} color="#333" />
+          <Ionicons name="search" size={24} color={darkMode ? '#fff' : '#333'} />
         </TouchableOpacity>
       )}
     </View>

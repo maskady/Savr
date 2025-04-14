@@ -1,20 +1,14 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, FlatList, ActivityIndicator, Appearance, StatusBar } from 'react-native';
 import * as Location from 'expo-location';
-import { set, throttle } from 'lodash';
-import haversine from 'haversine-distance';
 import { useNavigation } from '@react-navigation/native';
 import CategoryFilter from '../components/CategoryFilter';
 import MapSection from '../components/MapSection';
 import BottomSheet from '../components/BottomSheet';
 import ListItem from '../components/ListItem';
 import { businessCategories } from '../constants/businessCategories';
-import { getShops } from '../utils/api';
 import { SettingsContext } from '../contexts/SettingsContext';
-import styles from '../styles/AppStyles';
-import ImageUploadScreen from './ImageUploadScreen';
-import ImageUploadModal from '../components/ImageUploadModal';
-import { Button, Text } from 'react-native';
+import getStyles from '../styles/AppStyles';
 import { ShopContext } from '../contexts/ShopContext';
 
 
@@ -22,6 +16,7 @@ const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
+  const [styles, setStyles] = useState(getStyles());
 
   // Default location (Oulu, Finland)
   const [region, setRegion] = useState({
@@ -69,6 +64,12 @@ const MainScreen = () => {
       fetchShopsIfNeeded(currentRegion);
     };
     f();
+
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setStyles(getStyles());
+    });
+
+    subscription.remove();
     setIsLoading(false);
   }, []);
 
@@ -103,6 +104,10 @@ const MainScreen = () => {
 
   return (
     <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
+      <StatusBar
+        barStyle={styles.statusBar.barStyle}
+        backgroundColor={styles.statusBar.backgroundColor}
+      />
       <CategoryFilter
         // Convert dictionary to array before passing.
         categories={Object.values(businessCategories)}
@@ -113,7 +118,7 @@ const MainScreen = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-      <View style={localStyles.mapContainer}>
+      <View style={styles.mapContainer}>
         <MapSection
           region={region}
           setRegion={setRegion}
@@ -121,7 +126,7 @@ const MainScreen = () => {
           onRegionChange={fetchShopsIfNeeded}
           onShopSelect={handleSelect}
         />
-        <View style={localStyles.searchOverlay}></View>
+        <View style={styles.searchOverlay}></View>
       </View>
       <BottomSheet>
         <FlatList
@@ -135,19 +140,5 @@ const MainScreen = () => {
     </View>
   );
 };
-
-const localStyles = StyleSheet.create({
-  mapContainer: {
-    flex: 1,
-    position: 'relative',
-  },
-  searchOverlay: {
-    position: 'absolute',
-    top: 30,
-    left: 5,
-    right: 5,
-    zIndex: 100,
-  },
-});
 
 export default MainScreen;

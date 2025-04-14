@@ -229,6 +229,63 @@ const getStyles = () => {
     },
     statusBar: {
       backgroundColor: isDarkMode ? Colors.Black : Colors.White,
+      barStyle: isDarkMode ? "light-content" : "dark-content",
+    },
+    settingsDropDown: {
+      container: {
+        position: 'relative',
+        zIndex: 1000,
+        width: 40, 
+        paddingLeft: 15,
+        color: isDarkMode ? Colors.White : Colors.Black,
+      },
+      gearButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 0,
+      },
+      plusIcon: {
+        fontSize: 24,
+        color: isDarkMode ? Colors.White : Colors.Black,
+        fontWeight: 'bold',
+      },
+      dropdownMenu: {
+        position: 'absolute',
+        top: 45,
+        right: -15,
+        width: 200, 
+        backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
+        borderWidth: 1,
+        borderColor: isDarkMode ? Colors.darkGrey : Colors.lightGrey,
+        borderRadius: 5,
+        overflow: 'hidden',
+        zIndex: 1001,
+        elevation: 5,
+      },
+      option: {
+        padding: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: isDarkMode ? Colors.darkGrey : Colors.lightGrey,
+      },
+      optionText: {
+        fontSize: 14,
+        color: isDarkMode ? Colors.White : Colors.Black,
+      },
+      overlay: {
+        position: 'absolute',
+        top: 45,
+        left: -1000,
+        right: -1000,
+        bottom: -1000,
+        zIndex: 999,
+      },
+      settingsIcon: {
+        size: 24,
+        color: isDarkMode ? Colors.White : Colors.Black,
+      }
     }
   });
 }

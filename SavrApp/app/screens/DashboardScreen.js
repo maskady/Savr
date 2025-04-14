@@ -1,23 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Appearance,
+  StatusBar,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { LineChart, BarChart } from 'react-native-chart-kit';
-import styles from '../styles/AppStyles';
 import SettingsDropdown from '../components/SettingsDropdown';
+import getStyles from '../styles/AppStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
 const DashboardScreen = () => {
   const { t } = useTranslation();
+  const [styles, setStyles] = useState(getStyles());
+
+  useEffect(() => {
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setStyles(getStyles(colorScheme));
+    });
+
+    return () => subscription.remove();
+  }, []);
+
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        barStyle={styles.statusBar.barStyle}
+        backgroundColor={styles.statusBar.backgroundColor}
+      />
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>{t("appName")}</Text>
@@ -69,21 +85,7 @@ const DashboardScreen = () => {
           width={screenWidth * 0.9}   // 90% of screen width
           height={220}
           yAxisSuffix="€"
-          chartConfig={{
-            backgroundColor: '#ffffff',
-            backgroundGradientFrom: '#ffffff',
-            backgroundGradientTo: '#ffffff',
-            color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0,0,0,${opacity})`,
-            style: {
-              borderRadius: 16
-            },
-            propsForDots: {
-              r: '5',
-              strokeWidth: '2',
-              stroke: '#1976D2'
-            }
-          }}
+          chartConfig={styles.lineChartConfig}
           bezier
           style={styles.chartStyle}
         />
@@ -91,33 +93,23 @@ const DashboardScreen = () => {
         {/* CO2 Emissions Bar Chart */}
         <Text style={styles.chartTitle}>{t("dashboard.co2Saved")}</Text>
         <BarChart
-        data={{
+          data={{
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
             datasets: [
-            {
+              {
                 data: [12, 15, 10, 21, 13],
-            },
+              },
             ],
-        }}
-        width={Dimensions.get('window').width * 0.9}
-        height={220}
-        yAxisSuffix="kg"
-        chartConfig={{
-            backgroundColor: '#fff',
-            backgroundGradientFrom: '#fff',
-            backgroundGradientTo: '#fff',
-            decimalPlaces: 0,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-            borderRadius: 16,
-            },
-        }}
-        style={{
-            marginVertical: 8,
-            borderRadius: 16,
-            alignSelf: 'center',
-        }}
+          }}
+          width={Dimensions.get('window').width * 0.9}
+          height={220}
+          yAxisSuffix="kg"
+          chartConfig={styles.chartConfig}
+          style={{
+              marginVertical: 8,
+              borderRadius: 16,
+              alignSelf: 'center',
+          }}
         />
 
       </ScrollView>
