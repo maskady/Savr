@@ -1,11 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Supercluster from 'supercluster';
-import { debounce, throttle } from 'lodash';
+import { debounce } from 'lodash';
 import { businessCategoriesColors } from '../constants/businessCategories';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import getStyles from '../styles/AppStyles';
 
-const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) => {
+const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, getUserLocation }) => {
+
+  const [styles, setStyles] = useState(getStyles());
 
   const [clusters, setClusters] = useState([]);
 
@@ -112,42 +116,39 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
     []
   );
 
+  const locateMyself = async () => {
+    const newRegion = await getUserLocation();
+    if (onRegionChange) {
+      onRegionChange(newRegion);
+    }
+    updateClusters(newRegion);
+  };
+
   return (
-    <MapView
-      style={styles.map}
-      initialRegion={region}
-      onRegionChangeComplete={(newRegion) => {
-        setRegion(newRegion);
-        debouncedUpdateClusters(newRegion);
-        onRegionChange && onRegionChange(newRegion);
-      }}
-      showsUserLocation={true}
-      showsCompass={true}
-      showsMyLocationButton={true}
-      showsBuildings={true}
-      showsScale={true}
-      showsMyLocation={true}
-    >
-      {clusters.map(cluster => renderMarker(cluster))}
-    </MapView>
+    <View style={{ flex: 1 }}>
+      <MapView
+        style={styles.map}
+        region={region}
+        onRegionChangeComplete={(newRegion) => {
+          setRegion(newRegion);
+          debouncedUpdateClusters(newRegion);
+          onRegionChange && onRegionChange(newRegion);
+        }}
+        showsUserLocation={true}
+        showsCompass={true}
+        showsMyLocationButton={true}
+        showsBuildings={true}
+        showsScale={true}
+        showsMyLocation={true}
+      >
+        {clusters.map(cluster => renderMarker(cluster))}
+      </MapView>
+      <TouchableOpacity style={styles.locateButton} onPress={locateMyself}>
+        <MaterialIcons name="my-location" style={styles.myLocationIcon} />
+      </TouchableOpacity>
+    </View>
   );
 };
 
-const styles = StyleSheet.create({
-  clusterContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  clusterText: {
-    color: '#fff',
-    fontWeight: 'bold'
-  },
-  map: {
-    flex: 1,
-  },
-});
 
 export default MapSection;
