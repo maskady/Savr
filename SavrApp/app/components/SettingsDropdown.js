@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, Appearance, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getToken } from '../utils/token';
+import getStyles from '../styles/SettingsStyles';
 
 const SettingsDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState({});
+  const [styles, setStyles] = useState(getStyles());
   const dropdownHeight = useRef(new Animated.Value(0)).current;
   
   const menuHeight = 100;
@@ -47,6 +49,12 @@ const SettingsDropdown = () => {
     };
 
     loadUserData();
+
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setStyles(getStyles(colorScheme));
+    });
+
+    subscription.remove();
     setIsLoading(false);
   }, [isOpen]);
 
@@ -65,17 +73,17 @@ const SettingsDropdown = () => {
 
   if (isLoading || user.roleId === 'user') {
     return (
-      <TouchableOpacity style={styles.settingsButton} onPress={() => {navigation.navigate('Settings')}}>
-        <Ionicons name="settings-sharp" size={styles.settingsIcon.size} color={styles.settingsIcon.color} />
+      <TouchableOpacity style={styles.settingsDropDown.settingsButton} onPress={() => {navigation.navigate('Settings')}}>
+        <Ionicons name="settings-sharp" size={styles.settingsDropDown.settingsIcon.size} color={styles.settingsDropDown.settingsIcon.color} />
       </TouchableOpacity>
     )
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.settingsDropDown.container}>
       <TouchableOpacity 
         style={[
-          styles.gearButton, 
+          styles.settingsDropDown.gearButton, 
           isOpen && {
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
@@ -85,11 +93,11 @@ const SettingsDropdown = () => {
         onPress={toggleDropdown}
         activeOpacity={0.8}
       >
-        <Ionicons name="settings-sharp" size={24} color="#000" />
+        <Ionicons name="settings-sharp" size={styles.settingsDropDown.settingsIcon.size} color={styles.settingsDropDown.settingsIcon.color} />
       </TouchableOpacity>
 
       <Animated.View style={[
-        styles.dropdownMenu,
+        styles.settingsDropDown.dropdownMenu,
         { 
           height: dropdownHeight, 
           opacity: dropdownHeight.interpolate({
@@ -99,24 +107,24 @@ const SettingsDropdown = () => {
         }
       ]}>
         <TouchableOpacity
-          style={styles.option}
+          style={styles.settingsDropDown.option}
           onPress={() => handleOptionSelect(() => navigation.navigate('Settings'))}
         >
-          <Text style={styles.optionText}>User Settings</Text>
+          <Text style={styles.settingsDropDown.optionText}>User Settings</Text>
         </TouchableOpacity>
         
         <TouchableOpacity
-            style={[styles.option, { borderBottomWidth: 0, paddingBottom: 0 }]}
+            style={[styles.settingsDropDown.option, { borderBottomWidth: 0, paddingBottom: 0 }]}
             onPress={() => handleOptionSelect(() => navigation.navigate('CompanyList'))}
         >
-            <Text style={styles.optionText}>Company Settings</Text>
+            <Text style={styles.settingsDropDown.optionText}>Company Settings</Text>
         </TouchableOpacity>
         
       </Animated.View>
       
       {isOpen && (
         <TouchableOpacity 
-          style={styles.overlay}
+          style={styles.settingsDropDown.overlay}
           onPress={() => setIsOpen(false)}
           activeOpacity={0}
         />
@@ -124,65 +132,5 @@ const SettingsDropdown = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    zIndex: 1000,
-    width: 40, 
-    paddingLeft: 15,
-  },
-  gearButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 0,
-  },
-  plusIcon: {
-    fontSize: 24,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  dropdownMenu: {
-    position: 'absolute',
-    top: 45,
-    right: -15,
-    width: 200, 
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    overflow: 'hidden',
-    zIndex: 1001,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  option: {
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  optionText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 45,
-    left: -1000,
-    right: -1000,
-    bottom: -1000,
-    zIndex: 999,
-  },
-  settingsIcon: {
-    size: 24,
-    color: '#000',
-  }
-});
 
 export default SettingsDropdown;
