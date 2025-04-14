@@ -117,10 +117,10 @@ const LoginScreen = () => {
                 />
 
                 <TouchableOpacity
-                  style={[styles.continueButton, styles.loginButton]}
+                  style={styles.continueButton}
                   onPress={handleSignin}
                 >
-                  <Text style={[styles.continueButtonText, styles.loginButtonText]}>
+                  <Text style={styles.continueButtonText}>
                     {t("login.loginButton")}
                   </Text>
                 </TouchableOpacity>
