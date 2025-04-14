@@ -1,20 +1,14 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
-import { set, throttle } from 'lodash';
-import haversine from 'haversine-distance';
 import { useNavigation } from '@react-navigation/native';
 import CategoryFilter from '../components/CategoryFilter';
 import MapSection from '../components/MapSection';
 import BottomSheet from '../components/BottomSheet';
 import ListItem from '../components/ListItem';
 import { businessCategories } from '../constants/businessCategories';
-import { getShops } from '../utils/api';
 import { SettingsContext } from '../contexts/SettingsContext';
 import styles from '../styles/AppStyles';
-import ImageUploadScreen from './ImageUploadScreen';
-import ImageUploadModal from '../components/ImageUploadModal';
-import { Button, Text } from 'react-native';
 import { ShopContext } from '../contexts/ShopContext';
 
 
