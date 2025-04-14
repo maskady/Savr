@@ -1,7 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
-  StyleSheet,
   View,
   Text,
   TextInput,
@@ -12,28 +11,35 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Appearance,
 } from "react-native";
-import { useRoute,  useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { storeToken } from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { loginUser } from "../utils/authApi";
-import { SettingsContext } from "../contexts/SettingsContext";
-import styles from "../styles/AuthStyles";
+import getStyles from "../styles/AuthStyles";
 import { useTranslation } from 'react-i18next';
 
 const LoginScreen = () => {
   const { t } = useTranslation();
-
   const [password, setPassword] = useState("");
   const route = useRoute();
-  
   const { email } = route.params;
   const inputAccessoryLoginPassword = "inputAccessoryLoginPassword";
-  
-  const { darkMode } = useContext(SettingsContext);
-
   const navigation = useNavigation();
+  
+  const [styles, setStyles] = useState(getStyles());
+
+  useEffect(() => {
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setStyles(getStyles());
+    });
+  
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   const handleSignin = async () => {
     if (email === "" || password === "") {
@@ -60,92 +66,69 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView
-      style={[
-        styles.flexContainer,
-        { backgroundColor: darkMode ? "#121212" : "white" },
-      ]}
-    >
+    <SafeAreaView style={styles.flexContainer}>
       <StatusBar
-        barStyle={darkMode ? "light-content" : "dark-content"}
-        backgroundColor={darkMode ? "#333" : "white"}
+        barStyle={styles.statusBar.barStyle}
+        backgroundColor={styles.statusBar.backgroundColor}
       />
       <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{ flex: 1 }}
-          >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={styles.content}>
-        {Platform.OS === "ios" && (
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ArrowLeft size={24} color={darkMode ? "white" : "black"} />
-          </TouchableOpacity>
-        )}
-        <Text style={[styles.titleLogin, { color: darkMode ? "white" : "black" }]}>
-          {t("appName")}
-        </Text>
-        
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoidingView}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.content}>
+              {Platform.OS === "ios" && (
+                <TouchableOpacity 
+                  style={styles.backButton}
+                  onPress={() => navigation.goBack()}
+                >
+                  <ArrowLeft size={24} color={styles.backIcon.color} />
+                </TouchableOpacity>
+              )}
+              
+              <Text style={styles.title}>
+                {t("appName")}
+              </Text>
 
-        <View style={styles.formContainer}>
-          <Text
-            style={[styles.heading, { color: darkMode ? "white" : "black" }]}
-          >
-            {t("login.title")}
-          </Text>
-          <Text style={styles.divider}/>
+              <View style={styles.formContainer}>
+                <Text style={styles.heading}>
+                  {t("login.title")}
+                </Text>
+                <View style={styles.lineDivider} />
 
-          <TextInput
-            style={[
-              styles.input,
-              {
-                borderColor: darkMode ? "#444" : "#ddd",
-                backgroundColor: "#f1f1f1",
-                color: darkMode ? "white" : "black",
-              },
-            ]}
-            value={email}
-            editable={false}
-          />
+                <TextInput
+                  style={[styles.input, styles.disabledInput]}
+                  value={email}
+                  editable={false}
+                />
 
-          <TextInput
-            style={[
-              styles.input,
-              {
-                borderColor: darkMode ? "#444" : "#ddd",
-                backgroundColor: darkMode ? "#333" : "white",
-                color: darkMode ? "white" : "black",
-              },
-            ]}
-            placeholder={t("common.passwordPlaceholder")}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            placeholderTextColor={darkMode ? "#bbb" : "#666"}
-            autoCapitalize="none"
-            inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryLoginPassword : undefined}
-            returnKeyType="done"
-            onSubmitEditing={handleSignin}
-          />
+                <TextInput
+                  style={[styles.input, styles.passwordInput]}
+                  placeholder={t("common.passwordPlaceholder")}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  placeholderTextColor={styles.placeholderText.color}
+                  autoCapitalize="none"
+                  inputAccessoryViewID={Platform.OS === "ios" ? inputAccessoryLoginPassword : undefined}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSignin}
+                />
 
-          <TouchableOpacity
-            style={[
-              styles.continueButton,
-              { backgroundColor: darkMode ? "#6200ea" : "black" },
-            ]}
-            onPress={handleSignin}
-          >
-            <Text
-              style={[styles.continueButtonText, { color: "white" }]}
-            >
-              {t("login.loginButton")}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View />
-      </View>
-      </ScrollView>
-      </TouchableWithoutFeedback>
+                <TouchableOpacity
+                  style={[styles.continueButton, styles.loginButton]}
+                  onPress={handleSignin}
+                >
+                  <Text style={[styles.continueButtonText, styles.loginButtonText]}>
+                    {t("login.loginButton")}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View />
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
       {Platform.OS === "ios" && <IOSKeyboardToolBar inputAccessoryViewID={inputAccessoryLoginPassword} />}
     </SafeAreaView>
