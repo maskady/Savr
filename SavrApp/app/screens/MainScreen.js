@@ -107,7 +107,7 @@ const MainScreen = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-      <View style={localStyles.mapContainer}>
+      <View style={styles.mapContainer}>
         <MapSection
           region={region}
           setRegion={setRegion}
@@ -115,7 +115,7 @@ const MainScreen = () => {
           onRegionChange={fetchShopsIfNeeded}
           onShopSelect={handleSelect}
         />
-        <View style={localStyles.searchOverlay}></View>
+        <View style={styles.searchOverlay}></View>
       </View>
       <BottomSheet>
         <FlatList
@@ -129,19 +129,5 @@ const MainScreen = () => {
     </View>
   );
 };
-
-const localStyles = StyleSheet.create({
-  mapContainer: {
-    flex: 1,
-    position: 'relative',
-  },
-  searchOverlay: {
-    position: 'absolute',
-    top: 30,
-    left: 5,
-    right: 5,
-    zIndex: 100,
-  },
-});
 
 export default MainScreen;
