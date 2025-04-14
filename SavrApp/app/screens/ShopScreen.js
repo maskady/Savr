@@ -54,7 +54,7 @@ const ShopScreen = () => {
     setHasChanges(true);
   };
 
-  // Define colors based on dark mode
+  // I am here
   const colors = {
     background: darkMode ? '#121212' : '#ffffff',
     text: darkMode ? '#ffffff' : '#000000',
@@ -63,6 +63,8 @@ const ShopScreen = () => {
     card: darkMode ? '#1e1e1e' : '#f5f5f5',
     border: darkMode ? '#333333' : '#e0e0e0',
   };
+
+  // I want to jump here
 
   useEffect(() => {
     setHasChanges(true);
@@ -197,6 +199,7 @@ const ShopScreen = () => {
   }
 
   return (
+    
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
 
@@ -214,7 +217,7 @@ const ShopScreen = () => {
             <TouchableOpacity
               style={[
                 styles.saveButton,
-                { backgroundColor: isSaving ? 'rgba(0,0,0,0.4)' : 'rgba(46,125,50,0.9)' }
+                { backgroundColor: isSaving ? 'rgba(0,0,0,0.2)' : 'rgba(46,125,50,0.9)' }
               ]}
               onPress={handleSaveChanges}
               disabled={isSaving}
@@ -234,7 +237,7 @@ const ShopScreen = () => {
             style={[
               styles.saveButton,
               { 
-                backgroundColor: 'rgba(0,0,0,0.4)',
+                backgroundColor: 'rgba(0,0,0,0.2)',
                 marginLeft: editMode === 'edit' && hasChanges ? 8 : 0 
               }
             ]}
@@ -245,17 +248,17 @@ const ShopScreen = () => {
 
             <View style={styles.buttonContent}>
 
-            {editMode === 'view' ? (
-              <>
-                <Pencil size={16} color="#fff" style={styles.buttonIcon} />
-                <Text style={styles.buttonText}>Edit</Text>
-              </>
-            ) : (
-              <>
-                <X size={16} color="#fff" style={styles.buttonIcon} />
-                <Text style={styles.buttonText}>Cancel</Text>
-              </>
-            )}
+              {editMode === 'view' ? (
+                <>
+                  <Pencil size={16} color="#fff" style={styles.buttonIcon} />
+                  <Text style={styles.buttonText}>Edit</Text>
+                </>
+              ) : (
+                <>
+                  <X size={16} color="#fff" style={styles.buttonIcon} />
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </>
+              )}
             </View>
           </TouchableOpacity>
 
@@ -284,6 +287,7 @@ const ShopScreen = () => {
           </TouchableOpacity>
         </View>
       ) : (
+        
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Image Manager Component */}
           <ImageManager
@@ -298,6 +302,8 @@ const ShopScreen = () => {
           {/* Shop Info */}
           {/* /////////////////////////////// */}
           <View style={[styles.infoContainer, { backgroundColor: colors.background }]}>
+
+           {/* Shop Name */}
             {editMode === 'view' ? (
               <Text style={[styles.shopName, { color: colors.text }]}>{shop.name}</Text>
             ) : (
@@ -380,6 +386,7 @@ const ShopScreen = () => {
               </View>
             )}
 
+            {/* Description */}
             <View style={[styles.sectionContainer, { borderColor: colors.border }]}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>Description</Text>
               
@@ -404,10 +411,9 @@ const ShopScreen = () => {
             </View>
 
             {/* Contact & Location */}
-            <View style={[styles.sectionContainer, { borderColor: colors.border }]}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>Contact & Location</Text>
+              <View style={[styles.sectionContainer, { borderColor: colors.border }]}>
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>Contact & Location</Text>
 
-              {shop.phone && (
                 <View style={styles.contactItem}>
                   <Phone size={20} color={colors.primary} />
                   {editMode === 'view' ? (
@@ -428,71 +434,68 @@ const ShopScreen = () => {
                     </View>
                   )}
                 </View>
-              )}
 
-              {(shop.address || shop.postalCode || shop.city || shop.country) && (
                 <View style={styles.contactItem}>
-                  <MapPin size={20} color={colors.primary} />
-                  <View style={{ marginLeft: 12 }}>
-                    {editMode === 'view' ? (
-                      <TouchableOpacity onPress={handleNavigate}>
-                        {shop.address && (
-                          <Text style={[styles.contactText, { color: colors.text }]}>{shop.address}</Text>
-                        )}
-                        {(shop.postalCode || shop.city) && (
-                          <Text style={[styles.contactText, { color: colors.text }]}>
-                            {[
-                              shop.postalCode || '',
-                              shop.city || ''
-                            ].filter(Boolean).join(' ')}
-                          </Text>
-                        )}
-                        {shop.country && (
-                          <Text style={[styles.contactText, { color: colors.text }]}>{shop.country}</Text>
-                        )}
-                      </TouchableOpacity>
-                    ) : (
-                      <>
-                        <TextInput
-                          style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
-                          value={shop.address || ''}
-                          onChangeText={(text) => handleInputChange('address', text)}
-                          placeholder="Street address"
-                          placeholderTextColor={colors.subtext}
-                        />
-                        <Text style={[styles.inputLabel, { color: colors.subtext }]}>Street Address (e.g., 123 Main St)</Text>
-                        
-                        <TextInput
-                          style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
-                          value={shop.postalCode || ''}
-                          onChangeText={(text) => handleInputChange('postalCode', text)}
-                          placeholder="Postal code"
-                          placeholderTextColor={colors.subtext}
-                        />
-                        <Text style={[styles.inputLabel, { color: colors.subtext }]}>Postal Code (e.g., 10115)</Text>
-                        
-                        <TextInput
-                          style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
-                          value={shop.city || ''}
-                          onChangeText={(text) => handleInputChange('city', text)}
-                          placeholder="City"
-                          placeholderTextColor={colors.subtext}
-                        />
-                        <Text style={[styles.inputLabel, { color: colors.subtext }]}>City (e.g., Berlin)</Text>
-                        
-                        <TextInput
-                          style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
-                          value={shop.country || ''}
-                          onChangeText={(text) => handleInputChange('country', text)}
-                          placeholder="Country"
-                          placeholderTextColor={colors.subtext}
-                        />
-                        <Text style={[styles.inputLabel, { color: colors.subtext }]}>Country (e.g., Germany)</Text>
-                      </>
-                    )}
-                  </View>
+                <MapPin size={20} color={colors.primary} />
+                <View style={{ marginLeft: 12 }}>
+                  {editMode === 'view' ? (
+                    <TouchableOpacity onPress={handleNavigate}>
+                      {shop.address && (
+                        <Text style={[styles.contactText, { color: colors.text }]}>{shop.address}</Text>
+                      )}
+                      {(shop.postalCode || shop.city) && (
+                        <Text style={[styles.contactText, { color: colors.text }]}>
+                          {[
+                            shop.postalCode || '',
+                            shop.city || ''
+                          ].filter(Boolean).join(' ')}
+                        </Text>
+                      )}
+                      {shop.country && (
+                        <Text style={[styles.contactText, { color: colors.text }]}>{shop.country}</Text>
+                      )}
+                    </TouchableOpacity>
+                  ) : (
+                    <>
+                      <TextInput
+                        style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
+                        value={shop.address || ''}
+                        onChangeText={(text) => handleInputChange('address', text)}
+                        placeholder="Street address"
+                        placeholderTextColor={colors.subtext}
+                      />
+                      <Text style={[styles.inputLabel, { color: colors.subtext }]}>Street Address (e.g., 123 Main St)</Text>
+                      
+                      <TextInput
+                        style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
+                        value={shop.postalCode || ''}
+                        onChangeText={(text) => handleInputChange('postalCode', text)}
+                        placeholder="Postal code"
+                        placeholderTextColor={colors.subtext}
+                      />
+                      <Text style={[styles.inputLabel, { color: colors.subtext }]}>Postal Code (e.g., 10115)</Text>
+                      
+                      <TextInput
+                        style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
+                        value={shop.city || ''}
+                        onChangeText={(text) => handleInputChange('city', text)}
+                        placeholder="City"
+                        placeholderTextColor={colors.subtext}
+                      />
+                      <Text style={[styles.inputLabel, { color: colors.subtext }]}>City (e.g., Berlin)</Text>
+                      
+                      <TextInput
+                        style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
+                        value={shop.country || ''}
+                        onChangeText={(text) => handleInputChange('country', text)}
+                        placeholder="Country"
+                        placeholderTextColor={colors.subtext}
+                      />
+                      <Text style={[styles.inputLabel, { color: colors.subtext }]}>Country (e.g., Germany)</Text>
+                    </>
+                  )}
                 </View>
-              )}
+              </View>
 
             </View>
 
@@ -612,7 +615,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 8,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.2)',
     borderRadius: 20,
   },
   headerButtons: {
@@ -649,7 +652,7 @@ const styles = StyleSheet.create({
   },
   shareButton: {
     padding: 8,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.2)',
     borderRadius: 20,
   },
   infoContainer: {
@@ -843,7 +846,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import ImageGallery from './ImageGallery';
 import ImageUploadModal from './ImageUploadModal';
-import { Trash2, ArrowUp, ArrowDown } from 'lucide-react-native';
+import { Trash2, ArrowUp, ArrowDown, Pencil, X, Camera, Edit, ArrowLeft, ArrowRight } from 'lucide-react-native';
 
 /**
  * ImageManager component that combines ImageGallery with image upload, delete and reordering capabilities
@@ -23,6 +23,9 @@ import { Trash2, ArrowUp, ArrowDown } from 'lucide-react-native';
  * @param {boolean} props.showIndicators - Whether to show pagination indicators (default: true)
  * @param {function} props.onImagePress - Callback when an image is pressed in view mode
  */
+
+
+
 const ImageManager = ({
   images = [],
   onImagesChange,
@@ -111,64 +114,91 @@ const ImageManager = ({
 
   return (
     <View style={styles.container}>
-      {/* Image Gallery */}
-      <ImageGallery
-        images={images}
-        height={height}
-        showIndicators={showIndicators}
-        onImagePress={handleImagePress}
-      />
+      {/* Image Gallery with Overlay Button */}
+      <View style={styles.galleryContainer}>
+        <ImageGallery
+          images={images}
+          height={height}
+          showIndicators={showIndicators}
+          onImagePress={handleImagePress}
+        />
+
+        {editMode === 'edit' && (
+          <>
+            {/* Overlay Edit Button */}
+            <TouchableOpacity 
+              style={styles.overlayButton} 
+              onPress={() => setModalVisible(true)}
+            >
+              <View style={styles.buttonContent}>
+                <Camera size={18} color="#fff" style={styles.buttonIcon} />
+                <Text style={styles.overlayButtonText}>Add Photo</Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Overlay Selection Button */}
+            {images.length > 0 && (
+              <TouchableOpacity
+                style={[styles.overlayButton, styles.selectButton]}
+                onPress={() => setSelectedImageIndex(selectedImageIndex === null ? 0 : null)}
+              >
+                <View style={styles.buttonContent}>
+                  <Edit size={18} color="#fff" style={styles.buttonIcon} />
+                  <Text style={styles.overlayButtonText}>
+                    {selectedImageIndex !== null ? 'Cancel' : 'Edit Photos'}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          </>
+        )}
+      </View>
 
       {/* Image Management Controls in Edit Mode */}
-      {editMode === 'edit' && (
-        <>
-          <Button 
-            title="Add Image" 
-            onPress={() => setModalVisible(true)} 
-          />
-          
-          {selectedImageIndex !== null && images[selectedImageIndex]?.type !== 'placeholder' && (
-            <View style={styles.imageControls}>
-              <Text style={styles.controlsTitle}>
-                Image Controls
-              </Text>
-              
-              <View style={styles.controlsRow}>
-                <TouchableOpacity
-                  style={[styles.controlButton, selectedImageIndex === 0 && styles.disabledButton]}
-                  onPress={() => handleMoveImage(selectedImageIndex, 'up')}
-                  disabled={selectedImageIndex === 0}
-                >
-                  <ArrowUp 
-                    size={20} 
-                    color={selectedImageIndex === 0 ? '#ccc' : '#333'} 
-                  />
-                  <Text style={styles.controlButtonText}>Move Up</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity
-                  style={[styles.controlButton, selectedImageIndex === images.length - 1 && styles.disabledButton]}
-                  onPress={() => handleMoveImage(selectedImageIndex, 'down')}
-                  disabled={selectedImageIndex === images.length - 1}
-                >
-                  <ArrowDown 
-                    size={20} 
-                    color={selectedImageIndex === images.length - 1 ? '#ccc' : '#333'} 
-                  />
-                  <Text style={styles.controlButtonText}>Move Down</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity
-                  style={[styles.controlButton, styles.deleteButton]}
-                  onPress={() => handleDeleteImage(selectedImageIndex)}
-                >
-                  <Trash2 size={20} color="#d32f2f" />
-                  <Text style={[styles.controlButtonText, styles.deleteButtonText]}>Delete</Text>
-                </TouchableOpacity>
+      {editMode === 'edit' && selectedImageIndex !== null && images[selectedImageIndex]?.type !== 'placeholder' && (
+        <View style={styles.imageControls}>
+          <View style={styles.controlsRow}>
+            <TouchableOpacity
+              style={[styles.controlButton, selectedImageIndex === 0 && styles.disabledControlButton]}
+              onPress={() => handleMoveImage(selectedImageIndex, 'up')}
+              disabled={selectedImageIndex === 0}
+            >
+              <View style={styles.buttonContent}>
+                <ArrowLeft 
+                  size={18} 
+                  color={selectedImageIndex === 0 ? '#aaa' : '#fff'} 
+                  style={styles.buttonIcon}
+                />
+                <Text style={styles.controlButtonText}>Move Left</Text>
               </View>
-            </View>
-          )}
-        </>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[styles.controlButton, selectedImageIndex === images.length - 1 && styles.disabledControlButton]}
+              onPress={() => handleMoveImage(selectedImageIndex, 'down')}
+              disabled={selectedImageIndex === images.length - 1}
+            >
+              <View style={styles.buttonContent}>
+                <ArrowRight 
+                  size={18} 
+                  color={selectedImageIndex === images.length - 1 ? '#aaa' : '#fff'} 
+                  style={styles.buttonIcon}
+                />
+                <Text style={styles.controlButtonText}>Move Right</Text>
+              </View>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[styles.controlButton, styles.deleteButton]}
+              onPress={() => handleDeleteImage(selectedImageIndex)}
+            >
+              <View style={styles.buttonContent}>
+                <Trash2 size={18} color="#fff" style={styles.buttonIcon} />
+                <Text style={styles.controlButtonText}>Delete</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
       )}
 
       {/* Image Upload Modal */}
@@ -184,6 +214,37 @@ const ImageManager = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+  },
+  galleryContainer: {
+    position: 'relative',
+    width: '100%',
+  },
+  overlayButton: {
+    position: 'absolute',
+    bottom: 45,
+    right: 10,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+  },
+  selectButton: {
+    bottom: 45,
+    left: 10,
+    right: 'auto',
+  },
+  overlayButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
   imageControls: {
     padding: 12,
@@ -202,33 +263,49 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+    marginTop: 10,
   },
   controlButton: {
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
-    borderRadius: 4,
-    backgroundColor: '#fff',
-    minWidth: 80,
+    justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 2,
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 3,
+    minWidth: 110,
   },
-  controlButtonText: {
-    fontSize: 12,
-    marginTop: 4,
-  },
-  disabledButton: {
-    backgroundColor: '#f0f0f0',
+  disabledControlButton: {
+    backgroundColor: 'rgba(0,0,0,0.15)',
     shadowOpacity: 0,
     elevation: 0,
   },
-  deleteButton: {
-    backgroundColor: '#ffebee',
+  controlButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
-  deleteButtonText: {
-    color: '#d32f2f',
+  deleteButton: {
+    backgroundColor: 'rgba(255, 0, 0, 0.7)',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginLeft: 6,
+    marginRight: 6,
+  },
+  buttonIcon: {
+    marginRight: 6,
   },
 });
 
