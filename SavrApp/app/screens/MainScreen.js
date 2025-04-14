@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, FlatList, ActivityIndicator, Appearance, StatusBar } from 'react-native';
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
 import CategoryFilter from '../components/CategoryFilter';
@@ -8,7 +8,7 @@ import BottomSheet from '../components/BottomSheet';
 import ListItem from '../components/ListItem';
 import { businessCategories } from '../constants/businessCategories';
 import { SettingsContext } from '../contexts/SettingsContext';
-import styles from '../styles/AppStyles';
+import getStyles from '../styles/AppStyles';
 import { ShopContext } from '../contexts/ShopContext';
 
 
@@ -16,6 +16,7 @@ const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
+  const [styles, setStyles] = useState(getStyles());
 
   // Default location (Oulu, Finland)
   const [region, setRegion] = useState({
@@ -63,6 +64,12 @@ const MainScreen = () => {
       fetchShopsIfNeeded(currentRegion);
     };
     f();
+
+    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
+      setStyles(getStyles());
+    });
+
+    subscription.remove();
     setIsLoading(false);
   }, []);
 
@@ -97,6 +104,10 @@ const MainScreen = () => {
 
   return (
     <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
+      <StatusBar
+        barStyle={styles.statusBar.barStyle}
+        backgroundColor={styles.statusBar.backgroundColor}
+      />
       <CategoryFilter
         // Convert dictionary to array before passing.
         categories={Object.values(businessCategories)}
