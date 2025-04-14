@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
-import { throttle } from 'lodash';
+import { set, throttle } from 'lodash';
 import haversine from 'haversine-distance';
 import { useNavigation } from '@react-navigation/native';
 import CategoryFilter from '../components/CategoryFilter';
@@ -21,6 +21,7 @@ import { ShopContext } from '../contexts/ShopContext';
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Default location (Oulu, Finland)
   const [region, setRegion] = useState({
@@ -68,6 +69,7 @@ const MainScreen = () => {
       fetchShopsIfNeeded(currentRegion);
     };
     f();
+    setIsLoading(false);
   }, []);
 
   // Toggle the active/inactive state of a category.
@@ -90,6 +92,14 @@ const MainScreen = () => {
   const renderItem = ({ item }) => (
     <ListItem shop={item} onSelect={handleSelect} region={region} />
   );
+
+  if (isLoading) {
+    return (
+      <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff', justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={darkMode ? '#fff' : '#121212'} />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
