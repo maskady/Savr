@@ -30,6 +30,7 @@ const DashboardScreen = () => {
 
   return (
     <View style={styles.container}>
+      <View style={{ backgroundColor: styles.statusBar.backgroundColor, height: Platform.OS === 'ios' ? 44 : 0 }} />
       <StatusBar
         barStyle={styles.statusBar.barStyle}
         backgroundColor={styles.statusBar.backgroundColor}
