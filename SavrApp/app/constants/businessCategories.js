@@ -4,7 +4,7 @@ import { COLORS } from "./colors";
 export let businessCategories = {}; // category id -> category object
 export let businessCategoriesColors = {}; // category id -> color
 
-(async () => {
+export const fetchBusinessCategories = async () => {
   try {
     // Fetch categories array from API and filter out removed/deleted categories.
     const response = await getCategories();
@@ -42,4 +42,4 @@ export let businessCategoriesColors = {}; // category id -> color
     businessCategories = {};
     businessCategoriesColors = {};
   }
-})();
+}
