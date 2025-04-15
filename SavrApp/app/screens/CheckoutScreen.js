@@ -46,11 +46,7 @@ const CheckoutScreen = ({ route }) => {
   const total = subtotal + deliveryFee + serviceFee;
   
   const handlePayment = () => {
-    Alert.alert(
-      "Order confirmed",
-      "Your order has been placed successfully! You can pick up your items at the specified times.",
-      [{ text: "OK", onPress: () => navigation.navigate('Home') }]
-    );
+    navigation.navigate('CardPayment', { amount: total });
   };
   
   if (!items || items.length === 0) {
