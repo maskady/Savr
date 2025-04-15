@@ -7,6 +7,7 @@ import {
   Dimensions,
   Appearance,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { LineChart, BarChart } from 'react-native-chart-kit';
