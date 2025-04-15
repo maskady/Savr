@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   SafeAreaView,
   View,
@@ -20,6 +20,7 @@ import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { loginUser } from "../utils/authApi";
 import getStyles from "../styles/AuthStyles";
 import { useTranslation } from 'react-i18next';
+import { AuthContext } from "../contexts/AuthContext";
 
 const LoginScreen = () => {
   const { t } = useTranslation();
@@ -28,7 +29,8 @@ const LoginScreen = () => {
   const { email } = route.params;
   const inputAccessoryLoginPassword = "inputAccessoryLoginPassword";
   const navigation = useNavigation();
-  
+  const {login} = useContext(AuthContext);
+
   const [styles, setStyles] = useState(getStyles());
 
   useEffect(() => {
@@ -52,6 +54,7 @@ const LoginScreen = () => {
       if (response.ok) {
         console.log("User logged in successfully");
         storeToken(data.data.token);
+        login();
         navigation.navigate("App");
       } else {
         if (response.status === 401) {

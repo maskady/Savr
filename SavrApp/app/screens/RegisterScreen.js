@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   SafeAreaView,
   View,
@@ -16,7 +16,7 @@ import {
 import { ArrowLeft } from "lucide-react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { storeToken } from "../utils/token";
-
+import { AuthContext } from "../contexts/AuthContext";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { registerUser } from "../utils/authApi";
 
@@ -37,6 +37,7 @@ const RegisterScreen = () => {
   const lastNameRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
+  const { login } = useContext(AuthContext);
 
   const inputAccessoryRegisterFirstName = "inputAccessoryRegisterFirstName";
   const inputAccessoryRegisterLastName = "inputAccessoryRegisterLastName";
@@ -72,6 +73,7 @@ const RegisterScreen = () => {
       if (response.ok) {
         console.log("User created successfully");
         storeToken(data.data.token);
+        login();
         navigation.navigate("App");
       } else {
         console.error(data);

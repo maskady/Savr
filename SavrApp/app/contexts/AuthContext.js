@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { removeToken, getToken } from '../utils/token';
+import { fetchBusinessCategories } from '../constants/businessCategories';
 // Create the context
 export const AuthContext = createContext();
 
@@ -18,7 +19,7 @@ export const AuthProvider = ({ children }) => {
       const token = await getToken();
       console.log("AuthProvider: Token", token);
       if (token) {
-        setIsLoggedIn(true);
+        login();
       }
     } catch (error) {
       console.error("AuthProvider: Error checking token:", error);
@@ -31,6 +32,7 @@ export const AuthProvider = ({ children }) => {
   // Useless until we can't find a solution for the navigation issue
   const login = () => {
     console.log("AuthProvider: User logged in");
+    fetchBusinessCategories();
     setIsLoggedIn(true);
   };
 
