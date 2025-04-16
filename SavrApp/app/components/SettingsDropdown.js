@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getToken } from '../utils/token';
 import getStyles from '../styles/SettingsStyles';
+import { SettingsButton } from './SettingsButton';
 
 const SettingsDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +41,7 @@ const SettingsDropdown = () => {
           throw new Error("Failed to fetch user data");
         }
 
-        console.log("User data:", data);
+        //console.log("User data:", data);
         setUser(data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -74,7 +75,7 @@ const SettingsDropdown = () => {
   if (isLoading || user.roleId === 'user') {
     return (
       <TouchableOpacity style={styles.settingsDropDown.settingsButton} onPress={() => {navigation.navigate('Settings')}}>
-        <Ionicons name="settings-sharp" size={styles.settingsDropDown.settingsIcon.size} color={styles.settingsDropDown.settingsIcon.color} />
+        <SettingsButton />
       </TouchableOpacity>
     )
   }
@@ -93,7 +94,9 @@ const SettingsDropdown = () => {
         onPress={toggleDropdown}
         activeOpacity={0.8}
       >
-        <Ionicons name="settings-sharp" size={styles.settingsDropDown.settingsIcon.size} color={styles.settingsDropDown.settingsIcon.color} />
+
+        <SettingsButton />
+
       </TouchableOpacity>
 
       <Animated.View style={[
