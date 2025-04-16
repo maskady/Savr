@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Appearance } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import getStyles from '../styles/CompanyStyles'; 
 import { useNavigation } from '@react-navigation/native';
 import { getToken } from '../utils/token';
+import { AuthContext } from '../contexts/AuthContext';
 
 const CompanyListScreen = () => {
   const theme = Appearance.getColorScheme();
   console.log('Current theme:', theme);
   const [companyStyles, setCompanyStyles] = useState(getStyles());
   const navigation = useNavigation(); 
+  const { user } = useContext(AuthContext); 
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
@@ -94,8 +96,12 @@ const CompanyListScreen = () => {
   ]);
 
   const retrieveCompanies = async () => {
+    let onlyMyCompanies = true;
+    if (user.roleId === 'admin') {
+      onlyMyCompanies = false;
+    }
     try{
-      const response = await fetch('https://www.sevr.polaris.marek-mraz.com/api/company?onlyMyCompanies=false', {
+      const response = await fetch('https://www.sevr.polaris.marek-mraz.com/api/company?onlyMyCompanies=' + onlyMyCompanies, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
