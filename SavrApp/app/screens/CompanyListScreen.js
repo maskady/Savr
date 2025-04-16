@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Appearance } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import getStyles from '../styles/CompanyStyles'; 
+import { useNavigation } from '@react-navigation/native';
+import { getToken } from '../utils/token';
 
 const CompanyListScreen = () => {
   const theme = Appearance.getColorScheme();
   console.log('Current theme:', theme);
   const [companyStyles, setCompanyStyles] = useState(getStyles());
+  const navigation = useNavigation(); 
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
@@ -16,6 +19,8 @@ const CompanyListScreen = () => {
     };
 
     const subscription = Appearance.addChangeListener(handleThemeChange);
+
+    retrieveCompanies();
 
     return () => {
       subscription.remove();
@@ -88,10 +93,35 @@ const CompanyListScreen = () => {
     },
   ]);
 
-  // Function to handle adding a new company
+  const retrieveCompanies = async () => {
+    try{
+      const response = await fetch('https://www.sevr.polaris.marek-mraz.com/api/company?onlyMyCompanies=false', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${await getToken()}`
+        }
+      });
+      
+
+      const data = await response.json();
+
+      console.log("Response data:", data);
+
+      if (response.ok) {
+        setCompanies(data.data);
+      }
+      else {
+        console.error("Error fetching companies:", response);
+      }
+    }
+    catch (error) {
+      console.error("Error fetching companies :", error);
+    }
+  };
+
   const handleAddCompany = () => {
-    // TODO: Navigate to add company screen or open modal
-    console.log('Navigate to add company screen or open modal');
+    navigation.navigate('CompanyCreation');
   };
 
   // Function to handle editing a company
