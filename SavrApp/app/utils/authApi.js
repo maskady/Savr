@@ -16,3 +16,5 @@ export const registerUser = (email, password, firstName, lastName) =>
 
 export const checkUserExists = (email) =>
   request('/auth/exists', 'POST', { email: email.trim() });
+
+

@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getToken } from '../utils/token';
 import getStyles from '../styles/SettingsStyles';
+import { SettingsButton } from './SettingsButton';
+import { loadUserData } from '../utils/api';
 
 const SettingsDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,32 +25,20 @@ const SettingsDropdown = () => {
       useNativeDriver: false
     }).start();
 
-    const loadUserData = async () => {
+    // Define an async function to load user data and update state
+    const fetchUserData = async () => {
       try {
-        const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/user/me", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${await getToken()}`,
-          },
-        });
-        const dataResponse = await response.json();
-        const data = dataResponse.data;
-
-        if (!response.ok) {
-          console.log("Response not ok:", response.status, response.statusText);
-          throw new Error("Failed to fetch user data");
-        }
-
-        console.log("User data:", data);
+        const data = await loadUserData(); // Wait for the promise to resolve
         setUser(data);
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        navigation.navigate("App", { screen: "Error", params: { error: error.message } });
+        console.error("[SettingsDropdown] Error fetching user data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    loadUserData();
+    fetchUserData();
+
 
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setStyles(getStyles(colorScheme));
@@ -74,7 +64,7 @@ const SettingsDropdown = () => {
   if (isLoading || user.roleId === 'user') {
     return (
       <TouchableOpacity style={styles.settingsDropDown.settingsButton} onPress={() => {navigation.navigate('Settings')}}>
-        <Ionicons name="settings-sharp" size={styles.settingsDropDown.settingsIcon.size} color={styles.settingsDropDown.settingsIcon.color} />
+        <SettingsButton />
       </TouchableOpacity>
     )
   }
@@ -93,7 +83,9 @@ const SettingsDropdown = () => {
         onPress={toggleDropdown}
         activeOpacity={0.8}
       >
-        <Ionicons name="settings-sharp" size={styles.settingsDropDown.settingsIcon.size} color={styles.settingsDropDown.settingsIcon.color} />
+
+        <SettingsButton />
+
       </TouchableOpacity>
 
       <Animated.View style={[

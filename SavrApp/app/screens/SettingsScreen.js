@@ -6,8 +6,10 @@ import { getToken, storeToken, removeToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
+import { saveUserData, loadUserData } from "../utils/api";
+import { refreshToken } from "../utils/token";
 
-const SettingsScreen = ( ) => {
+const SettingsScreen = () => {
   const [user, setUser] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -66,12 +68,12 @@ const SettingsScreen = ( ) => {
         placeholderTextColor={styles.editableInput.placeholderTextColor}
         autoCapitalize="none"
         autoCorrect={false}
-        returnKeyType={ nextRef ? "next" : "done" }
+        returnKeyType={nextRef ? "next" : "done"}
         onSubmitEditing={() => {
           if (nextRef) {
             nextRef.current.focus();
           }
-          else{
+          else {
             handleSavePassword?.();
           }
         }}
@@ -84,38 +86,27 @@ const SettingsScreen = ( ) => {
   );
 
   useEffect(() => {
-    const loadUserData = async () => {
+    // Define an async function to load user data and update state
+    const fetchUserData = async () => {
       try {
-        const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/user/me", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${await getToken()}`,
-          },
-        });
-        const dataResponse = await response.json();
-        const data = dataResponse.data;
-
-        if (!response.ok) {
-          console.log("Response not ok:", response.status, response.statusText);
-          throw new Error("Failed to fetch user data");
-        }
-
-        console.log("User data:", data);
+        const data = await loadUserData(); // Wait for the promise to resolve
         setUser(data);
         setFirstName(data.firstName);
         setLastName(data.lastName);
         setEmail(data.email);
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        navigation.navigate("Error", { error: "Failed to load user data" });
+        console.error("[SettingsScreen] Error fetching user data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
+
+    fetchUserData();
 
     const handleThemeChange = ({ colorScheme }) => {
       console.log("Theme changed:", colorScheme);
       if (colorScheme) {
-        setStyles(getStyles()); 
+        setStyles(getStyles());
       }
     };
 
@@ -131,55 +122,33 @@ const SettingsScreen = ( ) => {
   if (!user) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color={styles.loader.color}/>
+        <ActivityIndicator size="large" color={styles.loader.color} />
       </View>
     );
   }
 
   const handleSave = async () => {
     try {
+      // Save user data
+      saveUserData({ firstName, lastName, email });
+      
+      // Refresh token
       const token = await getToken();
-      const response = await fetch("https://www.sevr.polaris.marek-mraz.com/api/user/me/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ firstName, lastName, email}),
-      });
-    
-      const data = await response.json();
+      const tokenData = await refreshToken(token);
+      const newToken = await tokenData.token;
+      console.log("[SettingsScreen] New token:", newToken);
 
-      if (!response.ok) {
-        throw new Error("Failed to update user data");
-      }
-
-      // Update the token with the new data
-      const responseNewToken = await fetch("https://www.sevr.polaris.marek-mraz.com/api/auth/refresh-token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ token }),
-      });
-
-      const dataNewToken = await responseNewToken.json();
-      if (!responseNewToken.ok) {
-        console.error("Failed to refresh token:", dataNewToken.message);
-        console.error("Response:", responseNewToken.status, responseNewToken.statusText);
-        return;
-      }
-      console.log("Token refreshed successfully:", dataNewToken);
-      if (dataNewToken.data.token) {
+      if (newToken) {
         await removeToken();
-        await storeToken(dataNewToken.data.token);
+        await storeToken(newToken);
       }
       else{
-        throw new Error("Token not found in response data");
+        throw new Error("[SettingsScreen] Token not found in response data");
       }
-      console.log("User data updated successfully:", data);
+      console.log("[SettingsScreen] User data updated successfully and token refreshed.");
+
     } catch (error) {
-      console.error("Error updating user data:", error);
+      console.error("[SettingsScreen] Error updating user data:", error);
     }
 
     // After saving, set the editable states to false
@@ -242,7 +211,7 @@ const SettingsScreen = ( ) => {
     alert('Create Store button pressed');
     // TODO: navigate to the create store screen
   };
-  
+
   const handleCreateCompany = () => {
     alert('Create Company button pressed');
     // TODO: navigate to the create company screen
@@ -260,7 +229,7 @@ const SettingsScreen = ( ) => {
           <Text style={styles.settingsTitle}>
             Personal information
           </Text>
-          <AddOptionsDropdown 
+          <AddOptionsDropdown
             onCreateCompany={handleCreateCompany}
             onCreateShop={handleCreateShop}
             role={user.roleId}
@@ -320,7 +289,7 @@ const SettingsScreen = ( ) => {
               )}
             </TouchableOpacity>
           </View>
-          
+
           <View style={[styles.input, styles.editableInputContainer]}>
             <TextInput
               value={email}
@@ -341,9 +310,9 @@ const SettingsScreen = ( ) => {
               hitSlop={styles.editIconContainer.hitSlop}
             >
               {editableEmail ? (
-                <FontAwesome6 name="check" size={styles.editIcon.size} color={styles.editIcon.color}/>
+                <FontAwesome6 name="check" size={styles.editIcon.size} color={styles.editIcon.color} />
               ) : (
-                <FontAwesome6 name="pen" size={styles.editIcon.size} color={styles.editIcon.color}/>
+                <FontAwesome6 name="pen" size={styles.editIcon.size} color={styles.editIcon.color} />
               )}
             </TouchableOpacity>
           </View>
@@ -355,10 +324,10 @@ const SettingsScreen = ( ) => {
                 {renderPasswordInput("New Password", newPassword, setNewPassword, showNewPassword, () => togglePasswordVisibility("new"), newPasswordRef, confirmNewPasswordRef)}
                 {renderPasswordInput("Confirm Password", confirmNewPassword, setConfirmNewPassword, showConfirmNewPassword, () => togglePasswordVisibility("confirm"), confirmNewPasswordRef, null, handleSavePassword)}
 
-                <View style={{width: "80%", flexDirection: "row", justifyContent: "space-between"}}>
+                <View style={{ width: "80%", flexDirection: "row", justifyContent: "space-between" }}>
                   <TouchableOpacity
                     onPress={
-                      () => {setEditablePassword(false);}
+                      () => { setEditablePassword(false); }
                     }
                     style={[styles.input, styles.cancelButton]}
                   >
