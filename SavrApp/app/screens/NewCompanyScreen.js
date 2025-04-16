@@ -75,7 +75,7 @@ const CompanyCreationScreen = () => {
       console.log("Response data:", data);
 
       if (response.ok) {
-        Alert.alert("Success", "Company created successfully!", [{ text: "OK" }]);
+        Alert.alert("Success", "Company created successfully!", [{ text: "OK", onPress: () => navigation.navigate('CompanyList') }]);
       } else {
         Alert.alert("Error", data.message || "Failed to create company.", [{ text: "OK" }]);
       }
