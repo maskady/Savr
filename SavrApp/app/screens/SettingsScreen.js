@@ -6,7 +6,7 @@ import { getToken, storeToken, removeToken, refreshToken } from "../utils/token"
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
-import { saveUserData, loadUserData } from "../utils/api";
+import { saveUserData } from "../utils/api";
 import { AuthContext } from "../contexts/AuthContext";
 
 const SettingsScreen = () => {
@@ -34,7 +34,7 @@ const SettingsScreen = () => {
 
   const navigation = useNavigation();
 
-  const { user, fetchUserData } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const logout = async () => {
     try {
@@ -98,7 +98,7 @@ const SettingsScreen = () => {
       }
     };
 
-    loadUserData();
+    
     const subscription = Appearance.addChangeListener(handleThemeChange);
 
     return () => {
