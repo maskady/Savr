@@ -21,6 +21,12 @@ const getStyles = () => {
       backgroundColor: isDarkMode ? Colors.Black : Colors.White,
       padding: 20,
     },
+    header:{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
     title: {
       fontSize: 24,
       fontWeight: 'bold',
