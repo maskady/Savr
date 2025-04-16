@@ -213,8 +213,7 @@ const SettingsScreen = () => {
   };
 
   const handleCreateCompany = () => {
-    alert('Create Company button pressed');
-    // TODO: navigate to the create company screen
+    navigation.navigate("CompanyCreation");
   };
 
   return (
