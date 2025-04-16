@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { request } from './request';
 
 export const storeToken = async (token) => {
     try {
@@ -26,3 +27,12 @@ export const removeToken = async () => {
     }
 };
   
+export const refreshToken = async (token) => {
+    try {
+      const response = await request('/auth/refresh-token', 'POST', { token });
+      return response;
+    } catch (error) {
+      console.error("Error in refreshToken:", error);
+      throw error; // Rethrow so the caller can handle it
+    }
+  };

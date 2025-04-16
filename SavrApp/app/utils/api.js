@@ -58,3 +58,30 @@ export const updateShop = async (id, data) => {
     throw error;
   }
 }
+
+export const loadUserData = async () => {
+  try {
+    const response = await request("/user/me", 'GET');
+    const data = response.data.data;
+    console.log("[utils/api/loadUserData] Data:", data);
+    return data;
+  } catch (error) {
+    console.error("[utils/api/loadUserData] Error fetching user data:", error);
+    navigation.navigate("App", { screen: "Error", params: { error: error.message } });
+    return null;
+  }
+
+};
+
+export const saveUserData = async ({ firstName, lastName, email}) => {
+  try {
+    const response = await request("/user/me/profile", 'PUT', { firstName, lastName, email}, null);
+    console.log("[utils/api/saveUserData] Response:", response);
+    return response;
+  }
+  catch (error) {
+    console.error("[utils/api/saveUserData] Error saving user data:", error);
+    navigation.navigate("App", { screen: "Error", params: { error: error.message } });
+    return null;
+  }
+}
