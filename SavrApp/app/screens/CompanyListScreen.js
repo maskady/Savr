@@ -132,8 +132,10 @@ const CompanyListScreen = () => {
 
   // Function to handle editing a company
   const handleEditCompany = (companyId) => {
-    // TODO: Navigate to edit company screen or open modal with the selected company details
     console.log('Edit company with ID:', companyId);
+    // Retrieve the company details from the companies array
+    const companyToEdit = companies.find(company => company.id === companyId);
+    navigation.navigate('CompanyUpdate', { company: companyToEdit });
   };
 
   return (
