@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { removeToken, getToken } from '../utils/token';
 import { fetchBusinessCategories } from '../constants/businessCategories';
+import { loadUserData } from '../utils/api';
 // Create the context
 export const AuthContext = createContext();
 
@@ -8,6 +9,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   // Check for existing token on app start
   useEffect(() => {
@@ -41,8 +43,14 @@ export const AuthProvider = ({ children }) => {
     removeToken();
   };
 
+  const fetchUserData = async () => {
+    const data = await loadUserData();
+    setUser(data);
+    console.log("AuthProvider: User data fetched", user);
+  }
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, isLoading, login, logout, user, fetchUserData }}>
       {children}
     </AuthContext.Provider>
   );

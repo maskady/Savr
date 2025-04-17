@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { View, Appearance, SafeAreaView, Text, ActivityIndicator, TouchableOpacity, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
-import { getToken, storeToken, removeToken } from "../utils/token";
+import { getToken, storeToken, removeToken, refreshToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
-import { saveUserData, loadUserData } from "../utils/api";
-import { refreshToken } from "../utils/token";
+import { saveUserData } from "../utils/api";
+import { AuthContext } from "../contexts/AuthContext";
 
 const SettingsScreen = () => {
-  const [user, setUser] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -34,6 +33,8 @@ const SettingsScreen = () => {
   const confirmNewPasswordRef = useRef(null);
 
   const navigation = useNavigation();
+
+  const { user } = useContext(AuthContext);
 
   const logout = async () => {
     try {
@@ -86,22 +87,9 @@ const SettingsScreen = () => {
   );
 
   useEffect(() => {
-    // Define an async function to load user data and update state
-    const fetchUserData = async () => {
-      try {
-        const data = await loadUserData(); // Wait for the promise to resolve
-        setUser(data);
-        setFirstName(data.firstName);
-        setLastName(data.lastName);
-        setEmail(data.email);
-      } catch (error) {
-        console.error("[SettingsScreen] Error fetching user data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchUserData();
+    setFirstName(user.firstName);
+    setLastName(user.lastName);
+    setEmail(user.email);
 
     const handleThemeChange = ({ colorScheme }) => {
       console.log("Theme changed:", colorScheme);
@@ -110,7 +98,7 @@ const SettingsScreen = () => {
       }
     };
 
-    loadUserData();
+    
     const subscription = Appearance.addChangeListener(handleThemeChange);
 
     return () => {
@@ -213,8 +201,7 @@ const SettingsScreen = () => {
   };
 
   const handleCreateCompany = () => {
-    alert('Create Company button pressed');
-    // TODO: navigate to the create company screen
+    navigation.navigate("CompanyCreation");
   };
 
   return (
