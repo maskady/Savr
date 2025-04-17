@@ -16,6 +16,22 @@ const CategoryFilter = ({
 }) => {
   const { darkMode } = useContext(SettingsContext);
 
+  const sortedCategories = categories.sort((a, b) => {
+    // 'bakery' > 'grocery' > 'restaurant' > 'cafe' > 'butcher' > the rest goes alphabetically > 'other' at the end
+    const order = {
+      bakery: 1,
+      grocery: 2,
+      restaurant: 3,
+      cafe: 4,
+      butcher: 5,
+      other: 7,
+    };
+    const aOrder = order[a.id] || 6;
+    const bOrder = order[b.id] || 6;
+
+    return aOrder - bOrder || a.name.localeCompare(b.name);
+  });
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       onPress={() => toggleCategory(item.id)}
@@ -67,7 +83,7 @@ const CategoryFilter = ({
     >
       <FlatList
         horizontal
-        data={categories}
+        data={sortedCategories}
         keyExtractor={(item) => item.id.toString()}
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem}
