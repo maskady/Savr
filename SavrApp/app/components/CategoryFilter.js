@@ -17,17 +17,17 @@ const CategoryFilter = ({
   const { darkMode } = useContext(SettingsContext);
 
   const sortedCategories = categories.sort((a, b) => {
-    // 'bakery' > 'grocery' > 'restaurant' > 'cafe' > 'butcher' > the rest goes alphabetically > 'other' at the end
+    // Custom sorting logic: more important categories in begginning
+    // 'bakery' > 'grocery' > 'restaurant' > 'cafe' > > the rest goes alphabetically > 'other' at the end
     const order = {
       bakery: 1,
       grocery: 2,
       restaurant: 3,
       cafe: 4,
-      butcher: 5,
-      other: 7,
+      other: 6,
     };
-    const aOrder = order[a.id] || 6;
-    const bOrder = order[b.id] || 6;
+    const aOrder = order[a.id] || 5;
+    const bOrder = order[b.id] || 5;
 
     return aOrder - bOrder || a.name.localeCompare(b.name);
   });
