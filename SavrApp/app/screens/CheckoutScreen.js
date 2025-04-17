@@ -12,7 +12,7 @@ const CheckoutScreen = ({ route }) => {
   const [paymentMethod, setPaymentMethod] = useState('card');
   const { items = [] } = route.params || {};
   
-  // Fake data for delivery and service fees
+  // Fake data for delivery and service fees - TODO: Replace with actual data
   const deliveryFee = 1.90;
   const serviceFee = 0.99;
   
@@ -53,7 +53,7 @@ const CheckoutScreen = ({ route }) => {
     return (
       <View style={[styles.container, isDark ? styles.darkContainer : styles.lightContainer]}>
         <Text style={[styles.emptyText, isDark ? styles.darkText : styles.lightText]}>
-          You have no items in your cart for the moment.
+          You have no items in your cart at the moment.
         </Text>
       </View>
     );

@@ -29,6 +29,14 @@ import { ShopContext } from '../contexts/ShopContext';
 const ShopScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
+
+  const goBackOrHome = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate('HomeTabs', { screen: 'Home' });
+    }
+  };
   const { darkMode } = useContext(SettingsContext);
   const { updateShopInContext } = useContext(ShopContext);
   const [shop, setShop] = useState(route.params?.shop || null);
@@ -206,7 +214,7 @@ const ShopScreen = () => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={goBackOrHome}
           style={styles.backButton}
         >
           <ArrowLeft size={24} color="#fff" />
@@ -281,7 +289,7 @@ const ShopScreen = () => {
           <Text style={[styles.errorText, { color: colors.text }]}>{error}</Text>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.primary }]}
-            onPress={() => navigation.goBack()}
+            onPress={goBackOrHome}
           >
             <Text style={styles.buttonText}>Go Back</Text>
           </TouchableOpacity>

@@ -15,5 +15,6 @@ export const COLORS = {
       "fishmonger": "blue",
       "grocery": "lightblue",
       "canteen": "lightgreen",
+      "other": "lightgray",
     },
   };
