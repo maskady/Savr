@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, Appearance, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -6,14 +6,16 @@ import { getToken } from '../utils/token';
 import getStyles from '../styles/SettingsStyles';
 import { SettingsButton } from './SettingsButton';
 import { loadUserData } from '../utils/api';
+import { AuthContext } from '../contexts/AuthContext';
 
 const SettingsDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState({});
   const [styles, setStyles] = useState(getStyles());
   const dropdownHeight = useRef(new Animated.Value(0)).current;
   
+  const { user } = useContext(AuthContext);
+
   const menuHeight = 100;
 
   const navigation = useNavigation();
@@ -24,21 +26,6 @@ const SettingsDropdown = () => {
       duration: 300,
       useNativeDriver: false
     }).start();
-
-    // Define an async function to load user data and update state
-    const fetchUserData = async () => {
-      try {
-        const data = await loadUserData(); // Wait for the promise to resolve
-        setUser(data);
-      } catch (error) {
-        console.error("[SettingsDropdown] Error fetching user data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchUserData();
-
 
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setStyles(getStyles(colorScheme));
