@@ -196,8 +196,7 @@ const SettingsScreen = () => {
 
 
   const handleCreateShop = () => {
-    alert('Create Store button pressed');
-    // TODO: navigate to the create store screen
+    navigation.navigate("ShopCreation", { companyId: user.companyId });
   };
 
   const handleCreateCompany = () => {
