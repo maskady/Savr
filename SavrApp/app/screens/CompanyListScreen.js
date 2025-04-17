@@ -138,6 +138,11 @@ const CompanyListScreen = () => {
     navigation.navigate('CompanyUpdate', { company: companyToEdit });
   };
 
+  const handleOpenCompany = (company) => {
+    console.log('Open company with ID:', company);
+    navigation.navigate('ShopList', { company });
+  };
+
   return (
     <SafeAreaView style={companyStyles.safeArea}>
       <StatusBar barStyle={companyStyles.isDarkMode ? "light-content" : "dark-content"} />
@@ -173,31 +178,35 @@ const CompanyListScreen = () => {
           </View>
         ) : (
           companies.map((company) => (
-            <View 
+            <TouchableOpacity 
               key={company.id} 
-              style={[companyStyles.companyCard, {
-                backgroundColor: companyStyles.isDarkMode ? '#333' : 'white',
-                borderColor: companyStyles.isDarkMode ? '#444' : '#eee',
-              }]}
+              onPress={() => handleOpenCompany(company)}
             >
-              <View style={companyStyles.companyInfo}>
-                <Text style={[companyStyles.companyName, {
-                  color: companyStyles.isDarkMode ? 'white' : 'black',
-                }]}>{company.name}</Text>
-                <Text style={[companyStyles.companyAddress, {
-                  color: companyStyles.isDarkMode ? '#bbb' : '#666',
-                }]}>{company.address}</Text>
-                <Text style={[companyStyles.companyCity, {
-                  color: companyStyles.isDarkMode ? '#bbb' : '#666',
-                }]}>{company.city}</Text>
-              </View>
-              <TouchableOpacity 
-                style={companyStyles.editButton}
-                onPress={() => handleEditCompany(company.id)}
+              <View 
+                style={[companyStyles.companyCard, {
+                  backgroundColor: companyStyles.isDarkMode ? '#333' : 'white',
+                  borderColor: companyStyles.isDarkMode ? '#444' : '#eee',
+                }]}
               >
-                <Feather name="edit" size={20} color={companyStyles.isDarkMode ? 'white' : 'black'} />
-              </TouchableOpacity>
-            </View>
+                <View style={companyStyles.companyInfo}>
+                  <Text style={[companyStyles.companyName, {
+                    color: companyStyles.isDarkMode ? 'white' : 'black',
+                  }]}>{company.name}</Text>
+                  <Text style={[companyStyles.companyAddress, {
+                    color: companyStyles.isDarkMode ? '#bbb' : '#666',
+                  }]}>{company.address}</Text>
+                  <Text style={[companyStyles.companyCity, {
+                    color: companyStyles.isDarkMode ? '#bbb' : '#666',
+                  }]}>{company.city}</Text>
+                </View>
+                <TouchableOpacity 
+                  style={companyStyles.editButton}
+                  onPress={() => handleEditCompany(company.id)}
+                >
+                  <Feather name="edit" size={20} color={companyStyles.isDarkMode ? 'white' : 'black'} />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
           ))
         )}
       </ScrollView>
