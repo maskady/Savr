@@ -233,7 +233,7 @@ const ShopCreationScreen = () => {
       </View>
       
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Description</Text>
+        <Text style={styles.label}>Description *</Text>
         <TextInput
           style={[styles.input, styles.textArea]}
           value={shop.description}
@@ -246,7 +246,7 @@ const ShopCreationScreen = () => {
       </View>
       
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Address</Text>
+        <Text style={styles.label}>Address *</Text>
         <TextInput
           style={styles.input}
           value={shop.address}
@@ -258,7 +258,7 @@ const ShopCreationScreen = () => {
       
       <View style={styles.rowContainer}>
         <View style={[styles.inputGroup, {flex: 1, marginRight: 10}]}>
-          <Text style={styles.label}>ZIP Code</Text>
+          <Text style={styles.label}>ZIP Code *</Text>
           <TextInput
             style={styles.input}
             value={shop.postalCode}
@@ -269,7 +269,7 @@ const ShopCreationScreen = () => {
         </View>
         
         <View style={[styles.inputGroup, {flex: 2}]}>
-          <Text style={styles.label}>City</Text>
+          <Text style={styles.label}>City *</Text>
           <TextInput
             style={styles.input}
             value={shop.city}
@@ -281,7 +281,7 @@ const ShopCreationScreen = () => {
       </View>
       
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Country</Text>
+        <Text style={styles.label}>Country *</Text>
         <TextInput
           style={styles.input}
           value={shop.country}
@@ -293,7 +293,7 @@ const ShopCreationScreen = () => {
       
       <View style={styles.rowContainer}>
         <View style={[styles.inputGroup, {flex: 1, marginRight: 10}]}>
-          <Text style={styles.label}>Latitude</Text>
+          <Text style={styles.label}>Latitude *</Text>
           <TextInput
             style={[styles.input, errors.latitude && styles.inputError]}
             value={String(shop.latitude)}
@@ -306,7 +306,7 @@ const ShopCreationScreen = () => {
         </View>
         
         <View style={[styles.inputGroup, {flex: 1}]}>
-          <Text style={styles.label}>Longitude</Text>
+          <Text style={styles.label}>Longitude *</Text>
           <TextInput
             style={[styles.input, errors.longitude && styles.inputError]}
             value={String(shop.longitude)}
@@ -348,7 +348,7 @@ const ShopCreationScreen = () => {
       
       {/* Catégories */}
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Categories</Text>
+        <Text style={styles.label}>Categories *</Text>
         <View style={styles.rowContainer}>
           <TextInput
             style={[styles.input, {flex: 3, marginRight: 10}]}
@@ -402,7 +402,7 @@ const ShopCreationScreen = () => {
       
       {/* Images */}
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Images</Text>
+        <Text style={styles.label}>Images *</Text>
         <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
           <Text style={styles.imagePickerButtonText}>Add Image</Text>
         </TouchableOpacity>
