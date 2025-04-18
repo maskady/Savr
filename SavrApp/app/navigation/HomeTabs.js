@@ -10,12 +10,19 @@ import DashboardScreen from "../screens/DashboardScreen";
 import CheckoutScreen from "../screens/CheckoutScreen";
 import ShopScreen from "../screens/ShopScreen";
 
+import { CartContext } from "../contexts/CheckoutContext";
+
 const Tab = createBottomTabNavigator();
 
 const HomeTabs = () => {
   const { darkMode } = useContext(SettingsContext);
   const navigation = useNavigation();
 
+  console.log('SettingsContext:', SettingsContext);
+  console.log('CartContext:', CartContext);
+
+
+  const { addToCart, clearCart } = useContext(CartContext);
 
   // For debugging purposes, log all route names
   useEffect(() => {
@@ -23,6 +30,12 @@ const HomeTabs = () => {
     console.log("All route names:", state.routeNames);
     // If you need nested routes, inspect state.routes, e.g.:
     // state.routes.forEach(r => console.log(r.name, r.state?.routeNames));
+
+    // Add some product to the cart with cartContext
+    clearCart(); // Clear the cart first
+    addToCart(dummyItems[0]);
+    addToCart(dummyItems[1]);
+    addToCart(dummyItems[1]); 
   }, [navigation]);
 
   const dummyItems = [ // TODO: Replace with actual data
@@ -34,7 +47,6 @@ const HomeTabs = () => {
       image: "https://placeholder.com/food",
       shopName: "La Boulangerie",
       pickupTime: "18:00 - 19:00",
-      quantity: 1
     },
     {
       id: 2,
@@ -44,7 +56,6 @@ const HomeTabs = () => {
       image: "https://placeholder.com/food",
       shopName: "La Boulangerie",
       pickupTime: "18:00 - 19:00",
-      quantity: 2
     }
   ];
 
@@ -108,7 +119,7 @@ const HomeTabs = () => {
       <Tab.Screen name="Home" component={MainScreen} />
       <Tab.Screen name="My Shop" component={ShopScreen} initialParams={{shop: dummyShop}} />
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Checkout" component={CheckoutScreen} initialParams={{ items: dummyItems }} />
+      <Tab.Screen name="Checkout" component={CheckoutScreen} />
     </Tab.Navigator>
   );
 };

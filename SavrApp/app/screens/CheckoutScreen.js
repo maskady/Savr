@@ -1,55 +1,44 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, Switch, Alert, FlatList } from 'react-native';
-import { useColorScheme } from 'react-native';
+import React from 'react';
+import { View, Text, ScrollView, TouchableOpacity, FlatList, useColorScheme } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useCart } from '../contexts/CheckoutContext';
 import styles from '../styles/CheckoutScreenStyles';
 
-const CheckoutScreen = ({ route }) => {
+const CheckoutScreen = () => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const navigation = useNavigation();
-  const [paymentMethod, setPaymentMethod] = useState('card');
-  const { items = [] } = route.params || {};
+  const [paymentMethod, setPaymentMethod] = React.useState('card');
+  
+  // Use the cart context
+  const { 
+    cartItems, 
+    addToCart, 
+    removeFromCart, 
+    getCartTotal 
+  } = useCart();
   
   // Fake data for delivery and service fees - TODO: Replace with actual data
   const deliveryFee = 1.90;
   const serviceFee = 0.99;
   
-  // Item quantity state management with an object using item ids as keys
-  const [quantities, setQuantities] = useState(() => {
-    const initialQuantities = {};
-    items.forEach(item => {
-      initialQuantities[item.id] = item.quantity || 1;
-    });
-    return initialQuantities;
-  });
-  
-  const handleQuantityChange = (itemId, increment) => {
-    setQuantities(prev => {
-      const newQuantity = (prev[itemId] || 1) + increment;
-      if (newQuantity >= 1 && newQuantity <= 5) {
-        return { ...prev, [itemId]: newQuantity };
-      }
-      return prev;
-    });
-  };
-  
-  // Calculate totals
-  const calculateSubtotal = () => {
-    return items.reduce((total, item) => {
-      return total + (item.discountPrice * (quantities[item.id] || 1));
-    }, 0);
-  };
-  
-  const subtotal = calculateSubtotal();
+  const subtotal = getCartTotal();
   const total = subtotal + deliveryFee + serviceFee;
+  
+  const handleQuantityChange = (item, increment) => {
+    if (increment > 0) {
+      addToCart(item);
+    } else {
+      removeFromCart(item.id);
+    }
+  };
   
   const handlePayment = () => {
     navigation.navigate('CardPayment', { amount: total });
   };
   
-  if (!items || items.length === 0) {
+  if (!cartItems || cartItems.length === 0) {
     return (
       <View style={[styles.container, isDark ? styles.darkContainer : styles.lightContainer]}>
         <Text style={[styles.emptyText, isDark ? styles.darkText : styles.lightText]}>
@@ -61,7 +50,7 @@ const CheckoutScreen = ({ route }) => {
 
   // Render single item
   const renderItem = ({ item }) => {
-    const quantity = quantities[item.id] || 1;
+    const quantity = item.quantity || 1;
     
     return (
       <View style={[styles.productCard, isDark ? styles.darkCard : styles.lightCard]}>
@@ -96,8 +85,7 @@ const CheckoutScreen = ({ route }) => {
           <View style={styles.quantityControls}>
             <TouchableOpacity 
               style={[styles.quantityButton, isDark ? styles.darkButton : styles.lightButton]} 
-              onPress={() => handleQuantityChange(item.id, -1)}
-              disabled={quantity <= 1}
+              onPress={() => handleQuantityChange(item, -1)}
             >
               <Text style={[styles.quantityButtonText, styles.quantityButtonTextDark]}>-</Text>
             </TouchableOpacity>
@@ -108,8 +96,7 @@ const CheckoutScreen = ({ route }) => {
             
             <TouchableOpacity 
               style={[styles.quantityButton, isDark ? styles.darkButton : styles.lightButton]} 
-              onPress={() => handleQuantityChange(item.id, 1)}
-              disabled={quantity >= 5}
+              onPress={() => handleQuantityChange(item, 1)}
             >
               <Text style={[styles.quantityButtonText, styles.quantityButtonTextDark]}>+</Text>
             </TouchableOpacity>
@@ -137,13 +124,13 @@ const CheckoutScreen = ({ route }) => {
         
         {/* Products List */}
         <FlatList
-          data={items}
+          data={cartItems}
           renderItem={renderItem}
           keyExtractor={item => item.id.toString()}
           scrollEnabled={false}
           ListHeaderComponent={
             <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText, styles.itemsHeader]}>
-              Your Items ({items.length})
+              Your Items ({cartItems.length})
             </Text>
           }
         />
@@ -214,7 +201,7 @@ const CheckoutScreen = ({ route }) => {
           
           <View style={styles.priceSummaryRow}>
             <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
-              Sub-total ({items.length} item{items.length > 1 ? 's' : ''})
+              Sub-total ({cartItems.length} item{cartItems.length > 1 ? 's' : ''})
             </Text>
             <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
               {subtotal.toFixed(2)} €
