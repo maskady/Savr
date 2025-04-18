@@ -18,4 +18,7 @@ export const COLORS = {
       "canteen": "lightgreen",
       "other": "lightgray",
     },
+    border: '#e0e0e0',
+    placeholder: '#a0a0a0',
+
   };

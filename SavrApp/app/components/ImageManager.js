@@ -160,7 +160,7 @@ const ImageManager = ({
           <View style={styles.controlsRow}>
             <TouchableOpacity
               style={[styles.controlButton, selectedImageIndex === 0 && styles.disabledControlButton]}
-              onPress={() => handleMoveImage(selectedImageIndex, 'up')}
+              onPress={() => handleMoveImage(selectedImageIndex, 'down')}
               disabled={selectedImageIndex === 0}
             >
               <View style={styles.buttonContent}>
@@ -175,7 +175,7 @@ const ImageManager = ({
             
             <TouchableOpacity
               style={[styles.controlButton, selectedImageIndex === images.length - 1 && styles.disabledControlButton]}
-              onPress={() => handleMoveImage(selectedImageIndex, 'down')}
+              onPress={() => handleMoveImage(selectedImageIndex, 'up')}
               disabled={selectedImageIndex === images.length - 1}
             >
               <View style={styles.buttonContent}>
