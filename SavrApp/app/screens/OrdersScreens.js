@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
 import {request} from '../utils/request';
+import { useNavigation } from '@react-navigation/native';
 
 const Colors = {
     Primary: '#000000',      
@@ -26,13 +27,14 @@ const Colors = {
     Info: '#555555',      
   };
 
-const OrdersScreen = ({ navigation }) => {
+const OrdersScreen = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [styles, setStyles] = useState(getStyles());
   const { user } = useContext(AuthContext); 
+  const navigation = useNavigation();
 
   const fetchOrders = async () => {
     try {
