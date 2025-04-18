@@ -463,7 +463,6 @@ const ShopCreationScreen = () => {
   );
 };
 
-// Ajout de styles supplémentaires pour les catégories
 const extraStyles = {
   categoriesContainer: {
     flexDirection: 'row',
