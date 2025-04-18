@@ -12,6 +12,7 @@ import {
 import { AuthContext } from '../contexts/AuthContext';
 import {request} from '../utils/request';
 import { useNavigation } from '@react-navigation/native';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 const Colors = {
     Primary: '#000000',      
@@ -164,6 +165,7 @@ const OrdersScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <FontAwesome6 name="arrow-left" size={24} color={styles.icon.color} onPress={() => navigation.goBack()} />
         <Text style={styles.title}>My Orders</Text>
       </View>
       
@@ -200,6 +202,9 @@ const getStyles = () => {
       flex: 1,
       backgroundColor: isDarkMode ? Colors.Black : Colors.White,
     },
+    icon: {
+      color: isDarkMode ? Colors.White : Colors.Black,
+    },
     centered: {
       flex: 1,
       justifyContent: 'center',
@@ -210,7 +215,6 @@ const getStyles = () => {
       marginTop: 50, // Adjust for notch
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
       paddingHorizontal: 20,
       marginBottom: 16,
     },
@@ -218,6 +222,7 @@ const getStyles = () => {
       fontSize: 24,
       fontWeight: 'bold',
       color: isDarkMode ? Colors.White : Colors.Black,
+      marginLeft: 16,
     },
     listContainer: {
       paddingHorizontal: 16,
