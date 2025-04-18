@@ -13,9 +13,13 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/NewCompanyStyles'; 
 import { getToken } from '../utils/token';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const CompanyCreationScreen = () => {
   const [styles, setStyles] = useState(getStyles());
+
+  const navigation = useNavigation();
   
   const [company, setCompany] = useState({
     name: '',
@@ -156,7 +160,12 @@ const CompanyCreationScreen = () => {
   
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Create Company</Text>
+      <View style={{flexDirection: 'row', marginBottom: 20}}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <FontAwesome6 name="arrow-left" size={24} color={styles.isDarkMode ? 'white' : 'black'} style={{ marginRight: 10, marginTop: 5 }} onPress={() => navigation.goBack()} />
+        </TouchableOpacity>
+        <Text style={styles.title}>Create Company</Text>
+      </View>
       
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Company Name *</Text>
