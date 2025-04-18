@@ -15,6 +15,7 @@ import getStyles from '../styles/NewCompanyStyles'; // Réutilisation du même s
 import { getToken } from '../utils/token';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 const ShopCreationScreen = () => {
   const navigation = useNavigation();
@@ -246,7 +247,12 @@ const ShopCreationScreen = () => {
   
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Create Shop</Text>
+      <View style={{flexDirection: 'row', marginBottom: 20}}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <FontAwesome6 name="arrow-left" size={24} color={Appearance.getColorScheme() === 'dark' ? '#FFFFFF' : '#000000'} />
+        </TouchableOpacity>
+        <Text style={styles.title}>Create Shop</Text>
+      </View>
       
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Shop Name *</Text>

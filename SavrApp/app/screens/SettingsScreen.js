@@ -6,13 +6,10 @@ import { getToken, storeToken, removeToken, refreshToken } from "../utils/token"
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
-import { saveUserData, loadUserData } from "../utils/api";
-import { refreshToken } from "../utils/token";
+import { saveUserData } from "../utils/api";
 import { AuthContext } from "../contexts/AuthContext";
 
 const SettingsScreen = () => {
-  const { user, setUser } = useContext(AuthContext);
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -214,7 +211,13 @@ const SettingsScreen = () => {
       />
       <View style={styles.settingsGlobalContainer}>
         <View style={styles.titleContainer}>
-          <FontAwesome6 name="gear" size={styles.gearIcon.size} color={styles.gearIcon.color} style={styles.gearIcon} />
+          <View style={{ flexDirection: "row"}}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <FontAwesome6 name="arrow-left" size={styles.backIcon.size} color={styles.backIcon.color} />
+            </TouchableOpacity>
+            <FontAwesome6 name="gear" size={styles.gearIcon.size} color={styles.gearIcon.color} style={styles.gearIcon} />
+          </View>
+          
           <Text style={styles.settingsTitle}>
             Personal information
           </Text>

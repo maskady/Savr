@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Appearance } from 'react-native';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';
 import getStyles from '../styles/CompanyStyles'; 
 import { useNavigation } from '@react-navigation/native';
 import { getToken } from '../utils/token';
@@ -152,9 +152,15 @@ const CompanyListScreen = () => {
         borderBottomColor: companyStyles.isDarkMode ? '#444' : '#eee',
         backgroundColor: companyStyles.isDarkMode ? 'black' : 'white',
       }]}>
-        <Text style={[companyStyles.headerTitle, {
-          color: companyStyles.isDarkMode ? 'white' : 'black',
-        }]}>My Companies</Text>
+        <View style={{ flexDirection: 'row'}}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <FontAwesome6 name="arrow-left" size={24} color={companyStyles.isDarkMode ? 'white' : 'black'} style={{ marginRight: 10, marginTop: 5 }} />
+          </TouchableOpacity>
+          <Text style={[companyStyles.headerTitle, {
+            color: companyStyles.isDarkMode ? 'white' : 'black',
+          }]}>My Companies</Text>
+        </View>
+
         <TouchableOpacity 
           style={companyStyles.addButton} 
           onPress={handleAddCompany}

@@ -14,16 +14,18 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/NewCompanyStyles'; 
 import { getToken } from '../utils/token';
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 
-const ShopUpdateScreen = ({ route, navigation }) => {
+const ShopUpdateScreen = ({ route }) => {
   const [shop, setShop] = useState(route.params.shop);
   const [styles, setStyles] = useState(getStyles());
   const [categoryInput, setCategoryInput] = useState('');
   const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState({});
-  
+  const navigation = useNavigation(); 
+
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
       console.log("Theme changed:", colorScheme);
@@ -265,6 +267,9 @@ const ShopUpdateScreen = ({ route, navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <FontAwesome6 name="arrow-left" size={24} color={Appearance.getColorScheme() === 'dark' ? '#FFFFFF' : '#000000'} />
+        </TouchableOpacity>
         <Text style={styles.title}>Update Shop</Text>
         <Ionicons name="trash" size={24} color="red" onPress={handleDeleteShop} />
       </View>

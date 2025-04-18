@@ -22,6 +22,10 @@ const getStyles = () => {
       color: isDarkMode ? Colors.White : Colors.Black,
       size: 20,
     },
+    backIcon: {
+      size: 24,
+      color: isDarkMode ? Colors.White : Colors.Black,
+    },  
     loaderContainer: {
       flex: 1,
       justifyContent: "center",
@@ -50,6 +54,7 @@ const getStyles = () => {
       color: isDarkMode ? Colors.White : Colors.Black,
       size: 24,
       marginRight: 20,
+      marginLeft: 10,
     },
     settingsTitle: {
       fontSize: 20,

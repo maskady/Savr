@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Appearance } from 'react-native';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';
 import getStyles from '../styles/CompanyStyles'; // Réutilisation du même fichier de style
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getToken } from '../utils/token';
@@ -94,6 +94,9 @@ const ShopListScreen = () => {
         borderBottomColor: styles.isDarkMode ? '#444' : '#eee',
         backgroundColor: styles.isDarkMode ? 'black' : 'white',
       }]}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <FontAwesome6 name="arrow-left" size={24} color={styles.isDarkMode ? 'white' : 'black'} />
+        </TouchableOpacity>
         <Text style={[styles.headerTitle, {
           color: styles.isDarkMode ? 'white' : 'black',
         }]}>{company.name ? `${company.name} - Shops` : 'All Shops'}</Text>

@@ -13,9 +13,6 @@ const SettingsDropdown = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [styles, setStyles] = useState(getStyles());
   const dropdownHeight = useRef(new Animated.Value(0)).current;
-  
-  const { user } = useContext(AuthContext);
-
   const menuHeight = 100;
 
   const navigation = useNavigation();

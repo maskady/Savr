@@ -12,7 +12,7 @@ import CompanyListScreen from "../screens/CompanyListScreen";
 import CardPaymentScreen from "../screens/CardPaymentScreen";
 
 import PostProductScreen from "../screens/PostProductScreen";
-import CompanyCreationScreen from "../screens/NewCompanyScreen";
+import CompanyCreationScreen from "../screens/CompanyCreationScreen";
 import CompanyUpdateScreen from "../screens/CompanyUpdateScreen";
 import ShopListScreen from "../screens/ShopListScreen";
 import ShopCreationScreen from "../screens/ShopCreationScreen";
