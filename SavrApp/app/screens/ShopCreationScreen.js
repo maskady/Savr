@@ -14,6 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/NewCompanyStyles'; // Réutilisation du même style
 import { getToken } from '../utils/token';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
 
 const ShopCreationScreen = () => {
   const navigation = useNavigation();
@@ -21,6 +22,7 @@ const ShopCreationScreen = () => {
   const { companyId } = route.params || {}; // Récupérer le companyId depuis les paramètres
   
   const [styles, setStyles] = useState(getStyles());
+  const [categories, setCategories] = useState([]);
   
   const [shop, setShop] = useState({
     name: '',
@@ -51,6 +53,8 @@ const ShopCreationScreen = () => {
     };
     
     const subscription = Appearance.addChangeListener(handleThemeChange);
+    
+    fetchCategories();
     
     return () => {
       subscription.remove();
@@ -215,6 +219,30 @@ const ShopCreationScreen = () => {
       images: updatedImages
     });
   };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('https://www.sevr.polaris.marek-mraz.com/api/category', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${await getToken()}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories');
+      }
+
+      const body = await response.json();
+      setCategories((body.data || []).map(category => category.name));
+      console.log("Fetched categories:", categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }  
+    
   
   return (
     <ScrollView style={styles.container}>
@@ -346,20 +374,26 @@ const ShopCreationScreen = () => {
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
       </View>
       
-      {/* Catégories */}
+      {/* Categories */}
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Categories *</Text>
         <View style={styles.rowContainer}>
-          <TextInput
-            style={[styles.input, {flex: 3, marginRight: 10}]}
-            value={categoryInput}
-            onChangeText={setCategoryInput}
-            placeholder="Add a category"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-          />
+          <View style={[styles.input, {flex: 3, marginRight: 10, justifyContent: 'center'}]}>
+            <Picker
+              selectedValue={categoryInput}
+              onValueChange={(itemValue) => setCategoryInput(itemValue)}
+              style={{height: 50, color: Appearance.getColorScheme() === 'dark' ? '#FFFFFF' : '#000000'}}
+            >
+              <Picker.Item label="Select a category" value="" />
+              {categories.map((cat, index) => (
+                <Picker.Item key={index} label={cat} value={cat} />
+              ))}
+            </Picker>
+          </View>
           <TouchableOpacity 
             style={[styles.imagePickerButton, {flex: 1, marginTop: 0}]} 
             onPress={addCategory}
+            disabled={!categoryInput}
           >
             <Text style={styles.imagePickerButtonText}>Add</Text>
           </TouchableOpacity>
@@ -429,7 +463,6 @@ const ShopCreationScreen = () => {
   );
 };
 
-// Ajout de styles supplémentaires pour les catégories
 const extraStyles = {
   categoriesContainer: {
     flexDirection: 'row',
@@ -448,9 +481,6 @@ const extraStyles = {
     paddingVertical: 8,
     borderRadius: 20,
   },
-  categoryText: {
-    color: '#333',
-  },
   primaryCategoryButton: {
     backgroundColor: '#007bff',
   },
@@ -465,11 +495,6 @@ const extraStyles = {
     backgroundColor: '#ff4d4f',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  helperText: {
-    fontSize: 12,
-    color: '#777',
-    marginTop: 5,
   },
 };
 
