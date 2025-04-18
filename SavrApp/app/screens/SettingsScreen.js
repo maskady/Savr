@@ -6,10 +6,13 @@ import { getToken, storeToken, removeToken, refreshToken } from "../utils/token"
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
-import { saveUserData } from "../utils/api";
+import { saveUserData, loadUserData } from "../utils/api";
+import { refreshToken } from "../utils/token";
 import { AuthContext } from "../contexts/AuthContext";
 
 const SettingsScreen = () => {
+  const { user, setUser } = useContext(AuthContext);
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");

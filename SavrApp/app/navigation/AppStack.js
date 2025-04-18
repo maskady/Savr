@@ -10,6 +10,8 @@ import SettingsScreen from "../screens/SettingsScreen";
 import ShopScreen from "../screens/ShopScreen";
 import CompanyListScreen from "../screens/CompanyListScreen";
 import CardPaymentScreen from "../screens/CardPaymentScreen";
+
+import PostProductScreen from "../screens/PostProductScreen";
 import CompanyCreationScreen from "../screens/NewCompanyScreen";
 import CompanyUpdateScreen from "../screens/CompanyUpdateScreen";
 import ShopListScreen from "../screens/ShopListScreen";
@@ -37,6 +39,8 @@ const AppStack = () => {
       <Stack.Screen name="ShopCreation" component={ShopCreationScreen} />
       <Stack.Screen name="ShopUpdate" component={ShopUpdateScreen} />
       <Stack.Screen name="Error" component={ErrorScreen} />
+      <Stack.Screen name="PostProduct" component={PostProductScreen} />
+
     </Stack.Navigator>
   );
 };

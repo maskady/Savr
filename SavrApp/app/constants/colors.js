@@ -2,6 +2,7 @@ export const COLORS = {
     backgroundLight: "white",
     backgroundDark: "#121212",
     primary: "#6200ea",
+    secondary: "#03dac6",
     borderLight: "#ddd",
     borderDark: "#444",
     textLight: "black",

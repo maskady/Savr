@@ -3,34 +3,32 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
-  ScrollView,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
   Linking,
   Share,
-  ActivityIndicator,
-  Dimensions,
-  Modal,
   Alert,
-  TextInput
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { ArrowLeft, Phone, MapPin, Share as ShareIcon, Star, Save, Pencil, X } from 'lucide-react-native';
 import { SettingsContext } from '../contexts/SettingsContext';
-import MapView, { Marker } from 'react-native-maps';
 import { getShopById, updateShop } from '../utils/api';
-import ImageManager from '../components/ImageManager';
-const { width } = Dimensions.get('window');
 import { businessCategories } from '../constants/businessCategories';
 import { ShopContext } from '../contexts/ShopContext';
+import { AuthContext } from '../contexts/AuthContext';
+import ShopHeader from '../components/ShopHeader';
+import ShopContent from '../components/ShopContent';
+import FullScreenImageModal from '../components/FullScreenImageModal';
 
 const ShopScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
 
-  const goBackOrHome = () => {
+  const { user } = useContext(AuthContext);
+
+  const goBackOrHome = async () => {
+    await handleSaveChanges();
+
     if (navigation.canGoBack()) {
       navigation.goBack();
     } else {
@@ -40,6 +38,7 @@ const ShopScreen = () => {
   const { darkMode } = useContext(SettingsContext);
   const { updateShopInContext } = useContext(ShopContext);
   const [shop, setShop] = useState(route.params?.shop || null);
+  const [oldShop, setOldShop] = useState(route.params?.shop || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fullScreenImage, setFullScreenImage] = useState(null);
@@ -140,8 +139,25 @@ const ShopScreen = () => {
     setFullScreenImage(image);
   };
 
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = () => {
     if (!hasChanges) return;
+  
+    Alert.alert(
+      "Save",                                         // title
+      "Are you sure you want to save your edits?",    // message (string!)
+      [                                               // ← third param: buttons
+        { text: "No",  style: "cancel", onPress: discardChanges },
+        { text: "Yes", onPress: saveChanges },
+      ]
+    );
+
+    setEditMode('view');
+    setIsSaving(false);
+    setHasChanges(false);
+  };
+
+  const saveChanges = async () => {
+    if (!hasChanges || isSaving) return;
 
     setEditMode('saving');
     setIsSaving(true);
@@ -154,14 +170,15 @@ const ShopScreen = () => {
       
       // Update the shop in the backend
       await updateShop(shop.id, updatedShop);
-
+      
       // Update the shop in context
       updateShopInContext(updatedShop);
+      setOldShop(shop);
       
       Alert.alert("Success", "Your changes have been saved successfully.", [{ text: "OK" }]);
       setHasChanges(false);
       setEditMode('view');
-
+      
     } catch (error) {
       console.error("Error saving changes:", error);
       Alert.alert(
@@ -175,7 +192,18 @@ const ShopScreen = () => {
     }
   };
 
+  const discardChanges = () => {
+    setShop(oldShop);
+    setHasChanges(false);
+    setEditMode('view');
+    setIsSaving(false);
+    Alert.alert("Changes Discarded", "Your changes have been discarded.", [{ text: "OK" }]);
+  };
+
   const toggleEditMode = () => {
+    if (editMode === 'edit') {
+      discardChanges(); 
+    }
     setEditMode(editMode === 'view' ? 'edit' : 'view');
   };
 
@@ -197,7 +225,7 @@ const ShopScreen = () => {
           </Text>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.primary }]}
-            onPress={() => navigation.goBack()}
+            onPress={goBackOrHome}
           >
             <Text style={styles.buttonText}>Go Back</Text>
           </TouchableOpacity>
@@ -209,399 +237,34 @@ const ShopScreen = () => {
   return (
     
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={goBackOrHome}
-          style={styles.backButton}
-        >
-          <ArrowLeft size={24} color="#fff" />
-        </TouchableOpacity>
-        <View style={styles.headerButtons}>
-
-          {editMode === 'edit' && hasChanges && (
-            <TouchableOpacity
-              style={[
-                styles.saveButton,
-                { backgroundColor: isSaving ? 'rgba(0,0,0,0.2)' : 'rgba(46,125,50,0.9)' }
-              ]}
-              onPress={handleSaveChanges}
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <ActivityIndicator size="small" color="#fff" />
-              ) : (
-                <View style={styles.buttonContent}>
-                  <Save size={16} color="#fff" style={styles.buttonIcon} />
-                  <Text style={styles.buttonText}>Save</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          )}
-
-          <TouchableOpacity
-            style={[
-              styles.saveButton,
-              { 
-                backgroundColor: 'rgba(0,0,0,0.2)',
-                marginLeft: editMode === 'edit' && hasChanges ? 8 : 0 
-              }
-            ]}
-            onPress={toggleEditMode}
-            disabled={editMode === 'saving'}
-          >
-
-
-            <View style={styles.buttonContent}>
-
-              {editMode === 'view' ? (
-                <>
-                  <Pencil size={16} color="#fff" style={styles.buttonIcon} />
-                  <Text style={styles.buttonText}>Edit</Text>
-                </>
-              ) : (
-                <>
-                  <X size={16} color="#fff" style={styles.buttonIcon} />
-                  <Text style={styles.buttonText}>Cancel</Text>
-                </>
-              )}
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            onPress={handleShare} 
-            style={[styles.shareButton, { marginLeft: 8 }]} 
-          >
-            <ShareIcon size={24} color="#fff" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {loading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={[styles.loadingText, { color: colors.text }]}>Loading shop details...</Text>
-        </View>
-      ) : error ? (
-        <View style={styles.errorContainer}>
-          <Text style={[styles.errorText, { color: colors.text }]}>{error}</Text>
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: colors.primary }]}
-            onPress={goBackOrHome}
-          >
-            <Text style={styles.buttonText}>Go Back</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Image Manager Component */}
-          <ImageManager
-            images={shop.images}
-            height={250}
-            editMode={editMode}
-            onImagesChange={handleImagesChange}
-            onImagePress={handleFullScreenImage}
-          />
-
-          {/* /////////////////////////////// */}
-          {/* Shop Info */}
-          {/* /////////////////////////////// */}
-          <View style={[styles.infoContainer, { backgroundColor: colors.background }]}>
-
-           {/* Shop Name */}
-            {editMode === 'view' ? (
-              <Text style={[styles.shopName, { color: colors.text }]}>{shop.name}</Text>
-            ) : (
-              <>
-                <TextInput
-                  style={[styles.shopName, styles.input, { color: colors.text, borderColor: colors.border }]}
-                  value={shop.name}
-                  onChangeText={(text) => handleInputChange('name', text)}
-                  placeholder="Shop Name"
-                  placeholderTextColor={colors.subtext}
-                />
-                <Text style={[styles.inputLabel, { color: colors.subtext }]}>Shop Name (displayed to customers)</Text>
-              </>
-            )}
-
-            {/* Rating */}
-            {shop.rating && (
-              <View style={styles.ratingContainer}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    size={16}
-                    fill={star <= Math.round(shop.rating) ? colors.primary : 'none'}
-                    color={star <= Math.round(shop.rating) ? colors.primary : colors.subtext}
-                  />
-                ))}
-                <Text style={[styles.ratingText, { color: colors.subtext }]}>
-                  {shop.rating.toFixed(1)} ({shop.ratings || 0} ratings)
-                </Text>
-              </View>
-            )}
-
-            {/* Category */}
-            {editMode === 'view' ? (
-              primaryCategoryName && (
-                <Text style={[styles.categoryText, { color: colors.subtext }]}>
-                  {primaryCategoryName}
-                </Text>
-              )
-            ) : (
-              <View>
-                <TouchableOpacity
-                  style={styles.dropdownTrigger}
-                  onPress={() => setShowCategoryDropdown(true)}
-                >
-                  <Text style={[styles.dropdownTriggerText, { color: colors.text }]}>
-                    {businessCategories[shop.primaryCategory]?.name || 'Select Category'}
-                  </Text>
-                </TouchableOpacity>
-                {showCategoryDropdown && (
-                  <Modal
-                    transparent
-                    animationType="fade"
-                    onRequestClose={() => setShowCategoryDropdown(false)}
-                  >
-                    <TouchableOpacity
-                      style={styles.modalOverlay}
-                      activeOpacity={1}
-                      onPress={() => setShowCategoryDropdown(false)}
-                    >
-                      <View style={styles.dropdownMenu}>
-                        {Object.keys(businessCategories).map((key) => (
-                          <TouchableOpacity
-                            key={key}
-                            style={styles.dropdownItem}
-                            onPress={() => {
-                              handleInputChange('primaryCategory', key);
-                              setShowCategoryDropdown(false);
-                            }}
-                          >
-                            <Text style={styles.dropdownItemText}>
-                              {businessCategories[key].name}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-                    </TouchableOpacity>
-                  </Modal>
-                )}
-              </View>
-            )}
-
-            {/* Description */}
-            <View style={[styles.sectionContainer, { borderColor: colors.border }]}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>Description</Text>
-              
-              {editMode === 'view' ? (
-                <Text style={[styles.descriptionText, { color: colors.subtext }]}>
-                  {shop.description || 'No description available for this shop.'}
-                </Text>
-              ) : (
-                <>
-                  <TextInput
-                    style={[styles.descriptionText, styles.input, { color: colors.text, borderColor: colors.border, textAlignVertical: 'top' }]}
-                    value={shop.description || ''}
-                    onChangeText={(text) => handleInputChange('description', text)}
-                    placeholder="Enter shop description"
-                    placeholderTextColor={colors.subtext}
-                    multiline
-                    numberOfLines={4}
-                  />
-                  <Text style={[styles.inputLabel, { color: colors.subtext }]}>Describe your shop to attract customers</Text>
-                </>
-              )}
-            </View>
-
-            {/* Contact & Location */}
-              <View style={[styles.sectionContainer, { borderColor: colors.border }]}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>Contact & Location</Text>
-
-                <View style={styles.contactItem}>
-                  <Phone size={20} color={colors.primary} />
-                  {editMode === 'view' ? (
-                    <TouchableOpacity onPress={handleCall}>
-                      <Text style={[styles.contactText, { color: colors.text }]}>{shop.phone}</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <View style={{ marginLeft: 12, flex: 1 }}>
-                      <TextInput
-                        style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
-                        value={shop.phone || ''}
-                        onChangeText={(text) => handleInputChange('phone', text)}
-                        placeholder="Phone number"
-                        placeholderTextColor={colors.subtext}
-                        keyboardType="phone-pad"
-                      />
-                      <Text style={[styles.inputLabel, { color: colors.subtext }]}>Phone Number (e.g., +49 123 456 7890)</Text>
-                    </View>
-                  )}
-                </View>
-
-                <View style={styles.contactItem}>
-                <MapPin size={20} color={colors.primary} />
-                <View style={{ marginLeft: 12 }}>
-                  {editMode === 'view' ? (
-                    <TouchableOpacity onPress={handleNavigate}>
-                      {shop.address && (
-                        <Text style={[styles.contactText, { color: colors.text }]}>{shop.address}</Text>
-                      )}
-                      {(shop.postalCode || shop.city) && (
-                        <Text style={[styles.contactText, { color: colors.text }]}>
-                          {[
-                            shop.postalCode || '',
-                            shop.city || ''
-                          ].filter(Boolean).join(' ')}
-                        </Text>
-                      )}
-                      {shop.country && (
-                        <Text style={[styles.contactText, { color: colors.text }]}>{shop.country}</Text>
-                      )}
-                    </TouchableOpacity>
-                  ) : (
-                    <>
-                      <TextInput
-                        style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
-                        value={shop.address || ''}
-                        onChangeText={(text) => handleInputChange('address', text)}
-                        placeholder="Street address"
-                        placeholderTextColor={colors.subtext}
-                      />
-                      <Text style={[styles.inputLabel, { color: colors.subtext }]}>Street Address (e.g., 123 Main St)</Text>
-                      
-                      <TextInput
-                        style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
-                        value={shop.postalCode || ''}
-                        onChangeText={(text) => handleInputChange('postalCode', text)}
-                        placeholder="Postal code"
-                        placeholderTextColor={colors.subtext}
-                      />
-                      <Text style={[styles.inputLabel, { color: colors.subtext }]}>Postal Code (e.g., 10115)</Text>
-                      
-                      <TextInput
-                        style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
-                        value={shop.city || ''}
-                        onChangeText={(text) => handleInputChange('city', text)}
-                        placeholder="City"
-                        placeholderTextColor={colors.subtext}
-                      />
-                      <Text style={[styles.inputLabel, { color: colors.subtext }]}>City (e.g., Berlin)</Text>
-                      
-                      <TextInput
-                        style={[styles.contactText, styles.input, { color: colors.text, borderColor: colors.border }]}
-                        value={shop.country || ''}
-                        onChangeText={(text) => handleInputChange('country', text)}
-                        placeholder="Country"
-                        placeholderTextColor={colors.subtext}
-                      />
-                      <Text style={[styles.inputLabel, { color: colors.subtext }]}>Country (e.g., Germany)</Text>
-                    </>
-                  )}
-                </View>
-              </View>
-
-            </View>
-
-            {/* Map */}
-            {shop.latitude && shop.longitude && (
-              <View style={styles.mapContainer}>
-                <MapView
-                  style={styles.map}
-                  initialRegion={{
-                    latitude: shop.latitude,
-                    longitude: shop.longitude,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
-                  }}
-                >
-                  <Marker
-                    coordinate={{
-                      latitude: shop.latitude,
-                      longitude: shop.longitude,
-                    }}
-                    title={shop.name}
-                  />
-                </MapView>
-                <TouchableOpacity
-                  style={[styles.directionsButton, { backgroundColor: colors.primary }]}
-                  onPress={handleNavigate}
-                >
-                  <Text style={styles.directionsButtonText}>Get Directions</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {/* Available Products */}
-            {shop.products && shop.products.length > 0 && (
-              <View style={[styles.sectionContainer, { borderColor: colors.border }]}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>Available Products</Text>
-                {shop.products.map((product, index) => (
-                  <View
-                    key={index}
-                    style={[styles.productCard, { backgroundColor: colors.card }]}
-                  >
-                    {product.image && (
-                      <Image
-                        source={{ uri: product.image }}
-                        style={styles.productImage}
-                      />
-                    )}
-                    <View style={styles.productInfo}>
-                      <Text style={[styles.productName, { color: colors.text }]}>
-                        {product.name}
-                      </Text>
-                      {product.description && (
-                        <Text style={[styles.productDescription, { color: colors.subtext }]}>
-                          {product.description}
-                        </Text>
-                      )}
-                      <View style={styles.productPriceContainer}>
-                        {product.original_price && (
-                          <Text style={[styles.productOriginalPrice, { color: colors.subtext }]}>
-                            €{product.original_price.toFixed(2)}
-                          </Text>
-                        )}
-                        <Text style={[styles.productPrice, { color: colors.primary }]}>
-                          €{product.price.toFixed(2)}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                ))}
-              </View>
-            )}
-          </View>
-        </ScrollView>
-      )}
-
-      {/* Full Screen Image Modal */}
-      <Modal
-        visible={!!fullScreenImage}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setFullScreenImage(null)}
-      >
-        <View style={styles.fullScreenModal}>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setFullScreenImage(null)}
-          >
-            <ArrowLeft size={24} color="#fff" />
-          </TouchableOpacity>
-          {fullScreenImage && (
-            <Image
-              source={{ uri: fullScreenImage.url }}
-              style={styles.fullScreenImage}
-              resizeMode="contain"
-            />
-          )}
-        </View>
-      </Modal>
+      <ShopHeader
+        editMode={editMode}
+        hasChanges={hasChanges}
+        isSaving={isSaving}
+        onSave={handleSaveChanges}
+        onToggleEdit={toggleEditMode}
+        onShare={handleShare}
+        onBack={goBackOrHome}
+      />
+      <ShopContent
+        shop={shop}
+        loading={loading}
+        error={error}
+        editMode={editMode}
+        colors={colors}
+        primaryCategoryName={primaryCategoryName}
+        user={user}
+        onCall={handleCall}
+        onNavigate={handleNavigate}
+        onInputChange={handleInputChange}
+        onImagesChange={handleImagesChange}
+        onImagePress={handleFullScreenImage}
+      />
+      <FullScreenImageModal
+        image={fullScreenImage}
+        onClose={() => setFullScreenImage(null)}
+      />
     </SafeAreaView>
   );
 };

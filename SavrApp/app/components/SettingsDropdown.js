@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { getToken } from '../utils/token';
 import getStyles from '../styles/SettingsStyles';
 import { SettingsButton } from './SettingsButton';
+import { loadUserData } from '../utils/api';
 import { AuthContext } from '../contexts/AuthContext';
 
 const SettingsDropdown = () => {
@@ -13,6 +14,8 @@ const SettingsDropdown = () => {
   const [styles, setStyles] = useState(getStyles());
   const dropdownHeight = useRef(new Animated.Value(0)).current;
   
+  const { user } = useContext(AuthContext);
+
   const menuHeight = 100;
 
   const navigation = useNavigation();
@@ -27,7 +30,7 @@ const SettingsDropdown = () => {
     }).start();
 
     fetchUserData();
-
+    
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setStyles(getStyles(colorScheme));
     });
