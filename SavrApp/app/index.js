@@ -3,6 +3,7 @@ import Navigation from "./navigation/Navigation";
 import { AuthProvider } from './contexts/AuthContext';
 import { SettingsProvider } from "./contexts/SettingsContext";
 import { ShopProvider } from "./contexts/ShopContext";
+import { CartProvider } from "./contexts/CheckoutContext";
 
 export default function App() {
   // Show only the first line of console.error messages
@@ -20,12 +21,14 @@ export default function App() {
   };
 
   return (
-    <AuthProvider>
-      <SettingsProvider>
-        <ShopProvider>
-          <Navigation />
-        </ShopProvider>
-      </SettingsProvider>
-    </AuthProvider>
+    <CartProvider>
+      <AuthProvider>
+        <SettingsProvider>
+          <ShopProvider>
+            <Navigation />
+          </ShopProvider>
+        </SettingsProvider>
+      </AuthProvider>
+    </CartProvider>
   );
 }
