@@ -10,7 +10,8 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState({});
+
+  const [user, setUser] = useState(null);
   
   
   // Define an async function to load user data and update state
@@ -25,6 +26,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
+
 
   // Check for existing token on app start
   useEffect(() => {
@@ -64,8 +66,16 @@ export const AuthProvider = ({ children }) => {
     console.log("AuthProvider: User logged out");
   };
 
+  const fetchUserData = async () => {
+    const data = await loadUserData();
+    setUser(data);
+    console.log("AuthProvider: User data fetched", user);
+  }
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, isLoading, user, login, logout, setUser }}>
+
+    <AuthContext.Provider value={{ isLoggedIn, isLoading, login, logout, user, fetchUserData }}>
+
       {children}
     </AuthContext.Provider>
   );

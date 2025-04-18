@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Appearance } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import getStyles from '../styles/CompanyStyles'; 
+import { useNavigation } from '@react-navigation/native';
+import { getToken } from '../utils/token';
+import { AuthContext } from '../contexts/AuthContext';
 
 const CompanyListScreen = () => {
   const theme = Appearance.getColorScheme();
   console.log('Current theme:', theme);
   const [companyStyles, setCompanyStyles] = useState(getStyles());
+  const navigation = useNavigation(); 
+  const { user } = useContext(AuthContext); 
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
@@ -16,6 +21,8 @@ const CompanyListScreen = () => {
     };
 
     const subscription = Appearance.addChangeListener(handleThemeChange);
+
+    retrieveCompanies();
 
     return () => {
       subscription.remove();
@@ -88,16 +95,52 @@ const CompanyListScreen = () => {
     },
   ]);
 
-  // Function to handle adding a new company
+  const retrieveCompanies = async () => {
+    let onlyMyCompanies = true;
+    if (user.roleId === 'admin') {
+      onlyMyCompanies = false;
+    }
+    try{
+      const response = await fetch('https://www.sevr.polaris.marek-mraz.com/api/company?onlyMyCompanies=' + onlyMyCompanies, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${await getToken()}`
+        }
+      });
+      
+
+      const data = await response.json();
+
+      console.log("Response data:", data);
+
+      if (response.ok) {
+        setCompanies(data.data);
+      }
+      else {
+        console.error("Error fetching companies:", response);
+      }
+    }
+    catch (error) {
+      console.error("Error fetching companies :", error);
+    }
+  };
+
   const handleAddCompany = () => {
-    // TODO: Navigate to add company screen or open modal
-    console.log('Navigate to add company screen or open modal');
+    navigation.navigate('CompanyCreation');
   };
 
   // Function to handle editing a company
   const handleEditCompany = (companyId) => {
-    // TODO: Navigate to edit company screen or open modal with the selected company details
     console.log('Edit company with ID:', companyId);
+    // Retrieve the company details from the companies array
+    const companyToEdit = companies.find(company => company.id === companyId);
+    navigation.navigate('CompanyUpdate', { company: companyToEdit });
+  };
+
+  const handleOpenCompany = (company) => {
+    console.log('Open company with ID:', company);
+    navigation.navigate('ShopList', { company });
   };
 
   return (
@@ -135,31 +178,35 @@ const CompanyListScreen = () => {
           </View>
         ) : (
           companies.map((company) => (
-            <View 
+            <TouchableOpacity 
               key={company.id} 
-              style={[companyStyles.companyCard, {
-                backgroundColor: companyStyles.isDarkMode ? '#333' : 'white',
-                borderColor: companyStyles.isDarkMode ? '#444' : '#eee',
-              }]}
+              onPress={() => handleOpenCompany(company)}
             >
-              <View style={companyStyles.companyInfo}>
-                <Text style={[companyStyles.companyName, {
-                  color: companyStyles.isDarkMode ? 'white' : 'black',
-                }]}>{company.name}</Text>
-                <Text style={[companyStyles.companyAddress, {
-                  color: companyStyles.isDarkMode ? '#bbb' : '#666',
-                }]}>{company.address}</Text>
-                <Text style={[companyStyles.companyCity, {
-                  color: companyStyles.isDarkMode ? '#bbb' : '#666',
-                }]}>{company.city}</Text>
-              </View>
-              <TouchableOpacity 
-                style={companyStyles.editButton}
-                onPress={() => handleEditCompany(company.id)}
+              <View 
+                style={[companyStyles.companyCard, {
+                  backgroundColor: companyStyles.isDarkMode ? '#333' : 'white',
+                  borderColor: companyStyles.isDarkMode ? '#444' : '#eee',
+                }]}
               >
-                <Feather name="edit" size={20} color={companyStyles.isDarkMode ? 'white' : 'black'} />
-              </TouchableOpacity>
-            </View>
+                <View style={companyStyles.companyInfo}>
+                  <Text style={[companyStyles.companyName, {
+                    color: companyStyles.isDarkMode ? 'white' : 'black',
+                  }]}>{company.name}</Text>
+                  <Text style={[companyStyles.companyAddress, {
+                    color: companyStyles.isDarkMode ? '#bbb' : '#666',
+                  }]}>{company.address}</Text>
+                  <Text style={[companyStyles.companyCity, {
+                    color: companyStyles.isDarkMode ? '#bbb' : '#666',
+                  }]}>{company.city}</Text>
+                </View>
+                <TouchableOpacity 
+                  style={companyStyles.editButton}
+                  onPress={() => handleEditCompany(company.id)}
+                >
+                  <Feather name="edit" size={20} color={companyStyles.isDarkMode ? 'white' : 'black'} />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
           ))
         )}
       </ScrollView>

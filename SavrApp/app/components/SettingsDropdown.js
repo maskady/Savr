@@ -20,6 +20,8 @@ const SettingsDropdown = () => {
 
   const navigation = useNavigation();
 
+  const { fetchUserData, user } = useContext(AuthContext);
+
   useEffect(() => {
     Animated.timing(dropdownHeight, {
       toValue: isOpen ? menuHeight : 0,
@@ -27,6 +29,8 @@ const SettingsDropdown = () => {
       useNativeDriver: false
     }).start();
 
+    fetchUserData();
+    
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setStyles(getStyles(colorScheme));
     });
@@ -34,6 +38,8 @@ const SettingsDropdown = () => {
     subscription.remove();
     setIsLoading(false);
   }, [isOpen]);
+
+  
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -48,7 +54,7 @@ const SettingsDropdown = () => {
     alert(message);
   }
 
-  if (isLoading || user.roleId === 'user') {
+  if (isLoading || user?.roleId === 'user') {
     return (
       <TouchableOpacity style={styles.settingsDropDown.settingsButton} onPress={() => {navigation.navigate('Settings')}}>
         <SettingsButton />
