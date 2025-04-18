@@ -13,12 +13,14 @@ import { useTranslation } from 'react-i18next';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import SettingsDropdown from '../components/SettingsDropdown';
 import getStyles from '../styles/AppStyles';
+import { useNavigation } from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('window').width;
 
 const DashboardScreen = () => {
   const { t } = useTranslation();
   const [styles, setStyles] = useState(getStyles());
+  const navigation = useNavigation();
 
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
@@ -113,6 +115,10 @@ const DashboardScreen = () => {
               alignSelf: 'center',
           }}
         />
+
+        <TouchableOpacity style={{backgroundColor: '#4CAF50', padding: 10, borderRadius: 5, marginTop: 20}} onPress={() => {navigation.navigate('Orders')}}>
+          <Text style={styles.buttonText}>Orders</Text>
+        </TouchableOpacity>
 
       </ScrollView>
 
