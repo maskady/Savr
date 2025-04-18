@@ -32,6 +32,7 @@ const getStyles = () => {
       fontWeight: 'bold',
       color: isDarkMode ? Colors.White : Colors.Black,
       textAlign: 'center',
+      marginLeft: 10,
     },
     inputGroup: {
       marginBottom: 20,
