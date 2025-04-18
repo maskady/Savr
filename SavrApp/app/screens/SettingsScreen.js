@@ -211,8 +211,10 @@ const SettingsScreen = () => {
       />
       <View style={styles.settingsGlobalContainer}>
         <View style={styles.titleContainer}>
-          <View>
-            <FontAwesome6 name="arrow-left" size={styles.backIcon.size} color={styles.backIcon.color} onPress={() => navigation.goBack()} />
+          <View style={{ flexDirection: "row"}}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <FontAwesome6 name="arrow-left" size={styles.backIcon.size} color={styles.backIcon.color} />
+            </TouchableOpacity>
             <FontAwesome6 name="gear" size={styles.gearIcon.size} color={styles.gearIcon.color} style={styles.gearIcon} />
           </View>
           
