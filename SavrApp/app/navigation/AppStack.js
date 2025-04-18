@@ -17,6 +17,8 @@ import CompanyUpdateScreen from "../screens/CompanyUpdateScreen";
 import ShopListScreen from "../screens/ShopListScreen";
 import ShopCreationScreen from "../screens/ShopCreationScreen";
 import ShopUpdateScreen from "../screens/ShopUpdateScreen";
+import OrdersScreen from "../screens/OrdersScreens";
+import OrderDetailsScreen from "../screens/OrderDetailsScreen";
 
 const Stack = createStackNavigator();
 
@@ -38,6 +40,8 @@ const AppStack = () => {
       <Stack.Screen name="ShopList" component={ShopListScreen} />
       <Stack.Screen name="ShopCreation" component={ShopCreationScreen} />
       <Stack.Screen name="ShopUpdate" component={ShopUpdateScreen} />
+      <Stack.Screen name="Orders" component={OrdersScreen} />
+      <Stack.Screen name="OrderDetails" component={OrderDetailsScreen} />
       <Stack.Screen name="Error" component={ErrorScreen} />
       <Stack.Screen name="PostProduct" component={PostProductScreen} />
 
