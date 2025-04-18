@@ -66,12 +66,6 @@ export const AuthProvider = ({ children }) => {
     console.log("AuthProvider: User logged out");
   };
 
-  const fetchUserData = async () => {
-    const data = await loadUserData();
-    setUser(data);
-    console.log("AuthProvider: User data fetched", user);
-  }
-
   return (
 
     <AuthContext.Provider value={{ isLoggedIn, isLoading, login, logout, user, fetchUserData }}>
