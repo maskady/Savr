@@ -14,7 +14,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/NewCompanyStyles'; 
 import { getToken } from '../utils/token';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome6 } from '@expo/vector-icons';
 
 const CompanyUpdateScreen = ({ route, navigation }) => {
   const [company, setCompany] = useState(route.params.company);
@@ -185,6 +185,9 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <FontAwesome6 name="arrow-left" size={24} color={Appearance.getColorScheme() === 'dark' ? '#FFFFFF' : '#000000'} />
+        </TouchableOpacity>
         <Text style={styles.title}>Update Company</Text>
         <Ionicons name="trash" size={24} color="red" onPress={handleDeleteCompany} />
       </View>
