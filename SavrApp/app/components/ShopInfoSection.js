@@ -11,6 +11,7 @@ import {
 import { Star } from 'lucide-react-native';
 import { businessCategories } from '../constants/businessCategories';
 import { useNavigation } from '@react-navigation/native';
+import CategoryDropdown from './CategoryDropdown';
 
 export default function ShopInfoSection({
   shop,
@@ -20,7 +21,6 @@ export default function ShopInfoSection({
   user,
   onInputChange
 }) {
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
   const navigation = useNavigation();
 
@@ -55,8 +55,8 @@ export default function ShopInfoSection({
           {user?.roleId != 'user' && ( 
               <TouchableOpacity
                 style={[styles.postButton, { backgroundColor: colors.primary }]}
-                onPress={() => navigation.navigate('PostProduct', { shopId: shop.id })}
-              >
+                onPress={() => navigation.navigate('PostProduct', { shop: shop })}
+                >
                 <Text style={styles.buttonText}>Post New Product</Text>
               </TouchableOpacity>
             )}
@@ -74,42 +74,7 @@ export default function ShopInfoSection({
             Shop Name (displayed to customers)
           </Text>
 
-          <TouchableOpacity
-            style={[styles.dropdownTrigger, { borderColor: colors.border }]}
-            onPress={() => setShowCategoryDropdown(true)}
-          >
-            <Text style={{ color: colors.text }}>
-              {businessCategories[shop.primaryCategory]?.name || 'Select Category'}
-            </Text>
-          </TouchableOpacity>
-          {showCategoryDropdown && (
-            <Modal
-              transparent
-              animationType="fade"
-              onRequestClose={() => setShowCategoryDropdown(false)}
-            >
-              <TouchableOpacity
-                style={styles.modalOverlay}
-                activeOpacity={1}
-                onPress={() => setShowCategoryDropdown(false)}
-              >
-                <View style={styles.dropdownMenu}>
-                  {Object.entries(businessCategories).map(([key, cat]) => (
-                    <TouchableOpacity
-                      key={key}
-                      style={styles.dropdownItem}
-                      onPress={() => {
-                        onInputChange('primaryCategory', key);
-                        setShowCategoryDropdown(false);
-                      }}
-                    >
-                      <Text>{cat.name}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </TouchableOpacity>
-            </Modal>
-          )}
+          <CategoryDropdown shop={shop} onInputChange={onInputChange} />
         </>
       )}
     </View>

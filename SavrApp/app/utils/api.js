@@ -85,3 +85,62 @@ export const saveUserData = async ({ firstName, lastName, email}) => {
     return null;
   }
 }
+
+export const postProduct = async (data) => {
+  /**
+   * data body example:
+   * {
+      "name": "Product Example",
+      "description": "Product Description Example",
+      "price": 9.99,
+      "companyId": 1,
+      "categories": [
+        "xyz",
+        "abc"
+      ],
+      "images": [
+        {
+          "url": "/public/images/abdd.jpg",
+          "alt": "Burger with fries",
+          "type": "titleImage"
+        }
+      ]
+    }
+   */
+
+  try {
+    const response = await request('/product', 'POST', data);
+    console.log("Product posted successfully. errors:", response.data);
+    // if (response.status !== 201) {
+    //   throw new Error('Failed to post product');
+    // }
+    return response.data;
+  } catch (error) {
+    console.error('[api] Error posting product:', error);
+    throw error;
+  }
+};
+
+export const postProductVariant = async (data) => {
+  /**
+   * data body example:
+   * {
+        "productId": 1,
+        "shopId": 1,
+        "price": 100,
+        "quantity": 100
+      }
+  */
+
+  try {
+    const response = await request('/product-variant', 'POST', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error posting product variant:', error);
+    throw error;
+  }
+}
+
+export const getShopProducts = async (shopId) => {
+  return null;
+}
