@@ -124,9 +124,17 @@ const getStyles = () => {
       alignItems: 'center',
     },
     removeImageText: {
-      color: Colors.White,
+      color: isDarkMode ? Colors.White : Colors.Black,
       fontSize: 18,
       fontWeight: 'bold',
+    },
+    categoryText: {
+      color: isDarkMode ? Colors.White : "#333",
+    },
+    helperText: {
+      fontSize: 12,
+      color: isDarkMode ? Colors.White : '#777',
+      marginTop: 5,
     },
   });
 };
