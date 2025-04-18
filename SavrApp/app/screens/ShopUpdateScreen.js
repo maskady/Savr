@@ -15,11 +15,13 @@ import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/NewCompanyStyles'; 
 import { getToken } from '../utils/token';
 import { Ionicons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 
 const ShopUpdateScreen = ({ route, navigation }) => {
   const [shop, setShop] = useState(route.params.shop);
   const [styles, setStyles] = useState(getStyles());
   const [categoryInput, setCategoryInput] = useState('');
+  const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState({});
   
   useEffect(() => {
@@ -31,6 +33,8 @@ const ShopUpdateScreen = ({ route, navigation }) => {
     };
     
     const subscription = Appearance.addChangeListener(handleThemeChange);
+
+    fetchCategories();
     
     return () => {
       subscription.remove();
@@ -231,6 +235,29 @@ const ShopUpdateScreen = ({ route, navigation }) => {
       ]
     );
   }
+
+  const fetchCategories = async () => {
+      try {
+        const response = await fetch('https://www.sevr.polaris.marek-mraz.com/api/category', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${await getToken()}`
+          }
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch categories');
+        }
+  
+        const body = await response.json();
+        setCategories((body.data || []).map(category => category.name));
+        console.log("Fetched categories:", categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    }  
   
   return (
     <ScrollView style={styles.container}>
@@ -382,16 +409,22 @@ const ShopUpdateScreen = ({ route, navigation }) => {
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Categories</Text>
         <View style={styles.rowContainer}>
-          <TextInput
-            style={[styles.input, {flex: 3, marginRight: 10}]}
-            value={categoryInput}
-            onChangeText={setCategoryInput}
-            placeholder="Add a category"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-          />
+          <View style={[styles.input, {flex: 3, marginRight: 10, justifyContent: 'center'}]}>
+            <Picker
+              selectedValue={categoryInput}
+              onValueChange={(itemValue) => setCategoryInput(itemValue)}
+              style={{height: 50, color: Appearance.getColorScheme() === 'dark' ? '#FFFFFF' : '#000000'}}
+            >
+              <Picker.Item label="Sélectionnez une catégorie" value="" />
+              {categories.map((cat, index) => (
+                <Picker.Item key={index} label={cat} value={cat} />
+              ))}
+            </Picker>
+          </View>
           <TouchableOpacity 
             style={[styles.imagePickerButton, {flex: 1, marginTop: 0}]} 
             onPress={addCategory}
+            disabled={!categoryInput}
           >
             <Text style={styles.imagePickerButtonText}>Add</Text>
           </TouchableOpacity>
@@ -409,7 +442,7 @@ const ShopUpdateScreen = ({ route, navigation }) => {
               >
                 <Text 
                   style={[
-                    categoriesStyles.categoryText,
+                    styles.categoryText,
                     category === shop.primaryCategory && categoriesStyles.primaryCategoryText
                   ]}
                 >
@@ -426,7 +459,7 @@ const ShopUpdateScreen = ({ route, navigation }) => {
           ))}
         </View>
         {shop.categories && shop.categories.length > 0 && (
-          <Text style={categoriesStyles.helperText}>
+          <Text style={styles.helperText}>
             Tap on a category to set it as primary. Current primary: {shop.primaryCategory || 'None'}
           </Text>
         )}
@@ -485,9 +518,6 @@ const categoriesStyles = {
     paddingVertical: 8,
     borderRadius: 20,
   },
-  categoryText: {
-    color: '#333',
-  },
   primaryCategoryButton: {
     backgroundColor: '#007bff',
   },
@@ -502,11 +532,6 @@ const categoriesStyles = {
     backgroundColor: '#ff4d4f',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  helperText: {
-    fontSize: 12,
-    color: '#777',
-    marginTop: 5,
   },
 };
 
