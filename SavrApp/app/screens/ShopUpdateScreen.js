@@ -35,6 +35,9 @@ const ShopUpdateScreen = ({ route, navigation }) => {
     const subscription = Appearance.addChangeListener(handleThemeChange);
 
     fetchCategories();
+    if (shop.categories && !shop.categories.includes(shop.primaryCategory)) {
+      shop.categories.push(shop.primaryCategory);
+    }
     
     return () => {
       subscription.remove();
