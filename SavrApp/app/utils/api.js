@@ -93,6 +93,7 @@ export const postProduct = async (data) => {
       "name": "Product Example",
       "description": "Product Description Example",
       "price": 9.99,
+      "originalPrice": 19.99,
       "shopId": 1,
       "categories": [
         "xyz",
@@ -125,6 +126,7 @@ export const postProductVariant = async (data) => {
    * {
   "productId": 1,
   "price": 100,
+  "originalPrice": 19.99,
   "quantity": 100,
   "isActive": true
   }
