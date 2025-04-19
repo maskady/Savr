@@ -7,6 +7,7 @@ import { businessCategoriesColors } from '../constants/businessCategories';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import getStyles from '../styles/AppStyles';
+import { getAvailableProductVariantsForShop } from '../utils/api';
 
 const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, getUserLocation }) => {
 
@@ -21,20 +22,39 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, ge
   const superclusterRef = useRef(new Supercluster({ radius: radiusThreshold, maxZoom: maxZoom }));
 
   // Build geoJSON from shops data
-  const geoJson = useMemo(() => {
-    return shops.map(shop => ({
-      type: 'Feature',
-      properties: {
-        cluster: false,
-        shopId: shop.id,
-        rating: shop.rating || 0
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [shop.longitude, shop.latitude]
-      }
-    }));
-  }, [shops]);
+  const [geoJson, setGeoJson] = useState([]);
+  const [variantCounts, setVariantCounts] = useState({});
+
+  useEffect(() => {
+    const fetchGeoJson = async () => {
+      const results = await Promise.all(
+        shops.map(async (shop) => {
+          const { data: variants = [] } = await getAvailableProductVariantsForShop(shop.id);
+          const count = Array.isArray(variants)
+            ? variants.reduce((sum, variant) => sum + (variant.quantity || 0), 0)
+            : 0;
+          return {
+            feature: {
+              type: 'Feature',
+              properties: { cluster: false, shopId: shop.id },
+              geometry: {
+                type: 'Point',
+                coordinates: [shop.longitude, shop.latitude],
+              },
+            },
+            count,
+          };
+        })
+      );
+      const geoJsonData = results.map(r => r.feature);
+      const countsMap = {};
+      results.forEach(r => { countsMap[r.feature.properties.shopId] = r.count; });
+      setVariantCounts(countsMap);
+      setGeoJson(geoJsonData);
+    };
+
+    fetchGeoJson();
+  }, [shops.map(s => s.id).join(',')]);
 
   // Load the data into Supercluster whenever the geoJSON changes
   useEffect(() => {
@@ -61,7 +81,8 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, ge
   // Render either an individual marker or a cluster marker based on properties
   const renderMarker = (cluster) => {
     const [longitude, latitude] = cluster.geometry.coordinates;
-    const { cluster: isCluster, point_count: pointCount, shopId, rating } = cluster.properties;
+    const { cluster: isCluster, point_count: pointCount, shopId } = cluster.properties;
+    const number = variantCounts[shopId] || 0;
 
     if (isCluster) {
       return (
@@ -93,8 +114,7 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, ge
     const shop = shops.find(shop => shop.id === shopId) || {};
     const category = shop.primaryCategory ? shop.primaryCategory : 'Unknown';
     const color = businessCategoriesColors[category] || businessCategoriesColors['other'] || 'lightgrey';
-    const displayRating = rating || 0; // TODO: Change with number of product variants
-
+    
     return (
       <Marker
         key={shopId}
@@ -104,7 +124,7 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, ge
         <View style={styles.pinContainer}>
           <FontAwesome6 name="location-pin" size={40} style={styles.locationPin} color={color} />
           <Text style={[styles.pinText]}>
-            {displayRating}
+            {number}
           </Text>
         </View>
       </Marker>

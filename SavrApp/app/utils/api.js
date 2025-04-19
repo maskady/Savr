@@ -147,3 +147,15 @@ export const postProductVariant = async (data) => {
 export const getShopProducts = async (shopId) => {
   return null;
 }
+
+export const getAvailableProductVariantsForShop = async (shopId) => {
+  try {
+    const response = await request(`/product-variant`, 'GET', null, { shopId: shopId });
+    console.log("[api] message:", response.data.message);
+    console.log("[api] Product Variants fetched successfully. response.data:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error('[api] Error fetching product variants:', error);
+    throw error;
+  }
+}
