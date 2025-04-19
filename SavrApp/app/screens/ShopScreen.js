@@ -46,12 +46,10 @@ const ShopScreen = () => {
   const [hasChanges, setHasChanges] = useState(false);
 
   const [editMode, setEditMode] = useState('view'); // view, edit, saving
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
 
   // get primary category name from businessCategories object 
   const primaryCategoryName = businessCategories[shop.primaryCategory]?.name || shop.primaryCategory;
-  //console.log("primaryCategoryName", primaryCategoryName);
 
   const handleInputChange = (field, value) => {
     setShop(prev => ({
@@ -74,7 +72,6 @@ const ShopScreen = () => {
   // I want to jump here
 
   useEffect(() => {
-    setHasChanges(true);
 
     const fetchShopDetails = async () => {
       if (!shop?.id) return;
@@ -82,7 +79,6 @@ const ShopScreen = () => {
       setLoading(true);
       try {
         const details = await getShopById(shop.id);
-        //console.log("details", JSON.stringify(details, null, 2));
         const data = details.data;
 
         if (data) {

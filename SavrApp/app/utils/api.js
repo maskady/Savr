@@ -93,7 +93,7 @@ export const postProduct = async (data) => {
       "name": "Product Example",
       "description": "Product Description Example",
       "price": 9.99,
-      "companyId": 1,
+      "shopId": 1,
       "categories": [
         "xyz",
         "abc"
@@ -110,10 +110,8 @@ export const postProduct = async (data) => {
 
   try {
     const response = await request('/product', 'POST', data);
-    console.log("Product posted successfully. errors:", response.data);
-    // if (response.status !== 201) {
-    //   throw new Error('Failed to post product');
-    // }
+    console.log("[api] ", response.data.message);
+    console.log("[api] Product posted successfully. response.data:", response.data);
     return response.data;
   } catch (error) {
     console.error('[api] Error posting product:', error);
@@ -125,22 +123,39 @@ export const postProductVariant = async (data) => {
   /**
    * data body example:
    * {
-        "productId": 1,
-        "shopId": 1,
-        "price": 100,
-        "quantity": 100
-      }
+  "productId": 1,
+  "price": 100,
+  "quantity": 100,
+  "isActive": true
+  }
   */
-
-  try {
+ 
+ try {
     const response = await request('/product-variant', 'POST', data);
+    console.log("[api] ", response.data.message);
+    console.log("[api] Product Variant posted successfully. response.data:", response.data);
+    if (!response.data) {
+      throw new Error("No data returned from API");
+    }
     return response.data;
   } catch (error) {
-    console.error('Error posting product variant:', error);
+    console.error('[api] Error posting product variant:', error);
     throw error;
   }
 }
 
 export const getShopProducts = async (shopId) => {
   return null;
+}
+
+export const getAvailableProductVariantsForShop = async (shopId) => {
+  try {
+    const response = await request(`/product-variant`, 'GET', null, { shopId: shopId });
+    console.log("[api] message:", response.data.message);
+    console.log("[api] Product Variants fetched successfully. response.data:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error('[api] Error fetching product variants:', error);
+    throw error;
+  }
 }
