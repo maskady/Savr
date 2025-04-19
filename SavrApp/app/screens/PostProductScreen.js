@@ -26,6 +26,7 @@ const PostProductScreen = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [originalPrice, setOriginalPrice] = useState('');
   const [category, setCategory] = useState('');
   const [imageUri, setImageUri] = useState(null);
   const [images, setImages] = useState([]);
@@ -41,18 +42,17 @@ const PostProductScreen = () => {
   }
 
   const handleSubmit = async () => {
-    if (!name || !price || !quantity) {
+    if (!name || !originalPrice || !price || !quantity) {
       Alert.alert('Validation', 'Name, price and quantity are required.');
       return;
     }
     setLoading(true);
 
-    
-
     try {
       const productToPost = {
         name,
         description,
+        originalPrice: parseFloat(originalPrice),
         price: parseFloat(price),
         shopId: shop?.id,
         categories: [category],
@@ -60,13 +60,14 @@ const PostProductScreen = () => {
       };
   
       console.log('Posting product with data:', productToPost);
-      const productResponse = await postProduct(productToPost); // Post product only if it does not exist - waiting for the backend to be ready
+      const productResponse = await postProduct(productToPost); // TODO: Post product only if it does not exist - waiting for the backend to be ready
       const productId = productResponse.data.id;
       const productVariantToPost = {
-        "productId": productId,
-        "price": parseFloat(price),
-        "quantity": quantity,
-        "isActive": true
+        productId: productId,
+        originalPrice: parseFloat(originalPrice),
+        price: parseFloat(price),
+        quantity: quantity,
+        isActive: true
       }
       console.log('Posting product variant with data:', productVariantToPost);
       const productVariantResponse = await postProductVariant(productVariantToPost);
@@ -144,6 +145,18 @@ const PostProductScreen = () => {
         multiline
         numberOfLines={4}
         returnKeyType='default'
+      />
+
+      {/** Original Price */}
+      <Text style={[styles.label, { color: colors.text }]}>Original Price *</Text>
+      <TextInput
+        style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.border }]}
+        value={originalPrice}
+        onChangeText={setOriginalPrice}
+        placeholder="0.00"
+        placeholderTextColor={colors.placeholder}
+        keyboardType="decimal-pad"
+        returnKeyType='done'
       />
 
       {/** Price */}

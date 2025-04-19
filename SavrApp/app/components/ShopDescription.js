@@ -15,7 +15,7 @@ export default function ShopDescription({
 }) {
   return (
     <View style={[styles.container, { borderColor: colors.border }]}>
-      <Text style={[styles.title, { color: colors.text }]}>Description</Text>
+      <Text style={[styles.title, { color: colors.text }]}>Shop Description</Text>
       {editMode === 'view' ? (
         <Text style={[styles.text, { color: colors.subtext }]}>
           {description || 'No description available for this shop.'}

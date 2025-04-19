@@ -1,12 +1,13 @@
 // components/ShopContent.js
 import React from 'react';
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
+import { Alert,View, Text, ScrollView, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
 import ImageManager from './ImageManager'; // adjust path
 import ShopInfoSection from './ShopInfoSection';
 import ShopDescription from './ShopDescription';
 import ContactSection from './ContactSection';
 import ShopMapSection from './ShopMapSection';
 import ProductsList from './ProductsList';
+import ShopProductList from './ShopProductList';
 
 export default function ShopContent({
   shop, loading, error, editMode, colors, primaryCategoryName,
@@ -51,6 +52,8 @@ export default function ShopContent({
         user={user}
         onInputChange={onInputChange}
       />
+
+      <ShopProductList shopId={shop.id} onItemPress={() => {Alert.alert("Item selected")}} />
 
       <ShopDescription
         description={shop.description}
