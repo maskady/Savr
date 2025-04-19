@@ -11,12 +11,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import * as ImagePicker from 'expo-image-picker';
 import { SettingsContext } from '../contexts/SettingsContext';
 import { postProduct, postProductVariant } from '../utils/api';
 import {COLORS} from '../constants/colors';
 import CategoryDropdown from '../components/CategoryDropdown';
 import ImageManager from '../components/ImageManager';
+
 
 const PostProductScreen = () => {
   const route = useRoute();
@@ -29,6 +29,7 @@ const PostProductScreen = () => {
   const [category, setCategory] = useState('');
   const [imageUri, setImageUri] = useState(null);
   const [images, setImages] = useState([]);
+  const [quantity, setQuantity] = useState(0);
   const [loading, setLoading] = useState(false);
   const shop = route.params?.shop || {};
 
@@ -40,35 +41,36 @@ const PostProductScreen = () => {
   }
 
   const handleSubmit = async () => {
-    if (!name || !price) {
-      Alert.alert('Validation', 'Name and price are required.');
+    if (!name || !price || !quantity) {
+      Alert.alert('Validation', 'Name, price and quantity are required.');
       return;
     }
     setLoading(true);
 
-    const dataToPost = {
-      name,
-      description,
-      price: parseFloat(price),
-      shopId: shop?.id,
-      categories: [category],
-      images: [],
-      // [
-      //   {
-      //     url: ],
-      //     alt: name,
-      //     type: 'titleImage',
-      //   },
-      // ],
-
-    };
+    
 
     try {
-      console.log('Posting product with data:', dataToPost);
-      await postProduct(dataToPost); // Post product only if it does not exist - waiting for the backend to be ready
-      await postProductVariant(dataToPost);
-      console.log('Product posted successfully');
-
+      const productToPost = {
+        name,
+        description,
+        price: parseFloat(price),
+        shopId: shop?.id,
+        categories: [category],
+        images: images,
+      };
+  
+      console.log('Posting product with data:', productToPost);
+      const productResponse = await postProduct(productToPost); // Post product only if it does not exist - waiting for the backend to be ready
+      const productId = productResponse.data.id;
+      const productVariantToPost = {
+        "productId": productId,
+        "price": parseFloat(price),
+        "quantity": quantity,
+        "isActive": true
+      }
+      console.log('Posting product variant with data:', productVariantToPost);
+      const productVariantResponse = await postProductVariant(productVariantToPost);
+      
       Alert.alert('Success', 'Product posted successfully!', [
         { text: 'OK', onPress: () => navigation.goBack() },
       ]);
@@ -104,6 +106,7 @@ const PostProductScreen = () => {
       contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}
       keyboardShouldPersistTaps="handled"
     >
+      {/** Cancel button */}
       <TouchableOpacity
         style={[styles.cancelButton, { backgroundColor: colors.secondary }]}
         onPress={handleCancel}
@@ -113,6 +116,8 @@ const PostProductScreen = () => {
         ) : (
           <Text style={styles.submitText}>Cancel</Text>
         )}
+
+      {/** Product Name */}
       </TouchableOpacity>
       <Text style={[styles.label, { color: colors.text }]}>Product Name *</Text>
       <TextInput
@@ -121,8 +126,10 @@ const PostProductScreen = () => {
         onChangeText={setName}
         placeholder="Enter product name"
         placeholderTextColor={colors.placeholder}
+        returnKeyType='default'
       />
 
+      {/** Description */}
       <Text style={[styles.label, { color: colors.text }]}>Description</Text>
       <TextInput
         style={[
@@ -136,8 +143,10 @@ const PostProductScreen = () => {
         placeholderTextColor={colors.placeholder}
         multiline
         numberOfLines={4}
+        returnKeyType='default'
       />
 
+      {/** Price */}
       <Text style={[styles.label, { color: colors.text }]}>Price *</Text>
       <TextInput
         style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.border }]}
@@ -146,19 +155,27 @@ const PostProductScreen = () => {
         placeholder="0.00"
         placeholderTextColor={colors.placeholder}
         keyboardType="decimal-pad"
+        returnKeyType='done'
       />
 
+      {/** Quantity */}
+      <Text style={[styles.label, { color: colors.text }]}>Quantity *</Text>
+      <TextInput
+        style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.border }]}
+        value={quantity.toString()}
+        onChangeText={(text) => setQuantity(parseInt(text))}
+        placeholder="Enter quantity"
+        placeholderTextColor={colors.placeholder}
+        keyboardType="numeric"
+        returnKeyType='done'
+      />
+
+      {/** Category */}
       <Text style={[styles.label, { color: colors.text }]}>Category</Text>
       <CategoryDropdown shop={shop} onInputChange={onCategoryInputChange} category={category} />
 
+      {/** Image Picker */}
       <Text style={[styles.label, { color: colors.text }]}>Image</Text>
-      {/* <TouchableOpacity style={styles.imagePicker} onPress={handlePickImage}>
-        {imageUri ? (
-          <Image source={{ uri: imageUri }} style={styles.imagePreview} />
-        ) : (
-          <Text style={{ color: colors.primary }}>Tap to choose an image</Text>
-        )}
-      </TouchableOpacity> */}
       <ImageManager
         images={images}
         height={250}
@@ -167,6 +184,8 @@ const PostProductScreen = () => {
         onImagePress={() => {}}
         
       />
+
+      {/** Submit button*/}
       <TouchableOpacity
         style={[styles.submitButton, { backgroundColor: colors.primary }]}
         onPress={handleSubmit}
