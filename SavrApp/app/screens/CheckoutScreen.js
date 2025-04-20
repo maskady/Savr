@@ -50,22 +50,6 @@ const CheckoutScreen = () => {
     );
   }
 
-  // Render single shop group
-  const renderShopGroup = ({ item: shop }) => {
-    return (
-      <View style={[styles.shopGroup, isDark ? styles.darkCard : styles.lightCard]}>
-        <Text style={[styles.shopName, isDark ? styles.darkText : styles.lightText]}>
-          {shop.shopName}
-        </Text>
-        <Text style={[styles.pickupTime, isDark ? styles.darkSubtext : styles.lightSubtext]}>
-          Pick up: {shop.pickupTime}
-        </Text>
-        
-        {shop.items.map(item => renderProductItem(shop.shopId, item))}
-      </View>
-    );
-  };
-
   // Render single product item
   const renderProductItem = (shopId, item, shopName, pickupTime) => {
     const quantity = item.quantity || 1;
