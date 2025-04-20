@@ -15,6 +15,7 @@ import CategoryDropdown from './CategoryDropdown';
 
 export default function ShopInfoSection({
   shop,
+  setVariants,
   editMode,
   colors,
   primaryCategoryName,
@@ -55,7 +56,7 @@ export default function ShopInfoSection({
           {user?.roleId != 'user' && ( 
               <TouchableOpacity
                 style={[styles.postButton, { backgroundColor: colors.primary }]}
-                onPress={() => navigation.navigate('PostProduct', { shop: shop })}
+                onPress={() => navigation.navigate('PostProduct', { shop: shop, setVariants: setVariants })}
                 >
                 <Text style={styles.buttonText}>Post New Product</Text>
               </TouchableOpacity>
