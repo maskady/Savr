@@ -15,7 +15,7 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => onItemPress && onItemPress(item)}>
       <View style={styles.itemRow}>
-        <Text style={styles.productName}>{item.productname}</Text>
+        <Text style={styles.productName}>{item.name}</Text>
         <Text style={styles.quantity}>{item.quantity}</Text>
         <Text style={styles.price}>{item.price}€</Text>
       </View>
