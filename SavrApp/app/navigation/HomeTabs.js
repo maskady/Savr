@@ -41,7 +41,7 @@ const HomeTabs = () => {
 
   const dummyItems = [ // TODO: Replace with actual data
     {
-      id: 1,
+      id: 3,
       shopId: 1,
       name: "Cheeseburger",
       description: "Delicious cheeseburger with fries",
@@ -62,8 +62,8 @@ const HomeTabs = () => {
       pickupTime: "18:00 - 19:00",
     },
     {
-      id: 1,
-      shopId: 2,
+      id: 21,
+      shopId: 7,
       name: "Piece of meat",
       description: "Delicious piece of meat with fries",
       price: 9.99,
@@ -83,7 +83,7 @@ const HomeTabs = () => {
       pickupTime: "19:00 - 20:00",
     },
     {
-      id: 2,
+      id: 6,
       shopId: 1,
       name: "Surprise panini",
       description: "Delicious surprise panini with fries",
