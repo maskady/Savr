@@ -1,9 +1,10 @@
 // app/screens/PostProductScreen.js
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   Text,
   TextInput,
   TouchableOpacity,
+  View,
   ScrollView,
   StyleSheet,
   Image,
@@ -12,7 +13,7 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SettingsContext } from '../contexts/SettingsContext';
-import { postProduct, postProductVariant } from '../utils/api';
+import { getShopProducts, postProduct, postProductVariant, updateProduct } from '../utils/api';
 import {COLORS} from '../constants/colors';
 import CategoryDropdown from '../components/CategoryDropdown';
 import ImageManager from '../components/ImageManager';
@@ -20,6 +21,8 @@ import ImageManager from '../components/ImageManager';
 
 const PostProductScreen = () => {
   const route = useRoute();
+  const shop = route.params?.shop || {};
+  const setVariants = route.params?.setVariants || (() => {});
   const navigation = useNavigation();
   const { darkMode } = useContext(SettingsContext);
 
@@ -32,14 +35,48 @@ const PostProductScreen = () => {
   const [images, setImages] = useState([]);
   const [quantity, setQuantity] = useState(0);
   const [loading, setLoading] = useState(false);
-  const shop = route.params?.shop || {};
+  const [shopProducts, setShopProducts] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // fetch products from the shop
-  const shopProducts = null; // Replace with actual fetch logic from api - waiting for the backend to be ready
+  useEffect(() => {
+    // Check if shop exists
+    if (!shop) {
+      Alert.alert('Error', 'Shop not found. Please select a valid shop.');
+      navigation.goBack();
+      return;
+    }
+
+    // Fetch shop products
+    const fetchShopProducts = async () => {
+      const products = await getShopProducts(shop?.id);
+      setShopProducts(products);
+    }
+    fetchShopProducts();
+  }, []);
 
   const onImagesChange = (newImages) => {
     setImages(newImages);
   }
+
+  const onNameChange = (text) => {
+    setName(text);
+    const filtered = shopProducts.filter(p =>
+      p.name.toLowerCase().includes(text.toLowerCase())
+    );
+    setSuggestions(filtered);
+    setShowSuggestions(filtered.length > 0);
+  };
+
+  const handleSelectProduct = (product) => {
+    setName(product.name);
+    setDescription(product.description || '');
+    setPrice(product.price?.toString() || '');
+    setOriginalPrice(product.originalPrice?.toString() || '');
+    setCategory(product.categories?.[0] || '');
+    setImages(product.images || []);
+    setShowSuggestions(false);
+  };
 
   const handleSubmit = async () => {
     if (!name || !originalPrice || !price || !quantity) {
@@ -59,9 +96,21 @@ const PostProductScreen = () => {
         images: images,
       };
   
-      console.log('Posting product with data:', productToPost);
-      const productResponse = await postProduct(productToPost); // TODO: Post product only if it does not exist - waiting for the backend to be ready
-      const productId = productResponse.data.id;
+      // Determine whether to create or update the product
+      let productId = null;
+      const existing = shopProducts.find(p => p.name.toLowerCase() === name.toLowerCase());
+      let productResponse;
+      if (existing) {
+        console.log('[PostProductScreen] Updating product with data:', productToPost);
+        await updateProduct(existing.id, productToPost);
+        productId = existing.id;
+
+      } else {
+        console.log('[PostProductScreen] Posting product with data:', productToPost);
+        productResponse = await postProduct(productToPost);
+        productId = productResponse.id;
+      }
+      console.log("ID", productId);
       const productVariantToPost = {
         productId: productId,
         originalPrice: parseFloat(originalPrice),
@@ -69,14 +118,23 @@ const PostProductScreen = () => {
         quantity: quantity,
         isActive: true
       }
-      console.log('Posting product variant with data:', productVariantToPost);
-      const productVariantResponse = await postProductVariant(productVariantToPost);
-      
+      console.log('[PostProductScreen] Posting product variant with data:', productVariantToPost);
+      await postProductVariant(productVariantToPost);
+
+      // update variants state (simply append productVariantToPost)
+      setVariants(prevVariants => [
+        ...prevVariants,
+        {
+          ...productVariantToPost,
+          ...productToPost,
+          productname: name,
+        }]);
+
       Alert.alert('Success', 'Product posted successfully!', [
         { text: 'OK', onPress: () => navigation.goBack() },
       ]);
     } catch (err) {
-      console.error('Error posting product:', err);
+      console.error('[PostProductScreen] Error posting product:', err);
       Alert.alert('Error', 'Failed to post product. Please try again.');
     } finally {
       setLoading(false);
@@ -124,11 +182,24 @@ const PostProductScreen = () => {
       <TextInput
         style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.border }]}
         value={name}
-        onChangeText={setName}
+        onChangeText={onNameChange}
         placeholder="Enter product name"
         placeholderTextColor={colors.placeholder}
         returnKeyType='default'
       />
+      {showSuggestions && suggestions.length > 0 && (
+        <View style={styles.suggestionsContainer}>
+          {suggestions.map(product => (
+            <TouchableOpacity
+              key={product.id}
+              onPress={() => handleSelectProduct(product)}
+              style={styles.suggestionItem}
+            >
+              <Text style={styles.suggestionText}>{product.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
 
       {/** Description */}
       <Text style={[styles.label, { color: colors.text }]}>Description</Text>
@@ -264,6 +335,20 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  suggestionsContainer: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+    maxHeight: 150,
+    marginBottom: 8,
+  },
+  suggestionItem: {
+    padding: 12,
+  },
+  suggestionText: {
+    fontSize: 16,
   },
 });
 
