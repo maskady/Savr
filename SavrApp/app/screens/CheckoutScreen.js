@@ -84,31 +84,40 @@ const CheckoutScreen = () => {
               Pick up: {pickupTime}
             </Text>
           </View>
-        
-          {/* Quantity */}
-          <View style={styles.quantitySelector}>
-            <Text style={[styles.quantityLabel, isDark ? styles.darkText : styles.lightText]}>
-              Quantity:
+
+          <View style={styles.priceContainer}>
+            <Text style={[styles.discountPrice, isDark ? styles.darkText : styles.lightText]}>
+              {item.price.toFixed(2)} €
             </Text>
-            <View style={styles.quantityControls}>
-              <TouchableOpacity 
-                style={[styles.quantityButton, isDark ? styles.darkButton : styles.lightButton]} 
-                onPress={() => handleQuantityChange(shopId, item, -1)}
-              >
-                <Text style={[styles.quantityButtonText, styles.quantityButtonTextDark]}>-</Text>
-              </TouchableOpacity>
-              
-              <Text style={[styles.quantityValue, isDark ? styles.darkText : styles.lightText]}>
-                {quantity}
-              </Text>
-              
-              <TouchableOpacity 
-                style={[styles.quantityButton, isDark ? styles.darkButton : styles.lightButton]} 
-                onPress={() => handleQuantityChange(shopId, item, 1)}
-              >
-                <Text style={[styles.quantityButtonText, styles.quantityButtonTextDark]}>+</Text>
-              </TouchableOpacity>
-            </View>
+            <Text style={styles.originalPrice}>
+              {item.originalPrice.toFixed(2)} €
+            </Text>
+          </View>
+        </View>
+        
+        {/* Quantity */}
+        <View style={styles.quantitySelector}>
+          <Text style={[styles.quantityLabel, isDark ? styles.darkText : styles.lightText]}>
+            Quantity:
+          </Text>
+          <View style={styles.quantityControls}>
+            <TouchableOpacity 
+              style={[styles.quantityButton, isDark ? styles.darkButton : styles.lightButton]} 
+              onPress={() => handleQuantityChange(shopId, item, -1)}
+            >
+              <Text style={[styles.quantityButtonText, styles.quantityButtonTextDark]}>-</Text>
+            </TouchableOpacity>
+            
+            <Text style={[styles.quantityValue, isDark ? styles.darkText : styles.lightText]}>
+              {quantity}
+            </Text>
+            
+            <TouchableOpacity 
+              style={[styles.quantityButton, isDark ? styles.darkButton : styles.lightButton]} 
+              onPress={() => handleQuantityChange(shopId, item, 1)}
+            >
+              <Text style={[styles.quantityButtonText, styles.quantityButtonTextDark]}>+</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
