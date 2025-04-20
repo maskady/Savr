@@ -17,7 +17,7 @@ const CheckoutScreen = () => {
     addToCart, 
     removeFromCart, 
     getCartTotal,
-    getTotalItemCount 
+    itemCount,
   } = useCart();
   
   // Fake data for delivery and service fees - TODO: Replace with actual data
@@ -26,7 +26,6 @@ const CheckoutScreen = () => {
   
   const subtotal = getCartTotal();
   const total = subtotal + deliveryFee + serviceFee;
-  const totalItems = getTotalItemCount ? getTotalItemCount() : 0;
   
   const handleQuantityChange = (shopId, item, increment) => {
     if (increment > 0) {
@@ -127,7 +126,7 @@ const CheckoutScreen = () => {
         {/* Products List */}
         <View style={styles.productsList}>
           <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText, styles.itemsHeader]}>
-            Your Items ({totalItems})
+            Your Items ({itemCount})
           </Text>
           
           {cartItems.flatMap(shop => 
@@ -201,7 +200,7 @@ const CheckoutScreen = () => {
           
           <View style={styles.priceSummaryRow}>
             <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
-              Sub-total ({totalItems} item{totalItems > 1 ? 's' : ''})
+              Sub-total ({itemCount} item{itemCount > 1 ? 's' : ''})
             </Text>
             <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
               {subtotal.toFixed(2)} €
