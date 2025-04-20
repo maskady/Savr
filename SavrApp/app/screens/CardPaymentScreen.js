@@ -13,6 +13,8 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/CardPaymentScreenStyles';
+import { useCart } from '../contexts/CheckoutContext';
+import { request } from '../utils/request';
 
 const CardPaymentScreen = ({ route }) => {
   const { amount = 0 } = route.params || {};
@@ -25,6 +27,8 @@ const CardPaymentScreen = ({ route }) => {
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
   const [saveCard, setSaveCard] = useState(false);
+
+  const { cartItems } = useCart();
   
   const [errors, setErrors] = useState({
     cardNumber: '',
@@ -123,30 +127,60 @@ const CardPaymentScreen = ({ route }) => {
     );
   };
   
-  const handlePayment = () => {
-    if (!isFormValid()) {
+  const handlePayment = async () => {
+    try {
+      if (!isFormValid()) {
+        Alert.alert(
+          "Form invalid",
+          "Please fill all fields correctly.",
+          [{ text: "OK" }]
+        );
+        return;
+      }
+
       Alert.alert(
-        "Form invalid",
-        "Please fill all fields correctly.",
-        [{ text: "OK" }]
+        "Payment in progress",
+        "Please wait while we process your payment.",
+        []
       );
-      return;
-    }
-    
-    Alert.alert(
-      "Payment in progress",
-      "Please wait while we process your payment.",
-      []
-    );
-    
-    // Simuler un délai de traitement
-    setTimeout(() => {
+  
+      // Request to the api to process the payment
+      for (const item of cartItems) {
+        console.log(`Processing payment for ${item}`);
+        const dataToSend = {
+          shopId: item.shopId,
+          status: "pre",
+          productVariants: item.items.map(product => ({
+            productVariantId: product.id,
+            quantity: product.quantity
+          })),
+        };
+  
+        console.log('Data to send:', dataToSend);
+  
+        const { response, data } = await request('/order', 'POST', dataToSend);
+        console.log('Response:', response);
+        console.log('Data:', data);
+        if (response.status !== 200) {
+          throw new Error('Payment failed for item: ' + item);
+        }
+        console.log('Payment successful for item:', item);
+      }
+      
       Alert.alert(
         "Payment successful",
         "Your payment of " + amount.toFixed(2) + " € has been processed successfully.",
         [{ text: "OK", onPress: () => navigation.navigate('Home') }]
       );
-    }, 2000);
+    } 
+    catch (error) {
+      console.error('Payment error:', error);
+      Alert.alert(
+        "Payment failed",
+        "There was an error processing your payment. Please try again.",
+        [{ text: "OK" }]
+      );
+    }
   };
   
   return (

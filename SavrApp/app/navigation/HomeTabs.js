@@ -36,24 +36,70 @@ const HomeTabs = () => {
     addToCart(dummyItems[0]);
     addToCart(dummyItems[1]);
     addToCart(dummyItems[1]); 
+    addToCart(dummyItems[2]);
   }, [navigation]);
 
   const dummyItems = [ // TODO: Replace with actual data
     {
-      id: 1,
-      name: "Surprise Sandwich",
-      originalPrice: 15.90,
-      discountPrice: 5.50,
-      image: "https://placeholder.com/food",
+      id: 3,
+      shopId: 1,
+      name: "Cheeseburger",
+      description: "Delicious cheeseburger with fries",
+      price: 9.99,
+      originalPrice: 19.99,
+      categories: [
+        "xyz",
+        "abc"
+      ],
+      images: [
+        {
+          url: "/public/images/abdd.jpg",
+          alt: "Burger with fries",
+          type: "titleImage"
+        }
+      ],
       shopName: "La Boulangerie",
       pickupTime: "18:00 - 19:00",
     },
     {
-      id: 2,
-      name: "Surprise Wrap",
-      originalPrice: 11.90,
-      discountPrice: 3.50,
-      image: "https://placeholder.com/food",
+      id: 21,
+      shopId: 7,
+      name: "Piece of meat",
+      description: "Delicious piece of meat with fries",
+      price: 9.99,
+      originalPrice: 19.99,
+      categories: [
+        "xyz",
+        "abc"
+      ],
+      images: [
+        {
+          url: "/public/images/abdd.jpg",
+          alt: "Piece of meat with fries",
+          type: "titleImage"
+        }
+      ],
+      shopName: "La Boucherie",
+      pickupTime: "19:00 - 20:00",
+    },
+    {
+      id: 6,
+      shopId: 1,
+      name: "Surprise panini",
+      description: "Delicious surprise panini with fries",
+      price: 9.99,
+      originalPrice: 19.99,
+      categories: [
+        "xyz",
+        "abc"
+      ],
+      images: [
+        {
+          url: "/public/images/abdd.jpg",
+          alt: "Surprise panini with fries",
+          type: "titleImage"
+        }
+      ],
       shopName: "La Boulangerie",
       pickupTime: "18:00 - 19:00",
     }
