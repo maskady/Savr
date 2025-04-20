@@ -188,7 +188,12 @@ const PostProductScreen = () => {
         returnKeyType='default'
       />
       {showSuggestions && suggestions.length > 0 && (
-        <View style={styles.suggestionsContainer}>
+        <ScrollView
+          style={styles.suggestionsContainer}
+          nestedScrollEnabled={true}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
           {suggestions.map(product => (
             <TouchableOpacity
               key={product.id}
@@ -198,7 +203,7 @@ const PostProductScreen = () => {
               <Text style={styles.suggestionText}>{product.name}</Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
       )}
 
       {/** Description */}
