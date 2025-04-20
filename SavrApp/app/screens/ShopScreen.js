@@ -39,6 +39,7 @@ const ShopScreen = () => {
   const { updateShopInContext } = useContext(ShopContext);
   const [shop, setShop] = useState(route.params?.shop || null);
   const [oldShop, setOldShop] = useState(route.params?.shop || null);
+  const [variants, setVariants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fullScreenImage, setFullScreenImage] = useState(null);
@@ -46,7 +47,6 @@ const ShopScreen = () => {
   const [hasChanges, setHasChanges] = useState(false);
 
   const [editMode, setEditMode] = useState('view'); // view, edit, saving
-
 
   // get primary category name from businessCategories object 
   const primaryCategoryName = businessCategories[shop.primaryCategory]?.name || shop.primaryCategory;
@@ -245,8 +245,12 @@ const ShopScreen = () => {
       />
       <ShopContent
         shop={shop}
+        variants={variants}
+        setVariants={setVariants}
         loading={loading}
+        setLoading={setLoading}
         error={error}
+        setError={setError}
         editMode={editMode}
         colors={colors}
         primaryCategoryName={primaryCategoryName}

@@ -10,35 +10,8 @@ import { COLORS } from '../constants/colors';
  *   - shopId: number (required)
  *   - onItemPress: function(productVariant) (optional)
  */
-export default function ShopProductList({ shopId, onItemPress }) {
-  const [variants, setVariants] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchVariants = async () => {
-      setLoading(true);
-      try {
-        const response = await getAvailableProductVariantsForShop(shopId);
-        if (!isMounted) return;
-        if (response.data && Array.isArray(response.data)) {
-          setVariants(response.data);
-        } else {
-          setVariants([]);
-        }
-      } catch (err) {
-        console.error('Failed to load product variants:', err);
-        setError(err);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    fetchVariants();
-    return () => { isMounted = false; };
-  }, [shopId]);
-
+export default function ShopProductList({ shopId, onItemPress, variants, setVariants }) {
+  
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => onItemPress && onItemPress(item)}>
       <View style={styles.itemRow}>
@@ -48,9 +21,6 @@ export default function ShopProductList({ shopId, onItemPress }) {
       </View>
     </TouchableOpacity>
   );
-
-  if (loading) return <ActivityIndicator style={styles.loading} size="large" />;
-  if (error) return <Text style={styles.error}>Error: {error.message}</Text>;
 
   return (
     <FlatList
@@ -74,6 +44,8 @@ export default function ShopProductList({ shopId, onItemPress }) {
 ShopProductList.propTypes = {
   shopId: PropTypes.number.isRequired,
   onItemPress: PropTypes.func,
+  variants: PropTypes.array.isRequired,
+  setVariants: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({
