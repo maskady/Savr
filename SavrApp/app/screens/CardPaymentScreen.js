@@ -13,6 +13,7 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/CardPaymentScreenStyles';
+import { useCart } from '../contexts/CheckoutContext';
 
 const CardPaymentScreen = ({ route }) => {
   const { amount = 0 } = route.params || {};
@@ -25,6 +26,8 @@ const CardPaymentScreen = ({ route }) => {
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
   const [saveCard, setSaveCard] = useState(false);
+
+  const { cartItems } = useCart();
   
   const [errors, setErrors] = useState({
     cardNumber: '',
@@ -124,6 +127,7 @@ const CardPaymentScreen = ({ route }) => {
   };
   
   const handlePayment = () => {
+    console.log('Cart Items:', cartItems);
     if (!isFormValid()) {
       Alert.alert(
         "Form invalid",
@@ -138,15 +142,15 @@ const CardPaymentScreen = ({ route }) => {
       "Please wait while we process your payment.",
       []
     );
+
+    // Request to the api to process the payment
     
-    // Simuler un délai de traitement
-    setTimeout(() => {
-      Alert.alert(
-        "Payment successful",
-        "Your payment of " + amount.toFixed(2) + " € has been processed successfully.",
-        [{ text: "OK", onPress: () => navigation.navigate('Home') }]
-      );
-    }, 2000);
+    
+    Alert.alert(
+      "Payment successful",
+      "Your payment of " + amount.toFixed(2) + " € has been processed successfully.",
+      [{ text: "OK", onPress: () => navigation.navigate('Home') }]
+    );
   };
   
   return (
@@ -314,7 +318,7 @@ const CardPaymentScreen = ({ route }) => {
           <TouchableOpacity 
             style={[styles.payButton, !isFormValid() && styles.payButtonDisabled, isDark && isFormValid() && styles.darkPayButton]}
             onPress={handlePayment}
-            disabled={!isFormValid()}
+            // disabled={!isFormValid()}
           >
             <Text style={[styles.payButtonText, isDark && styles.darkPayButtonText]}>
               Pay {amount.toFixed(2)} €
