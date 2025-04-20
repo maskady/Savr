@@ -127,7 +127,6 @@ const PostProductScreen = () => {
         {
           ...productVariantToPost,
           ...productToPost,
-          productname: name,
         }]);
 
       Alert.alert('Success', 'Product posted successfully!', [
