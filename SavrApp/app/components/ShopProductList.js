@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
-import { getAvailableProductVariantsForShop } from '../utils/api';
 import { COLORS } from '../constants/colors';
 import QuantityCartButton from './QuantityCartButton';
 import { useCart } from '../contexts/CheckoutContext';
@@ -13,7 +12,6 @@ import { useCart } from '../contexts/CheckoutContext';
  *   - shopId: number (required)
  *   - onItemPress: function(productVariant) (optional)
  */
-// TODO: Set good quantity on loading
 export default function ShopProductList({ shopId, onItemPress, variants, setVariants }) {
 
   const { 
@@ -22,20 +20,20 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
     removeFromCart,
   } = useCart();
   
-  const handleQuantityChange = (item, newQuantity, increment) => {
-    console.log('Is increment:', increment);
+  const handleQuantityChange = (item, increment) => {
     if (increment) {
-      console.log('Adding to cart:');
       addToCart(item);
     } else {
-      console.log('Removing from cart:');
       removeFromCart(item.shopId, item.id);
     }
-
-    console.log(`Cart: ${JSON.stringify(cartItems, null, 2)}`);
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }) => {
+    const shopCart = cartItems.find(cart => cart.shopId === item.shopId);
+    const matchingItem = shopCart?.items.find(i => i.id === item.id);
+    const quantityInCart = matchingItem?.quantity || 0;
+
+    return (
     <TouchableOpacity 
       style={styles.card}
       onPress={() => onItemPress && onItemPress(item)}
@@ -54,14 +52,14 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
         </View>
         <View style={styles.buttonContainer}>
           <QuantityCartButton 
-            initialQuantity={item.quantityInCart || 0}
+            initialQuantity={quantityInCart}
             maxQuantity={item.quantity} // Assuming max quantity is the available stock
-            onQuantityChange={(newQuantity, increment) => handleQuantityChange(item, newQuantity, increment)}
+            onQuantityChange={(increment) => handleQuantityChange(item, increment)}
           />
         </View>
       </View>
     </TouchableOpacity>
-  );
+  )};
 
   return (
     <FlatList
