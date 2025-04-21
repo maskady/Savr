@@ -12,7 +12,7 @@ import { useCart } from '../contexts/CheckoutContext';
  *   - shopId: number (required)
  *   - onItemPress: function(productVariant) (optional)
  */
-export default function ShopProductList({ shopId, onItemPress, variants, setVariants }) {
+export default function ShopProductList({ shopId, onItemPress, variants }) {
 
   const { 
     cartItems,
@@ -84,7 +84,6 @@ ShopProductList.propTypes = {
   shopId: PropTypes.number.isRequired,
   onItemPress: PropTypes.func,
   variants: PropTypes.array.isRequired,
-  setVariants: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({
