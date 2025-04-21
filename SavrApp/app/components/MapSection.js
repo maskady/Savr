@@ -200,14 +200,14 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
           debouncedUpdateClusters(newRegion);
           onRegionChange && onRegionChange(newRegion);
         }}
-        showsUserLocation={Platform.OS === 'ios' ? false : true}
+        showsUserLocation={true}
         followsUserLocation={true}
         showsCompass={true}
         showsMyLocationButton={false} // Disable default button, we'll use our own
         showsBuildings={true}
         showsScale={true}
-        userLocationUpdateInterval={30000} // Update user location every 30 seconds
-        userLocationFastestInterval={10000} // Fastest interval to receive updates
+        userLocationUpdateInterval={30000} // Update user location every 30 seconds - Andorid specific, iOS uses the default
+        userLocationFastestInterval={10000} // Fastest interval to receive updates - Android specific, iOS uses the default
       >
         {clusters.map(cluster => renderMarker(cluster))}
       </MapView>
