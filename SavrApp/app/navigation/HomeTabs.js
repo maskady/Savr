@@ -32,11 +32,11 @@ const HomeTabs = () => {
     // state.routes.forEach(r => console.log(r.name, r.state?.routeNames));
 
     // Add some product to the cart with cartContext
-    clearCart(); // Clear the cart first
-    addToCart(dummyItems[0]);
-    addToCart(dummyItems[1]);
-    addToCart(dummyItems[1]); 
-    addToCart(dummyItems[2]);
+    // clearCart(); // Clear the cart first
+    // addToCart(dummyItems[0]);
+    // addToCart(dummyItems[1]);
+    // addToCart(dummyItems[1]); 
+    // addToCart(dummyItems[2]);
   }, [navigation]);
 
   const dummyItems = [ // TODO: Replace with actual data
