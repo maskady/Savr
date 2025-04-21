@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Alert, ActivityIndicator, TouchableOpacity } fr
 import { useStripe, initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native';
 import { Appearance } from 'react-native';
 import { request } from '../utils/request';
-
+import { APP_NAME } from '@env';
 const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,6 @@ const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
       // REAL API CALL - Use this in production
       const { response, data } = await request(`/order/${orderId}/payment-sheet`, 'GET');
 
-
       if (!response.ok) {
         console.error('Payment sheet fetch error:', response.status, data);
         throw new Error(`Failed to fetch payment details: ${response.status}`);
@@ -33,18 +32,9 @@ const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
         customer,
         publishableKey,
       };
+
     } catch (error) {
       console.error('Error fetching payment sheet params:', error);
-      
-      // Development fallback
-      if (__DEV__) {
-        console.warn('Using fallback test values for development');
-        return {
-          paymentIntent: 'pi_3OhbdXBLm9jMjKyY0tTktO5z_secret_9zSaHbCVmS4w8RaE5FyNIxqld',
-          ephemeralKey: 'ek_test_YWNjdF8xTzVxQmRCTG05ak1qS3lZLDl1ck9FTlhPaHJ2eWE1a2pwY0x1WTZvNjlUcE5Lek5J_00bsWqcRLM',
-          customer: 'cus_PQgPhPNBLw7iFu'
-        };
-      }
       
       onPaymentError && onPaymentError('Failed to initialize payment. Please try again.');
       return null;
@@ -66,7 +56,7 @@ const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
       const { paymentIntent, ephemeralKey, customer, publishableKey } = params;
 
       const { error } = await initPaymentSheet({
-        merchantDisplayName: "Good2Rescue",
+        merchantDisplayName: APP_NAME,
         customerId: customer,
         customerEphemeralKeySecret: ephemeralKey,
         paymentIntentClientSecret: paymentIntent,
@@ -110,7 +100,7 @@ const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
         onPaymentError && onPaymentError(error.message);
       } else {
         console.log('Payment success with option:', paymentOption);
-        onPaymentSuccess && onPaymentSuccess({ id: orderId || '123' });
+        onPaymentSuccess && onPaymentSuccess({ id: orderId });
       }
     } catch (error) {
       console.error('Error presenting payment sheet:', error);
@@ -127,9 +117,6 @@ const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, isDarkMode && styles.titleDark]}>
-        Payment Details
-      </Text>
       
       <TouchableOpacity 
         style={[

@@ -6,7 +6,7 @@ import { useCart } from '../contexts/CheckoutContext';
 import styles from '../styles/CheckoutScreenStyles';
 import StripePaymentForm from '../components/StripePaymentForm';
 import { StripeProvider } from '@stripe/stripe-react-native';
-
+import { STRIPE_PUBLISHABLE_KEY, STRIPE_MERCHANT_ID, STRIPE_URL_SCHEME } from '@env';
 
 const CheckoutScreen = () => {
   const colorScheme = useColorScheme();
@@ -41,6 +41,16 @@ const CheckoutScreen = () => {
   const handlePayment = () => {
     navigation.navigate('CardPayment', { amount: total });
   };
+
+  const handlePaymentSuccess = (paymentData) => {
+    console.log('Payment successful:', paymentData);
+    // TODO: Handle payment success
+  };
+
+  const handlePaymentError = (error) => {
+    console.log('Payment error:', error);
+    Alert.alert('Payment Error', error.message);
+  };
   
   if (!cartItems || cartItems.length === 0) {
     return (
@@ -57,6 +67,7 @@ const CheckoutScreen = () => {
     const quantity = item.quantity || 1;
     
     return (
+
       <View key={shopId.toString() + item.id.toString()} style={[styles.productCard, isDark ? styles.darkCard : styles.lightCard]}>
         <View style={styles.productInfo}>
           <View style={styles.productTextContainer}>
@@ -111,6 +122,7 @@ const CheckoutScreen = () => {
   };
 
   return (
+
     <View style={[styles.container, isDark ? styles.darkContainer : styles.lightContainer]}>
       <ScrollView style={styles.scrollView}>
         {/* Header */}
@@ -136,65 +148,7 @@ const CheckoutScreen = () => {
             shop.items.map(item => renderProductItem(shop.shopId, item, shop.shopName, shop.pickupTime))
           )}
         </View>
-        
-        {/* Payment method */}
-        <View style={[styles.section, isDark ? styles.darkCard : styles.lightCard]}>
-          <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText]}>
-            Payment method
-          </Text>
-          
-          <TouchableOpacity 
-            style={[
-              styles.paymentOption, 
-              paymentMethod === 'card' && styles.selectedPaymentOption,
-              isDark ? styles.darkPaymentOption : styles.lightPaymentOption
-            ]}
-            onPress={() => setPaymentMethod('card')}
-          >
-            <FontAwesome name="credit-card" size={20} color={isDark ? "#fff" : "#333"} />
-            <Text style={[styles.paymentLabel, isDark ? styles.darkText : styles.lightText]}>
-              Credit Card
-            </Text>
-            {paymentMethod === 'card' && (
-              <FontAwesome name="check-circle" size={20} color="#4CAF50" style={styles.checkIcon} />
-            )}
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[
-              styles.paymentOption, 
-              paymentMethod === 'paypal' && styles.selectedPaymentOption,
-              isDark ? styles.darkPaymentOption : styles.lightPaymentOption
-            ]}
-            onPress={() => setPaymentMethod('paypal')}
-          >
-            <FontAwesome name="paypal" size={20} color={isDark ? "#fff" : "#333"} />
-            <Text style={[styles.paymentLabel, isDark ? styles.darkText : styles.lightText]}>
-              PayPal
-            </Text>
-            {paymentMethod === 'paypal' && (
-              <FontAwesome name="check-circle" size={20} color="#4CAF50" style={styles.checkIcon} />
-            )}
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={[
-              styles.paymentOption, 
-              paymentMethod === 'apple' && styles.selectedPaymentOption,
-              isDark ? styles.darkPaymentOption : styles.lightPaymentOption
-            ]}
-            onPress={() => setPaymentMethod('apple')}
-          >
-            <FontAwesome name="apple" size={20} color={isDark ? "#fff" : "#333"} />
-            <Text style={[styles.paymentLabel, isDark ? styles.darkText : styles.lightText]}>
-              Apple Pay
-            </Text>
-            {paymentMethod === 'apple' && (
-              <FontAwesome name="check-circle" size={20} color="#4CAF50" style={styles.checkIcon} />
-            )}
-          </TouchableOpacity>
-        </View>
-        
+
         {/* Summary */}
         <View style={[styles.section, isDark ? styles.darkCard : styles.lightCard]}>
           <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText]}>
@@ -240,19 +194,13 @@ const CheckoutScreen = () => {
           </View>
         </View>
       </ScrollView>
-      
+
       {/* Payment button */}
       <View style={styles.bottomContainer}>
-        <TouchableOpacity style={[styles.payButton, isDark ? styles.payButtonDark : null]} onPress={handlePayment}>
-          <Text style={[styles.payButtonText, isDark ? styles.payButtonTextDark : null]}>
-            Pay {total.toFixed(2)} €
-          </Text>
-        </TouchableOpacity>
+        <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} merchantIdentifier={STRIPE_MERCHANT_ID} urlScheme={STRIPE_URL_SCHEME}>
+          <StripePaymentForm orderId={63} total={total} onPaymentSuccess={handlePaymentSuccess} onPaymentError={handlePaymentError} />
+        </StripeProvider>
       </View>
-
-      <StripePaymentForm 
-        orderId={63}
-      />
     </View>
   );
 };
