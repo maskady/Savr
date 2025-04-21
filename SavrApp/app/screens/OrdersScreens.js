@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
 import {request} from '../utils/request';
-import { useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 const Colors = {
@@ -29,47 +29,26 @@ const Colors = {
   };
 
 const OrdersScreen = () => {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+  const route = useRoute();
+  const { orders, setOrders, onRefresh, refreshing, setRefreshing } = route.params;
   const [error, setError] = useState(null);
   const [styles, setStyles] = useState(getStyles());
   const { user } = useContext(AuthContext); 
   const navigation = useNavigation();
 
-  const fetchOrders = async () => {
-    try {
-      const parameters = user.roleId === 'admin' ? null : 'orderUserId=' + user.id;
-      const { response, data } = await request('/order', 'GET', null, parameters);
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      
-      if (data && data.data.length > 0) {
-        setOrders(data.data);
-      }
-    } catch (error) {
-      setError('Network error. Please check your connection.');
-      console.error('Error fetching orders:', error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setStyles(getStyles());
     });
-    fetchOrders();
+
+    // Trigger an initial refresh when the screen loads
+    onRefresh();
 
     return () => subscription.remove();
   }, []);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchOrders();
+  const fetchOrders = () => {
+    onRefresh();
   };
 
   const handleOrderPress = (order) => {
@@ -143,7 +122,7 @@ const OrdersScreen = () => {
     </TouchableOpacity>
   );
 
-  if (loading && !refreshing) {
+  if (refreshing) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={Colors.Primary} />
