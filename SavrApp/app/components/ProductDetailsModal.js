@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Modal, View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { HOST_URL } from '@env'; 
-import QuantityCartButton from './QuantityCartButton';
 
 const ProductDetailsModal = ({ item, visible, onClose, quantityButton }) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
