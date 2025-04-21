@@ -20,7 +20,6 @@ export const ShopProvider = ({ children }) => {
     }
   }, [businessCategories]);
 
-
   const MAX_RADIUS = 100; // Maximum radius in kilometers
   const THROTTLE_TIME = 100; // Throttle time in milliseconds
 
@@ -79,16 +78,32 @@ export const ShopProvider = ({ children }) => {
     );
   };
 
-  // Derive filteredShops from shops and activeCategories via useMemo.
-  const filteredShops = useMemo(() => {
-    const filtered = shops.filter((shop) => activeCategories.includes(shop.primaryCategory));
-    if (activeCategories.includes('other')) {
-      const otherShops = shops.filter((shop) => !shop.primaryCategory);
-      return [...filtered, ...otherShops];
-    }
-    return filtered;
-  }, [activeCategories, shops]);
+  // State for filtered shops and updater
+  const [filteredShops, setFilteredShops] = useState([]);
+  // State for search query
+  const [searchQuery, setSearchQuery] = useState('');
 
+  // Update filteredShops based on search query and activeCategories
+  useEffect(() => {
+    // Start with all shops
+    let filtered = shops;
+
+    // Apply search filter if query exists
+    if (searchQuery.trim() !== '') {
+      filtered = filtered.filter((shop) =>
+        shop.name.toLowerCase().includes(searchQuery) ||
+        shop.description.toLowerCase().includes(searchQuery)
+      );
+    }
+
+    // Apply category filter, including "other" for uncategorized shops
+    filtered = filtered.filter((shop) =>
+      activeCategories.includes(shop.primaryCategory) ||
+      (activeCategories.includes('other') && !shop.primaryCategory)
+    );
+
+    setFilteredShops(filtered);
+  }, [shops, activeCategories, searchQuery]);
 
   return (
     <ShopContext.Provider value={{
@@ -101,7 +116,10 @@ export const ShopProvider = ({ children }) => {
       setAllShops,
       fetchShopsIfNeeded,
       setActiveCategories,
-      updateShopInContext
+      updateShopInContext,
+      setFilteredShops,
+      searchQuery,
+      setSearchQuery
     }}>
       {children}
     </ShopContext.Provider>

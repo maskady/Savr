@@ -33,7 +33,7 @@ const PostProductScreen = () => {
   const [category, setCategory] = useState('');
   const [imageUri, setImageUri] = useState(null);
   const [images, setImages] = useState([]);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState('');
   const [loading, setLoading] = useState(false);
   const [shopProducts, setShopProducts] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
@@ -79,8 +79,8 @@ const PostProductScreen = () => {
   };
 
   const handleSubmit = async () => {
-    if (!name || !originalPrice || !price || !quantity) {
-      Alert.alert('Validation', 'Name, price and quantity are required.');
+    if (!name || !originalPrice || !price || !quantity || !description) {
+      Alert.alert('Validation', 'Name, description, price, and quantity are required.');
       return;
     }
     setLoading(true);
@@ -110,16 +110,19 @@ const PostProductScreen = () => {
         productResponse = await postProduct(productToPost);
         productId = productResponse.id;
       }
-      console.log("ID", productId);
+      console.log("Product ID", productId);
       const productVariantToPost = {
+        ...productToPost,
         productId: productId,
         originalPrice: parseFloat(originalPrice),
         price: parseFloat(price),
         quantity: quantity,
-        isActive: true
+        isActive: true,
       }
       console.log('[PostProductScreen] Posting product variant with data:', productVariantToPost);
-      await postProductVariant(productVariantToPost);
+      const productVariantResponse = await postProductVariant(productVariantToPost);
+      const productVariantId = productVariantResponse.data.id;
+      console.log("New Product Variant ID", productVariantId);
 
       // update variants state (simply append productVariantToPost)
       setVariants(prevVariants => [
@@ -127,6 +130,7 @@ const PostProductScreen = () => {
         {
           ...productVariantToPost,
           ...productToPost,
+          id: productVariantId,
         }]);
 
       Alert.alert('Success', 'Product posted successfully!', [
@@ -206,7 +210,7 @@ const PostProductScreen = () => {
       )}
 
       {/** Description */}
-      <Text style={[styles.label, { color: colors.text }]}>Description</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Description *</Text>
       <TextInput
         style={[
           styles.input,
@@ -251,7 +255,15 @@ const PostProductScreen = () => {
       <TextInput
         style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.border }]}
         value={quantity.toString()}
-        onChangeText={(text) => setQuantity(parseInt(text))}
+        onChangeText={(text) => {
+          console.log("Quantity", text);
+          if (text === '') {
+            setQuantity('');
+          } else {
+            setQuantity(parseInt(text))
+          }
+          
+        }}
         placeholder="Enter quantity"
         placeholderTextColor={colors.placeholder}
         keyboardType="numeric"

@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
  *   - onItemPress: function(productVariant) (optional)
  */
 export default function ShopProductList({ shopId, onItemPress, variants, setVariants }) {
+
   const { 
     cartItems,
     addToCart,
@@ -172,7 +173,6 @@ ShopProductList.propTypes = {
   shopId: PropTypes.number.isRequired,
   onItemPress: PropTypes.func,
   variants: PropTypes.array.isRequired,
-  setVariants: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({

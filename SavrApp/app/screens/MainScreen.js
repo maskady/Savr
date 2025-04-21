@@ -32,13 +32,14 @@ const MainScreen = () => {
   const {
     shops,
     filteredShops,
+    searchQuery,
+    setSearchQuery,
     activeCategories,
     fetchShopsIfNeeded,
     setActiveCategories,
   } = useContext(ShopContext);
 
   const [searchActive, setSearchActive] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     // Start location updates
@@ -70,6 +71,15 @@ const MainScreen = () => {
       subscription.remove();
     };
   }, []);
+
+  const onSearchQueryChange = (query) => {
+    const normalized = query.toLowerCase();
+    setSearchQuery(normalized);
+    // Keep the search input open even when cleared
+    if (!searchActive) {
+      setSearchActive(true);
+    }
+  };
 
   // While loading, display the activity indicator with a message.
   if (isLoading || region === null) {
@@ -128,7 +138,7 @@ const MainScreen = () => {
         searchActive={searchActive}
         setSearchActive={setSearchActive}
         searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        onSearchQueryChange={onSearchQueryChange}
         searchComponent={true}
       />
       <View style={styles.mapContainer}>

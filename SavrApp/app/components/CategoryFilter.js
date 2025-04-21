@@ -12,7 +12,7 @@ const CategoryFilter = ({
   searchActive,
   setSearchActive,
   searchQuery,
-  setSearchQuery,
+  onSearchQueryChange,
   searchComponent=false,
 }) => {
   const { darkMode } = useContext(SettingsContext);
@@ -94,7 +94,7 @@ const CategoryFilter = ({
           searchActive={searchActive}
           setSearchActive={setSearchActive}
           searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
+          onSearchQueryChange={onSearchQueryChange}
         />}
     </View>
   );

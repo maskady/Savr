@@ -92,7 +92,11 @@ export default function ShopContent({
               onInputChange={onInputChange}
             />
 
-            <ShopProductList shopId={shop.id} onItemPress={() => {Alert.alert("Item selected")}} variants={variants} setVariants={setVariants} />
+            <ShopProductList 
+              shopId={shop.id} 
+              onItemPress={() => {Alert.alert("Item selected")}} 
+              variants={variants} 
+            />
 
             <ShopDescription
               description={shop.description}
