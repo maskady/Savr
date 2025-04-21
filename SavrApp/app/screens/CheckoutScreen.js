@@ -5,6 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useCart } from '../contexts/CheckoutContext';
 import styles from '../styles/CheckoutScreenStyles';
 import StripePaymentForm from '../components/StripePaymentForm';
+import { StripeProvider } from '@stripe/stripe-react-native';
+
 
 const CheckoutScreen = () => {
   const colorScheme = useColorScheme();
