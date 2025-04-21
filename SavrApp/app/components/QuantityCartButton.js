@@ -30,7 +30,6 @@ const QuantityCartButton = ({ onQuantityChange, initialQuantity = 0, maxQuantity
       setQuantity(newQuantity);
       if (onQuantityChange) onQuantityChange(false);
       
-      // Si la quantité devient 0, retourner à l'état initial
       if (newQuantity === 0) {
         setIsInCart(false);
       }
@@ -38,14 +37,12 @@ const QuantityCartButton = ({ onQuantityChange, initialQuantity = 0, maxQuantity
   };
 
   if (!isInCart) {
-    // Afficher le bouton d'ajout au panier avec l'icône de caddy
     return (
       <TouchableOpacity style={styles.addButton} onPress={handleAddToCart}>
         <FontAwesome name="shopping-cart" size={18} color="#FFFFFF" />
       </TouchableOpacity>
     );
   } else {
-    // Afficher le contrôle de quantité
     return (
       <View style={styles.quantityContainer}>
         <TouchableOpacity style={styles.quantityButton} onPress={handleDecrement}>

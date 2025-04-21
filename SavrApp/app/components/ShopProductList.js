@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { COLORS } from '../constants/colors';
 import QuantityCartButton from './QuantityCartButton';
 import { useCart } from '../contexts/CheckoutContext';
+import ProductDetailsModal from './ProductDetailsModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 /**
@@ -12,31 +14,106 @@ import { useCart } from '../contexts/CheckoutContext';
  *   - shopId: number (required)
  *   - onItemPress: function(productVariant) (optional)
  */
-export default function ShopProductList({ shopId, onItemPress, variants }) {
+export default function ShopProductList({ shopId, onItemPress, variants, setVariants }) {
 
   const { 
     cartItems,
     addToCart,
     removeFromCart,
   } = useCart();
-  
+
+  // Try to get an item from AsyncStorage
+  // const getItemDetails = async () => {
+  //   try {
+  //     const itemDetails = await AsyncStorage.getItem('selectedItem');
+  //     if (itemDetails !== null) {
+  //       const parsedItem = JSON.parse(itemDetails);
+  //       console.log('Item details retrieved from AsyncStorage:', parsedItem);
+  //       return parsedItem;
+  //     }
+  //   } catch (error) {
+  //     console.error('Error retrieving item details from AsyncStorage:', error);
+  //   }
+  // };
+  // 
+  // useEffect(() => {
+  //   getItemDetails()
+  //     .then(item => {
+  //       if (item) {
+  //         setSelectedItem(item);
+  //         setModalVisible(true);
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error('Error in useEffect:', error);
+  //     });
+  // }, []);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const QuantityButton = ({ item }) => {
+    const shopCart = cartItems.find(cart => cart.shopId === item.shopId);
+    const matchingItem = shopCart?.items.find(i => i.id === item.id);
+    const quantityInCart = matchingItem?.quantity || 0;
+    return (
+      <QuantityCartButton 
+        initialQuantity={quantityInCart}
+        maxQuantity={item.initialStock}
+        onQuantityChange={(increment) => handleQuantityChange(item, increment)}
+      />
+    );
+  };
+
   const handleQuantityChange = (item, increment) => {
     if (increment) {
       addToCart(item);
     } else {
       removeFromCart(item.shopId, item.id);
     }
+  
+    setVariants(prevVariants =>
+      prevVariants.map(variant => {
+        if (variant.id === item.id && variant.shopId === item.shopId) {
+          const toAdd = increment ? 1 : -1;
+          
+          return {
+            ...variant,
+            quantity: variant.quantity - toAdd,
+          };
+        }
+        return variant;
+      })
+    );
+  };
+
+  const handleItemPress = (item) => {
+    setSelectedItem(item);
+    setModalVisible(true);
+    // Store in AsyncStorage this information
+
+    const storeItemDetails = async (item) => {
+      try {
+        const itemDetails = JSON.stringify(item);
+        await AsyncStorage.setItem('selectedItem', itemDetails);
+        console.log('Item details stored in AsyncStorage');
+      } catch (error) {
+        console.error('Error storing item details in AsyncStorage:', error);
+      }
+    };
+
+    storeItemDetails(item);
+
   };
 
   const renderItem = ({ item }) => {
-    const shopCart = cartItems.find(cart => cart.shopId === item.shopId);
-    const matchingItem = shopCart?.items.find(i => i.id === item.id);
-    const quantityInCart = matchingItem?.quantity || 0;
+    console.log(`Item: ${JSON.stringify(item, null, 2)}`);
+    
 
     return (
     <TouchableOpacity 
       style={styles.card}
-      onPress={() => onItemPress && onItemPress(item)}
+      onPress={() => handleItemPress(item)}
     >
       <View style={styles.cardContent}>
         <View style={styles.productInfo}>
@@ -51,32 +128,44 @@ export default function ShopProductList({ shopId, onItemPress, variants }) {
           </View>
         </View>
         <View style={styles.buttonContainer}>
-          <QuantityCartButton 
-            initialQuantity={quantityInCart}
-            maxQuantity={item.quantity} // Assuming max quantity is the available stock
-            onQuantityChange={(increment) => handleQuantityChange(item, increment)}
-          />
+          <QuantityButton item={item} />
+          
         </View>
       </View>
     </TouchableOpacity>
   )};
 
   return (
-    <FlatList
-      data={variants}
-      ListHeaderComponent={() => (
-        <View style={styles.listHeader}>
-          <Text style={styles.textListHeader}>Available Products</Text>
-        </View>
+    <>
+      <FlatList
+        data={variants}
+        ListHeaderComponent={() => (
+          <View style={styles.listHeader}>
+            <Text style={styles.textListHeader}>Available Products</Text>
+          </View>
+        )}
+        renderItem={renderItem}
+        contentContainerStyle={styles.list}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListEmptyComponent={() => (
+          <Text style={styles.empty}>No products available atm</Text>
+        )}
+        keyExtractor={(item) => item.id?.toString()}
+      />
+
+      {selectedItem && (
+        <ProductDetailsModal
+          item={selectedItem}
+          visible={modalVisible}
+          onClose={() => {
+            setModalVisible(false);
+            // Optionnel: ajouter un délai avant de réinitialiser l'élément sélectionné
+            setTimeout(() => setSelectedItem(null), 3000);
+          }}
+          quantityButton={<QuantityButton item={selectedItem} />}
+        />
       )}
-      renderItem={renderItem}
-      contentContainerStyle={styles.list}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
-      ListEmptyComponent={() => (
-        <Text style={styles.empty}>No products available atm</Text>
-      )}
-      keyExtractor={(item) => item.id.toString()}
-    />
+    </>
   );
 }
 

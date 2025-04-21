@@ -24,7 +24,12 @@ export default function ShopContent({
         );
         if (!isMounted) return;
         if (response.data && Array.isArray(response.data)) {
-          setVariants(response.data);
+          // Add a new field in each variant object to store the initial stock
+          const updatedVariants = response.data.map(variant => ({
+            ...variant,
+            initialStock: variant.quantity,
+          }));
+          setVariants(updatedVariants);
         } else {
           setVariants([]);
         }
