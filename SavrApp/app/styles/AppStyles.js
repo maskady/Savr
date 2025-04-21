@@ -40,6 +40,13 @@ const getStyles = () => {
       fontSize: 14,
       color: isDarkMode ? Colors.White : Colors.Black,
     },
+    buttonText: {
+      fontSize: 14,
+      color: isDarkMode ? Colors.White : Colors.Black,
+      fontWeight: 'bold',
+      alignContent: 'center',
+      textAlign: 'center',
+    },
     contentContainer: {
       flex: 1,
       paddingHorizontal: 20,
@@ -81,8 +88,11 @@ const getStyles = () => {
     },
     chartStyle: {
       marginVertical: 8,
+      marginBottom: 10,
+      paddingBottom: 10,
       borderRadius: 16,
-      alignSelf: 'center'
+      alignSelf: 'center',
+      overflow: 'visible'
     },
     co2Row: {
       flexDirection: 'row',

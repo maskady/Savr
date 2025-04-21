@@ -24,7 +24,7 @@ export const getProducts = async () => {
 export const getShopProducts = async (shopId) => {
   try {
     const response = await request(`/product`, 'GET', null, { shopId });
-    console.log("[api] message:", response?.data?.message);
+    //console.log("[api] message:", response?.data?.message);
     return response?.data?.data || []; // Safely access response.data
   } catch (error) {
     console.error('[api] Error fetching products:', error);
@@ -35,7 +35,7 @@ export const getShopProducts = async (shopId) => {
 export const getAvailableProductVariantsForShop = async (shopId) => {
   try {
     const response = await request(`/product-variant`, 'GET', null, { shopId });
-    console.log("[api] message:", response?.data?.message);
+    //console.log("[api] message:", response?.data?.message);
     return response?.data || []; // Safely access response.data
   } catch (error) {
     console.error('[api] Error fetching product variants:', error);
@@ -104,7 +104,7 @@ export const saveUserData = async ({ firstName, lastName, email }) => {
 export const postProduct = async (data) => {
   try {
     const response = await request('/product', 'POST', data);
-    console.log("[api] ", response?.data?.message);
+    //console.log("[api] ", response?.data?.message);
     console.log("[api] Product posted successfully. response.data:", response?.data);
     return response?.data || null; // Safely access response.data
   } catch (error) {
@@ -139,3 +139,19 @@ export const updateProduct = async (id, data) => {
     throw error;
   }
 };
+
+export const getOrders = async (shopId=null, userId=null) => {
+  if (!shopId && !userId) {
+    throw new Error("Either shopId or userId must be provided.");
+  }
+
+  try {
+    const response = await request('/order', 'GET', null, { shopId: shopId, orderUserId: userId });
+    console.log("[api] Order history response:", response);
+    return response?.data || []; // Safely access response.data
+  } catch (error) {
+    console.error('Error fetching order history:', error);
+    throw error;
+  }
+
+}

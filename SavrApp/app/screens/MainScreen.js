@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import { View, FlatList, ActivityIndicator, Text, Appearance, StatusBar } from 'react-native';
-import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
 import CategoryFilter from '../components/CategoryFilter';
 import MapSection from '../components/MapSection';
@@ -11,12 +10,13 @@ import { businessCategories } from '../constants/businessCategories';
 import { SettingsContext } from '../contexts/SettingsContext';
 import getStyles from '../styles/AppStyles';
 import { ShopContext } from '../contexts/ShopContext';
+import { getUserLocation, startLocationUpdates, stopLocationUpdates, isDifferentRegion } from '../utils/location';
 
 const initialRegion = {
   latitude: 0,
   longitude: 0,
-  latitudeDelta: 0,
-  longitudeDelta: 0,
+  latitudeDelta: 0.09,
+  longitudeDelta: 0.04,
 };
 
 const MainScreen = () => {
@@ -27,6 +27,7 @@ const MainScreen = () => {
   // Start with region as null while we fetch the user's location.
   const [region, setRegion] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [locationUpdateInterval, setLocationUpdateInterval] = useState(null);
 
   const {
     shops,
@@ -39,35 +40,18 @@ const MainScreen = () => {
   const [searchActive, setSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Modified getUserLocation returns the user's location or a default fallback.
-  const getUserLocation = async () => {
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
-        const currentLocation = await Location.getCurrentPositionAsync({});
-        if (currentLocation) {
-          return {
-            latitude: currentLocation.coords.latitude,
-            longitude: currentLocation.coords.longitude,
-            latitudeDelta: 0.09,
-            longitudeDelta: 0.04,
-          };
-        }
-      }
-    } catch (error) {
-      console.error('Error getting user location:', error);
-      alert('Unable to fetch your location. Please check your location settings.');
-    }
-    // Fallback to default region if permission is not granted or an error occurs.
-    return initialRegion;
-  };
-
   useEffect(() => {
-    // Immediately start fetching the location.
+    // Start location updates
+    const intervalId = startLocationUpdates(1); // Update every 1 minute
+    setLocationUpdateInterval(intervalId);
+    
+    // Initialize location for map
     const initializeLocation = async () => {
       const currentRegion = await getUserLocation();
+      console.log('Current region:', currentRegion);
       setRegion(currentRegion);
-      // Now fetch the shops based on the current region.
+      
+      // Fetch shops based on current region
       fetchShopsIfNeeded(currentRegion);
       setIsLoading(false);
     };
@@ -78,11 +62,13 @@ const MainScreen = () => {
       setStyles(getStyles());
     });
 
-    
-    setIsLoading(false);
+    // Cleanup function
     return () => {
+      if (locationUpdateInterval) {
+        stopLocationUpdates(locationUpdateInterval);
+      }
       subscription.remove();
-    }
+    };
   }, []);
 
   // While loading, display the activity indicator with a message.
@@ -143,19 +129,19 @@ const MainScreen = () => {
         setSearchActive={setSearchActive}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        searchComponent={true}
       />
       <View style={styles.mapContainer}>
         <MapSection
           region={region}
           setRegion={(newRegion) => {
-            setRegion(newRegion);
-            fetchShopsIfNeeded(newRegion);
+            if (newRegion && isDifferentRegion(newRegion, region)) {  
+              console.log('setting region', newRegion);
+              setRegion(newRegion);
+              fetchShopsIfNeeded(newRegion);
+            }
           }}
           shops={filteredShops}
-          onRegionChange={(newRegion) => {
-            setRegion(newRegion);
-            fetchShopsIfNeeded(newRegion);
-          }}
           onShopSelect={handleSelect}
           getUserLocation={getUserLocation}
         />

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Supercluster from 'supercluster';
 import { debounce } from 'lodash';
@@ -8,12 +8,14 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import getStyles from '../styles/AppStyles';
 import { getAvailableProductVariantsForShop } from '../utils/api';
+import { getUserLocation, startLocationUpdates, stopLocationUpdates } from '../utils/location';
 
-const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, getUserLocation }) => {
-
+const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) => {
   const [styles, setStyles] = useState(getStyles());
-
   const [clusters, setClusters] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationUpdateInterval, setLocationUpdateInterval] = useState(null);
+  const mapRef = useRef(null);
 
   // Clustering configuration
   const radiusThreshold = 32; // in pixels, for how close pins should be to cluster
@@ -24,6 +26,28 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, ge
   // Build geoJSON from shops data
   const [geoJson, setGeoJson] = useState([]);
   const [variantCounts, setVariantCounts] = useState({});
+
+  // Initialize location tracking
+  useEffect(() => {
+    // Get initial location
+    const initLocation = async () => {
+      const location = await getUserLocation(1); // Get location max 1 minute old
+      setUserLocation(location);
+    };
+    
+    initLocation();
+    
+    // Start periodic location updates every 30 seconds
+    const intervalId = startLocationUpdates(0.5); // 0.5 minutes = 30 seconds
+    setLocationUpdateInterval(intervalId);
+    
+    // Cleanup
+    return () => {
+      if (locationUpdateInterval) {
+        stopLocationUpdates(locationUpdateInterval);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const fetchGeoJson = async () => {
@@ -139,17 +163,36 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, ge
     []
   );
 
+  // Function to center map on user's location
   const locateMyself = async () => {
-    const newRegion = await getUserLocation();
-    if (onRegionChange) {
-      onRegionChange(newRegion);
+    try {
+      // Get fresh location (max 1 minute old)
+      const newLocation = await getUserLocation(1);
+      
+      // Update local state
+      setUserLocation(newLocation);
+      
+      // Animate map to new location
+      if (mapRef.current) {
+        mapRef.current.animateToRegion(newLocation, 500);
+      }
+      
+      // Update region state in parent component
+      if (onRegionChange) {
+        onRegionChange(newLocation);
+      }
+      
+      // Update clusters
+      updateClusters(newLocation);
+    } catch (error) {
+      console.error('Error locating user:', error);
     }
-    updateClusters(newRegion);
   };
 
   return (
     <View style={{ flex: 1 }}>
       <MapView
+        ref={mapRef}
         style={styles.map}
         region={region}
         onRegionChangeComplete={(newRegion) => {
@@ -157,21 +200,22 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect, ge
           debouncedUpdateClusters(newRegion);
           onRegionChange && onRegionChange(newRegion);
         }}
-        showsUserLocation={true}
+        showsUserLocation={Platform.OS === 'ios' ? false : true}
+        followsUserLocation={true}
         showsCompass={true}
-        showsMyLocationButton={true}
+        showsMyLocationButton={false} // Disable default button, we'll use our own
         showsBuildings={true}
         showsScale={true}
-        showsMyLocation={true}
+        userLocationUpdateInterval={30000} // Update user location every 30 seconds
+        userLocationFastestInterval={10000} // Fastest interval to receive updates
       >
         {clusters.map(cluster => renderMarker(cluster))}
       </MapView>
       <TouchableOpacity style={styles.locateButton} onPress={locateMyself}>
-        <MaterialIcons name="my-location" style={styles.myLocationIcon} />
+        <MaterialIcons name="my-location" size={24} style={styles.myLocationIcon} />
       </TouchableOpacity>
     </View>
   );
 };
-
 
 export default MapSection;
