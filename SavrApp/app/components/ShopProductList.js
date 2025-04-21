@@ -13,6 +13,7 @@ import { useCart } from '../contexts/CheckoutContext';
  *   - shopId: number (required)
  *   - onItemPress: function(productVariant) (optional)
  */
+// TODO: Set good quantity on loading
 export default function ShopProductList({ shopId, onItemPress, variants, setVariants }) {
 
   const { 
