@@ -23,7 +23,7 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const QuantityButton = (item) => {
+  const QuantityButton = ({ item }) => {
     const shopCart = cartItems.find(cart => cart.shopId === item.shopId);
     const matchingItem = shopCart?.items.find(i => i.id === item.id);
     const quantityInCart = matchingItem?.quantity || 0;
@@ -33,7 +33,7 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
         maxQuantity={item.initialStock}
         onQuantityChange={(increment) => handleQuantityChange(item, increment)}
       />
-    )
+    );
   };
 
   const handleQuantityChange = (item, increment) => {
@@ -85,7 +85,8 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
           </View>
         </View>
         <View style={styles.buttonContainer}>
-          {QuantityButton(item)}
+          <QuantityButton item={item} />
+          
         </View>
       </View>
     </TouchableOpacity>
@@ -118,7 +119,7 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
             // Optionnel: ajouter un délai avant de réinitialiser l'élément sélectionné
             setTimeout(() => setSelectedItem(null), 3000);
           }}
-          quantityButton={QuantityButton(selectedItem)}
+          quantityButton={<QuantityButton item={selectedItem} />}
         />
       )}
     </>
