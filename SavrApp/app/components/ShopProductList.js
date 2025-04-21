@@ -13,7 +13,6 @@ import { useCart } from '../contexts/CheckoutContext';
  *   - onItemPress: function(productVariant) (optional)
  */
 export default function ShopProductList({ shopId, onItemPress, variants, setVariants }) {
-
   const { 
     cartItems,
     addToCart,
@@ -26,6 +25,20 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
     } else {
       removeFromCart(item.shopId, item.id);
     }
+  
+    setVariants(prevVariants =>
+      prevVariants.map(variant => {
+        if (variant.id === item.id && variant.shopId === item.shopId) {
+          const toAdd = increment ? 1 : -1;
+          
+          return {
+            ...variant,
+            quantity: variant.quantity - toAdd,
+          };
+        }
+        return variant;
+      })
+    );
   };
 
   const renderItem = ({ item }) => {
@@ -53,7 +66,7 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
         <View style={styles.buttonContainer}>
           <QuantityCartButton 
             initialQuantity={quantityInCart}
-            maxQuantity={item.quantity} // Assuming max quantity is the available stock
+            maxQuantity={item.initialStock}
             onQuantityChange={(increment) => handleQuantityChange(item, increment)}
           />
         </View>
