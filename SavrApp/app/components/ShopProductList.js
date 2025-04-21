@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { COLORS } from '../constants/colors';
 import QuantityCartButton from './QuantityCartButton';
 import { useCart } from '../contexts/CheckoutContext';
 import ProductDetailsModal from './ProductDetailsModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 /**
@@ -19,6 +20,33 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
     addToCart,
     removeFromCart,
   } = useCart();
+
+  // Try to get an item from AsyncStorage
+  // const getItemDetails = async () => {
+  //   try {
+  //     const itemDetails = await AsyncStorage.getItem('selectedItem');
+  //     if (itemDetails !== null) {
+  //       const parsedItem = JSON.parse(itemDetails);
+  //       console.log('Item details retrieved from AsyncStorage:', parsedItem);
+  //       return parsedItem;
+  //     }
+  //   } catch (error) {
+  //     console.error('Error retrieving item details from AsyncStorage:', error);
+  //   }
+  // };
+  // 
+  // useEffect(() => {
+  //   getItemDetails()
+  //     .then(item => {
+  //       if (item) {
+  //         setSelectedItem(item);
+  //         setModalVisible(true);
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error('Error in useEffect:', error);
+  //     });
+  // }, []);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -61,6 +89,20 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
   const handleItemPress = (item) => {
     setSelectedItem(item);
     setModalVisible(true);
+    // Store in AsyncStorage this information
+
+    const storeItemDetails = async (item) => {
+      try {
+        const itemDetails = JSON.stringify(item);
+        await AsyncStorage.setItem('selectedItem', itemDetails);
+        console.log('Item details stored in AsyncStorage');
+      } catch (error) {
+        console.error('Error storing item details in AsyncStorage:', error);
+      }
+    };
+
+    storeItemDetails(item);
+
   };
 
   const renderItem = ({ item }) => {
