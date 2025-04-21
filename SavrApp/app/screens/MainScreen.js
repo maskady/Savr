@@ -12,12 +12,6 @@ import getStyles from '../styles/AppStyles';
 import { ShopContext } from '../contexts/ShopContext';
 import { getUserLocation, startLocationUpdates, stopLocationUpdates, isDifferentRegion } from '../utils/location';
 
-const initialRegion = {
-  latitude: 0,
-  longitude: 0,
-  latitudeDelta: 0.09,
-  longitudeDelta: 0.04,
-};
 
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
@@ -26,9 +20,12 @@ const MainScreen = () => {
   
   // Start with region as null while we fetch the user's location.
   const [region, setRegion] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [locationUpdateInterval, setLocationUpdateInterval] = useState(null);
-
+  const [searchActive, setSearchActive] = useState(false);
+  
   const {
     shops,
     filteredShops,
@@ -39,7 +36,6 @@ const MainScreen = () => {
     setActiveCategories,
   } = useContext(ShopContext);
 
-  const [searchActive, setSearchActive] = useState(false);
 
   useEffect(() => {
     // Start location updates
@@ -49,9 +45,12 @@ const MainScreen = () => {
     // Initialize location for map
     const initializeLocation = async () => {
       const currentRegion = await getUserLocation();
-      console.log('Current region:', currentRegion);
+
       setRegion(currentRegion);
-      
+      setUserLocation(currentRegion);
+      console.log('userLocation--------', currentRegion);
+
+
       // Fetch shops based on current region
       fetchShopsIfNeeded(currentRegion);
       setIsLoading(false);
@@ -62,6 +61,7 @@ const MainScreen = () => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setStyles(getStyles());
     });
+
 
     // Cleanup function
     return () => {
@@ -122,7 +122,7 @@ const MainScreen = () => {
   };
 
   const renderItem = ({ item }) => (
-    <ListItem shop={item} onSelect={handleSelect} region={region} />
+    <ListItem shop={item} onSelect={handleSelect} userLocation={userLocation} />
   );
 
   return (
@@ -146,7 +146,6 @@ const MainScreen = () => {
           region={region}
           setRegion={(newRegion) => {
             if (newRegion && isDifferentRegion(newRegion, region)) {  
-              console.log('setting region', newRegion);
               setRegion(newRegion);
               fetchShopsIfNeeded(newRegion);
             }

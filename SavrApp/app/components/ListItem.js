@@ -3,16 +3,17 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { SettingsContext } from '../contexts/SettingsContext';
 import { getDistance } from 'geolib';
 import { ChevronRight } from 'lucide-react-native';
-import { API_URI } from '@env';
 import { HOST_URL } from '@env';
 
-const ListItem = ({ shop, onSelect, region }) => {
+const ListItem = ({ shop, onSelect, userLocation }) => {
   const {darkMode} = useContext(SettingsContext);
 
   let distance = null;
   let distanceUnit = null;
-  if (region.latitude && shop.latitude && region.longitude && shop.longitude) {
-    distance = getDistance({latitude: region.latitude, longitude: region.longitude}, {latitude: shop.latitude, longitude: shop.longitude});
+
+  if (userLocation && userLocation.latitude && shop.latitude && userLocation.longitude && shop.longitude) {
+
+    distance = getDistance({latitude: userLocation.latitude, longitude: userLocation.longitude}, {latitude: shop.latitude, longitude: shop.longitude});
     if (distance > 1000) {
       distance = (distance / 1000).toFixed(1); // Convert to km and round to 1 decimal place
       distanceUnit = 'km';
