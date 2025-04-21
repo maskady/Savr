@@ -13,8 +13,6 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Appearance } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import StripePaymentProvider from '../components/StripePaymentProvider';
-import StripePaymentForm from '../components/StripePaymentForm';
 import { useCart } from '../contexts/CheckoutContext';
 import { request } from '../utils/request';
 

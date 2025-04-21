@@ -4,21 +4,75 @@ import { useStripe, initPaymentSheet, presentPaymentSheet } from '@stripe/stripe
 import { Appearance } from 'react-native';
 import { request } from '../utils/request';
 import { APP_NAME } from '@env';
-const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
+
+const OrderAndPay = ({ orderId, cartItems, onPaymentSuccess, onPaymentError }) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState(orderId);
   
   const theme = Appearance.getColorScheme();
   const isDarkMode = theme === 'dark';
-  
-  const fetchPaymentSheetParams = async () => {
+
+  const createOrder = async () => {
+    let payload = null;
+
     try {
-      // For testing, we're using hardcoded values since the endpoint isn't working
-      console.log('Fetching payment sheet for order:', orderId);
+      let items = cartItems;
+      let shopId = items[0].shopId;
+
+      let productVariants = items[0].items.map(item => ({
+        productVariantId: item.id,
+        quantity: item.quantity
+      }));
+
+      let order = {
+        shopId: shopId,
+        status: "pen",
+        productVariants: productVariants
+      }
+
+      const { response, data } = await request(`/order`, 'POST', order);
+
+      console.log('Order created:', JSON.stringify(data, null, 2));
+      payload = data?.data;
+
+    } catch (error) {
+      console.error('Error creating order:', error);
+      throw error;
+    }
+    return payload;
+  }
+
+  const onOrderAndPay = async () => {
+    try {
+      setLoading(true);
+      const data = await createOrder();
+      console.log('Order:', data);
+      const newOrderId = data?.orderId;
+      
+      if (newOrderId) {
+        setCurrentOrderId(newOrderId);
+        // Initialize payment sheet with the new order ID
+        await initializePaymentSheet(newOrderId);
+        // Open payment sheet after initialization
+        await openPaymentSheet();
+      } else {
+        throw new Error('Failed to create order');
+      }
+    } catch (error) {
+      console.error('Error in order and pay:', error);
+      onPaymentError && onPaymentError('Failed to process order');
+      setLoading(false);
+    }
+  }
+  
+  const fetchPaymentSheetParams = async (orderIdToUse) => {
+    try {
+      console.log('Fetching payment sheet for order:', orderIdToUse);
       
       // REAL API CALL - Use this in production
-      const { response, data } = await request(`/order/${orderId}/payment-sheet`, 'GET');
+      const { response, data } = await request(`/payment/${orderIdToUse}/payment-sheet`, 'GET');
 
       if (!response.ok) {
         console.error('Payment sheet fetch error:', response.status, data);
@@ -32,24 +86,24 @@ const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
         customer,
         publishableKey,
       };
-
     } catch (error) {
       console.error('Error fetching payment sheet params:', error);
-      
       onPaymentError && onPaymentError('Failed to initialize payment. Please try again.');
       return null;
     }
   };
 
-  const initializePaymentSheet = async () => {
+  const initializePaymentSheet = async (orderIdToUse) => {
     try {
-      setLoading(true);
+      if (!orderIdToUse) {
+        console.error('No order ID provided for payment sheet initialization');
+        return;
+      }
       
-      const params = await fetchPaymentSheetParams();
+      const params = await fetchPaymentSheetParams(orderIdToUse);
       console.log('Payment sheet params:', JSON.stringify(params, null, 2));
       
       if (!params) {
-        setLoading(false);
         return;
       }
       
@@ -71,7 +125,6 @@ const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
         },
         merchantCountryCode: 'FI', // Use your country code
         testEnv: true, // Set to false in production
-        allowsDelayedPaymentMethods: true,
         publishableKey: publishableKey,
       });
 
@@ -91,7 +144,6 @@ const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
 
   const openPaymentSheet = async () => {
     try {
-      setLoading(true);
       const { error, paymentOption } = await presentPaymentSheet();
       console.log('Payment option:', paymentOption, error);
       
@@ -100,7 +152,7 @@ const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
         onPaymentError && onPaymentError(error.message);
       } else {
         console.log('Payment success with option:', paymentOption);
-        onPaymentSuccess && onPaymentSuccess({ id: orderId });
+        onPaymentSuccess && onPaymentSuccess({ id: currentOrderId });
       }
     } catch (error) {
       console.error('Error presenting payment sheet:', error);
@@ -111,25 +163,28 @@ const StripePaymentForm = ({ orderId, onPaymentSuccess, onPaymentError }) => {
   };
 
   useEffect(() => {
-    // Initialize even if orderId is not provided (using mock data in dev)
-    initializePaymentSheet();
-  }, []);
+    // Initialize if an order ID is already provided
+    if (currentOrderId) {
+      initializePaymentSheet(currentOrderId);
+    } else {
+      setReady(true); // Set ready so the button is enabled
+    }
+  }, [currentOrderId]);
 
   return (
     <View style={styles.container}>
-      
       <TouchableOpacity 
         style={[
           styles.payButton, 
-          (!ready || loading) && styles.disabledButton
+          (loading) && styles.disabledButton
         ]} 
-        disabled={!ready || loading}
-        onPress={openPaymentSheet}
+        disabled={loading}
+        onPress={onOrderAndPay}
       >
         {loading ? (
           <ActivityIndicator size="small" color="#FFFFFF" />
         ) : (
-          <Text style={styles.payButtonText}>Pay Securely</Text>
+          <Text style={styles.payButtonText}>Order and Pay</Text>
         )}
       </TouchableOpacity>
     </View>
@@ -168,4 +223,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StripePaymentForm; 
+export default OrderAndPay; 

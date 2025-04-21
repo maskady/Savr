@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useCart } from '../contexts/CheckoutContext';
 import styles from '../styles/CheckoutScreenStyles';
-import StripePaymentForm from '../components/StripePaymentForm';
+import OrderAndPay from '../components/OrderAndPay';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { STRIPE_PUBLISHABLE_KEY, STRIPE_MERCHANT_ID, STRIPE_URL_SCHEME } from '@env';
 
@@ -24,8 +24,8 @@ const CheckoutScreen = () => {
   } = useCart();
   
   // Fake data for delivery and service fees - TODO: Replace with actual data
-  const deliveryFee = 1.90;
-  const serviceFee = 0.99;
+  const deliveryFee = 0;
+  const serviceFee = 0;
   
   const subtotal = getCartTotal();
   const total = subtotal + deliveryFee + serviceFee;
@@ -151,38 +151,39 @@ const CheckoutScreen = () => {
 
         {/* Summary */}
         <View style={[styles.section, isDark ? styles.darkCard : styles.lightCard]}>
-          <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText]}>
+
+          {/* <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText]}>
             Summary
-          </Text>
+          </Text> */}
           
-          <View style={styles.priceSummaryRow}>
+          {/* <View style={styles.priceSummaryRow}>
             <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
               Sub-total ({itemCount} item{itemCount > 1 ? 's' : ''})
             </Text>
             <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
               {subtotal?.toFixed(2)} €
             </Text>
-          </View>
+          </View> */}
           
-          <View style={styles.priceSummaryRow}>
+          {/* <View style={styles.priceSummaryRow}>
             <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
               Service fee
             </Text>
             <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
               {serviceFee?.toFixed(2)} €
             </Text>
-          </View>
+          </View> */}
           
-          <View style={styles.priceSummaryRow}>
+          {/* <View style={styles.priceSummaryRow}>
             <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
               Shipping fee
             </Text>
             <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
               {deliveryFee?.toFixed(2)} €
             </Text>
-          </View>
+          </View> */}
           
-          <View style={styles.divider} />
+          {/* <View style={styles.divider} /> */}
           
           <View style={styles.totalRow}>
             <Text style={[styles.totalLabel, isDark ? styles.darkText : styles.lightText]}>
@@ -197,8 +198,8 @@ const CheckoutScreen = () => {
 
       {/* Payment button */}
       <View style={styles.bottomContainer}>
-        <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} merchantIdentifier={STRIPE_MERCHANT_ID} urlScheme={STRIPE_URL_SCHEME}>
-          <StripePaymentForm orderId={63} total={total} onPaymentSuccess={handlePaymentSuccess} onPaymentError={handlePaymentError} />
+        <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} merchantIdentifier={STRIPE_MERCHANT_ID} urlScheme={STRIPE_URL_SCHEME} >
+          <OrderAndPay orderId={63} total={total} onPaymentSuccess={handlePaymentSuccess} onPaymentError={handlePaymentError} cartItems={cartItems} />
         </StripeProvider>
       </View>
     </View>
