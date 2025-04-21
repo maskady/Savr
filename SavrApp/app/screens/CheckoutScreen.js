@@ -70,10 +70,10 @@ const CheckoutScreen = () => {
 
           <View style={styles.priceContainer}>
             <Text style={[styles.discountPrice, isDark ? styles.darkText : styles.lightText]}>
-              {item.price.toFixed(2)} €
+              {item.price?.toFixed(2)} €
             </Text>
             <Text style={styles.originalPrice}>
-              {item.originalPrice.toFixed(2)} €
+              {item.originalPrice?.toFixed(2)} €
             </Text>
           </View>
         </View>
@@ -203,7 +203,7 @@ const CheckoutScreen = () => {
               Sub-total ({itemCount} item{itemCount > 1 ? 's' : ''})
             </Text>
             <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
-              {subtotal.toFixed(2)} €
+              {subtotal?.toFixed(2)} €
             </Text>
           </View>
           
@@ -212,7 +212,7 @@ const CheckoutScreen = () => {
               Service fee
             </Text>
             <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
-              {serviceFee.toFixed(2)} €
+              {serviceFee?.toFixed(2)} €
             </Text>
           </View>
           
@@ -221,7 +221,7 @@ const CheckoutScreen = () => {
               Shipping fee
             </Text>
             <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
-              {deliveryFee.toFixed(2)} €
+              {deliveryFee?.toFixed(2)} €
             </Text>
           </View>
           
@@ -232,7 +232,7 @@ const CheckoutScreen = () => {
               Total
             </Text>
             <Text style={[styles.totalValue, isDark ? styles.darkText : styles.lightText]}>
-              {total.toFixed(2)} €
+              {total?.toFixed(2)} €
             </Text>
           </View>
         </View>
@@ -242,7 +242,7 @@ const CheckoutScreen = () => {
       <View style={styles.bottomContainer}>
         <TouchableOpacity style={[styles.payButton, isDark ? styles.payButtonDark : null]} onPress={handlePayment}>
           <Text style={[styles.payButtonText, isDark ? styles.payButtonTextDark : null]}>
-            Pay {total.toFixed(2)} €
+            Pay {total?.toFixed(2)} €
           </Text>
         </TouchableOpacity>
       </View>
