@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useCart } from '../contexts/CheckoutContext';
 import styles from '../styles/CheckoutScreenStyles';
+import StripePaymentForm from '../components/StripePaymentForm';
 
 const CheckoutScreen = () => {
   const colorScheme = useColorScheme();
@@ -246,6 +247,10 @@ const CheckoutScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <StripePaymentForm 
+        orderId={63}
+      />
     </View>
   );
 };
