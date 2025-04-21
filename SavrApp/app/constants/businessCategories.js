@@ -4,6 +4,20 @@ import { COLORS } from "./colors";
 export let businessCategories = {}; // category id -> category object
 export let businessCategoriesColors = {}; // category id -> color
 
+// TODO: problem: grocery stores (such as supermarkets) can sell products in different categories, also flowers and clothes
+export let businessCategoryGroups = { 
+  bakery: "food",
+  grocery: "food",
+  restaurant: "food",
+  cafe: "food",
+  food: "food",
+  butcher: "food",
+  fishmonger: "food",
+  florist: "flora",
+  canteen: "food",
+  other: "other",
+}; // category id -> group id (string)
+
 export const fetchBusinessCategories = async () => {
   try {
     // Fetch categories array from API and filter out removed/deleted categories.

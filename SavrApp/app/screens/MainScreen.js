@@ -143,6 +143,7 @@ const MainScreen = () => {
         setSearchActive={setSearchActive}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        searchComponent={true}
       />
       <View style={styles.mapContainer}>
         <MapSection
