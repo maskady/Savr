@@ -10,7 +10,7 @@ import {
   Appearance
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
-import {request} from '../utils/request';
+import { request } from '../utils/request';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
