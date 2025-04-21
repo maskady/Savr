@@ -96,6 +96,7 @@ export default function ShopContent({
               shopId={shop.id} 
               onItemPress={() => {Alert.alert("Item selected")}} 
               variants={variants} 
+              setVariants={setVariants}
             />
 
             <ShopDescription
