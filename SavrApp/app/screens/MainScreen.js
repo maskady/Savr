@@ -11,6 +11,7 @@ import { businessCategories } from '../constants/businessCategories';
 import { SettingsContext } from '../contexts/SettingsContext';
 import getStyles from '../styles/AppStyles';
 import { ShopContext } from '../contexts/ShopContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const initialRegion = {
   latitude: 0,
@@ -41,21 +42,31 @@ const MainScreen = () => {
 
   // Modified getUserLocation returns the user's location or a default fallback.
   const getUserLocation = async () => {
+
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
-        const currentLocation = await Location.getCurrentPositionAsync({});
-        if (currentLocation) {
-          return {
-            latitude: currentLocation.coords.latitude,
-            longitude: currentLocation.coords.longitude,
-            latitudeDelta: 0.09,
-            longitudeDelta: 0.04,
-          };
+      let location = await AsyncStorage.getItem('@lastLocation');
+      location = JSON.parse(location);
+      console.log('Location from AsyncStorage:', location);
+
+      // TODO: Refresh location every 1 minute
+      
+      if (!location) {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === 'granted') {
+          location = await Location.getCurrentPositionAsync({});
+          await AsyncStorage.setItem('@lastLocation', JSON.stringify(location));
         }
       }
+      
+      return {
+        latitude: location?.coords?.latitude,
+        longitude: location?.coords?.longitude,
+        latitudeDelta: 0.09,
+        longitudeDelta: 0.04,
+      }
+
     } catch (error) {
-      console.error('Error getting user location:', error);
+      console.error('Error getting or saving user location:', error);
       alert('Unable to fetch your location. Please check your location settings.');
     }
     // Fallback to default region if permission is not granted or an error occurs.
