@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 // Screens
 import MainScreen from "../screens/MainScreen";
-import DashboardScreen from "../screens/DashboardScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 import CheckoutScreen from "../screens/CheckoutScreen";
 import ShopScreen from "../screens/ShopScreen";
 
@@ -103,7 +103,7 @@ const HomeTabs = () => {
           let iconName;
 
           if (route.name === "Home") iconName = "home";
-          else if (route.name === "Dashboard") iconName = "stats-chart";
+          else if (route.name === "Profile") iconName = "stats-chart";
           else if (route.name === "Checkout") iconName = "cart";
           else if (route.name === "My Shop") iconName = "storefront";
 
@@ -118,7 +118,7 @@ const HomeTabs = () => {
     >
       <Tab.Screen name="Home" component={MainScreen} />
       <Tab.Screen name="My Shop" component={ShopScreen} initialParams={{shop: dummyShop}} />
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Checkout" component={CheckoutScreen} />
     </Tab.Navigator>
   );

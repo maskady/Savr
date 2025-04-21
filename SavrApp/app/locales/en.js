@@ -36,8 +36,8 @@ export default {
         termsLink: "Terms of Service",
         registerButton: "Register",
     },
-    dashboard: {
-        title: "Dashboard",
+    profile: {
+        title: "Profile",
         tab1: "All", 
         tab2: "Food",
         tab3: "Clothes",
