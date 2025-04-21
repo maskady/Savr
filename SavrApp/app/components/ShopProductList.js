@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { COLORS } from '../constants/colors';
 import QuantityCartButton from './QuantityCartButton';
 import { useCart } from '../contexts/CheckoutContext';
+import ProductDetailsModal from './ProductDetailsModal';
 
 
 /**
@@ -18,7 +19,23 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
     addToCart,
     removeFromCart,
   } = useCart();
-  
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const QuantityButton = (item) => {
+    const shopCart = cartItems.find(cart => cart.shopId === item.shopId);
+    const matchingItem = shopCart?.items.find(i => i.id === item.id);
+    const quantityInCart = matchingItem?.quantity || 0;
+    return (
+      <QuantityCartButton 
+        initialQuantity={quantityInCart}
+        maxQuantity={item.initialStock}
+        onQuantityChange={(increment) => handleQuantityChange(item, increment)}
+      />
+    )
+  };
+
   const handleQuantityChange = (item, increment) => {
     if (increment) {
       addToCart(item);
@@ -41,15 +58,19 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
     );
   };
 
+  const handleItemPress = (item) => {
+    setSelectedItem(item);
+    setModalVisible(true);
+  };
+
   const renderItem = ({ item }) => {
-    const shopCart = cartItems.find(cart => cart.shopId === item.shopId);
-    const matchingItem = shopCart?.items.find(i => i.id === item.id);
-    const quantityInCart = matchingItem?.quantity || 0;
+    console.log(`Item: ${JSON.stringify(item, null, 2)}`);
+    
 
     return (
     <TouchableOpacity 
       style={styles.card}
-      onPress={() => onItemPress && onItemPress(item)}
+      onPress={() => handleItemPress(item)}
     >
       <View style={styles.cardContent}>
         <View style={styles.productInfo}>
@@ -64,32 +85,43 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
           </View>
         </View>
         <View style={styles.buttonContainer}>
-          <QuantityCartButton 
-            initialQuantity={quantityInCart}
-            maxQuantity={item.initialStock}
-            onQuantityChange={(increment) => handleQuantityChange(item, increment)}
-          />
+          {QuantityButton(item)}
         </View>
       </View>
     </TouchableOpacity>
   )};
 
   return (
-    <FlatList
-      data={variants}
-      ListHeaderComponent={() => (
-        <View style={styles.listHeader}>
-          <Text style={styles.textListHeader}>Available Products</Text>
-        </View>
+    <>
+      <FlatList
+        data={variants}
+        ListHeaderComponent={() => (
+          <View style={styles.listHeader}>
+            <Text style={styles.textListHeader}>Available Products</Text>
+          </View>
+        )}
+        renderItem={renderItem}
+        contentContainerStyle={styles.list}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListEmptyComponent={() => (
+          <Text style={styles.empty}>No products available atm</Text>
+        )}
+        keyExtractor={(item) => item.id?.toString()}
+      />
+
+      {selectedItem && (
+        <ProductDetailsModal
+          item={selectedItem}
+          visible={modalVisible}
+          onClose={() => {
+            setModalVisible(false);
+            // Optionnel: ajouter un délai avant de réinitialiser l'élément sélectionné
+            setTimeout(() => setSelectedItem(null), 3000);
+          }}
+          quantityButton={QuantityButton(selectedItem)}
+        />
       )}
-      renderItem={renderItem}
-      contentContainerStyle={styles.list}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
-      ListEmptyComponent={() => (
-        <Text style={styles.empty}>No products available atm</Text>
-      )}
-      keyExtractor={(item) => item.id.toString()}
-    />
+    </>
   );
 }
 
