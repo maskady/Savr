@@ -11,6 +11,8 @@ import CheckoutScreen from "../screens/CheckoutScreen";
 import ShopScreen from "../screens/ShopScreen";
 
 import { CartContext } from "../contexts/CheckoutContext";
+import { AuthContext } from "../contexts/AuthContext";
+import CompanyListScreen from "../screens/CompanyListScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -19,6 +21,9 @@ const HomeTabs = () => {
   const navigation = useNavigation();
 
   const { addToCart, clearCart } = useContext(CartContext);
+  const { user } = useContext(AuthContext);
+
+  console.log("User roleId:", user?.roleId);
 
   useEffect(() => {
     const state = navigation.getState();
@@ -72,6 +77,8 @@ const HomeTabs = () => {
           else if (route.name === "Profile") iconName = "person";
           else if (route.name === "Checkout") iconName = "cart";
           else if (route.name === "My Shop") iconName = "storefront";
+          else if (route.name === "My Company") iconName = "business";
+
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -83,7 +90,15 @@ const HomeTabs = () => {
       })}
     >
       <Tab.Screen name="Home" component={MainScreen} />
-      <Tab.Screen name="My Shop" component={ShopScreen} initialParams={{shop: dummyShop}} />
+      { user?.roleId === 'shop' ? (
+        <Tab.Screen name="My Shop" component={ShopScreen} initialParams={{shop: dummyShop}} />
+      )
+      : user?.roleId === 'company' ? (
+        <Tab.Screen name="My Company" component={CompanyListScreen} initialParams={{from: 'home'}} />
+      )
+      : null
+      }
+
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Checkout" component={CheckoutScreen} />
     </Tab.Navigator>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Appearance } from 'react-native';
 import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';
 import getStyles from '../styles/CompanyStyles'; 
-import { useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { getToken } from '../utils/token';
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -12,6 +12,8 @@ const CompanyListScreen = () => {
   const [companyStyles, setCompanyStyles] = useState(getStyles());
   const navigation = useNavigation(); 
   const { user } = useContext(AuthContext); 
+  const route = useRoute();
+  const from = route.params?.from || null; 
 
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
@@ -32,68 +34,7 @@ const CompanyListScreen = () => {
 
   
   // State to hold the companies data - will be replaced with API data later
-  const [companies, setCompanies] = useState([
-    {
-      id: '1',
-      name: 'Tech Solutions Inc.',
-      address: '123 Innovation Street',
-      city: 'San Francisco, CA 94107'
-    },
-    {
-      id: '2',
-      name: 'Global Marketing Group',
-      address: '456 Business Avenue',
-      city: 'New York, NY 10001'
-    },
-    {
-      id: '3',
-      name: 'Green Energy Solutions',
-      address: '789 Eco Boulevard',
-      city: 'Austin, TX 78701'
-    },
-    {
-      id: '4',
-      name: 'Creative Designs Co.',
-      address: '321 Artist Lane',
-      city: 'Los Angeles, CA 90012'
-    },
-    {
-      id: '5',
-      name: 'Financial Advisory Partners',
-      address: '555 Investment Place',
-      city: 'Chicago, IL 60602'
-    },
-    {
-      id: '6',
-      name: 'Health & Wellness Corp.',
-      address: '888 Health Drive',
-      city: 'Miami, FL 33101'
-    },
-    {
-      id: '7',
-      name: 'Travel & Leisure Group',
-      address: '222 Adventure Road',
-      city: 'Seattle, WA 98101'
-    },
-    {
-      id: '8',
-      name: 'E-commerce Solutions Ltd.',
-      address: '111 Online Plaza',
-      city: 'Boston, MA 02108'
-    },
-    {
-      id: '9',
-      name: 'Real Estate Holdings LLC',
-      address: '777 Property Lane',
-      city: 'Denver, CO 80202'
-    },
-    {
-      id: '10',
-      name: 'Food & Beverage Innovations',
-      address: '999 Culinary Court',
-      city: 'Portland, OR 97201'
-    },
-  ]);
+  const [companies, setCompanies] = useState(null);
 
   const retrieveCompanies = async () => {
     let onlyMyCompanies = true;
@@ -116,6 +57,9 @@ const CompanyListScreen = () => {
 
       if (response.ok) {
         setCompanies(data.data);
+        if (from === 'home' && data.data.length < 2) {
+          navigation.navigate('ShopList', { company: data.data[0] });
+        }
       }
       else {
         console.error("Error fetching companies:", response);
@@ -142,6 +86,14 @@ const CompanyListScreen = () => {
     console.log('Open company with ID:', company);
     navigation.navigate('ShopList', { company });
   };
+
+  if (!companies) {
+    return (
+      <View style={companyStyles.loadingContainer}>
+        <Text style={[companyStyles.loadingText, { color: companyStyles.isDarkMode ? 'white' : 'black' }]}>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={companyStyles.safeArea}>
@@ -176,7 +128,7 @@ const CompanyListScreen = () => {
         }]}
         contentContainerStyle={companyStyles.contentContainer}
       >
-        {companies.length === 0 ? (
+        {companies?.length === 0 ? (
           <View style={companyStyles.emptyContainer}>
             <Text style={{ color: companyStyles.isDarkMode ? 'white' : 'black' }}>
               You don't have any companies yet. Tap the + button to add one.

@@ -78,6 +78,11 @@ const ShopListScreen = () => {
     navigation.navigate('ShopUpdate', { shop });
   };
 
+  const handleDetailShop = (shop) => {
+    console.log('Detail shop:', shop.name);
+    navigation.navigate('Shop', { shop });
+  };
+
   // Fonction pour obtenir l'image principale d'un shop
   const getPrimaryImage = (images) => {
     if (!images || images.length === 0) return null;
@@ -129,37 +134,38 @@ const ShopListScreen = () => {
           </View>
         ) : (
           shops.map((shop) => (
-            <View 
-              key={shop.id} 
-              style={[styles.companyCard, {
-                backgroundColor: styles.isDarkMode ? '#333' : 'white',
-                borderColor: styles.isDarkMode ? '#444' : '#eee',
-              }]}
-            >
-              <View style={styles.companyInfo}>
-                <Text style={[styles.companyName, {
-                  color: styles.isDarkMode ? 'white' : 'black',
-                }]}>{shop.name}</Text>
-                <Text style={[styles.companyAddress, {
-                  color: styles.isDarkMode ? '#bbb' : '#666',
-                }]}>{shop.address}</Text>
-                <Text style={[styles.companyCity, {
-                  color: styles.isDarkMode ? '#bbb' : '#666',
-                }]}>{shop.city}, {shop.postalCode}</Text>
-                {shop.primaryCategory && (
-                  <Text style={[styles.companyCity, {
-                    color: styles.isDarkMode ? '#8af' : '#36f',
-                    marginTop: 4,
-                  }]}>Category: {shop.primaryCategory}</Text>
-                )}
-              </View>
-              <TouchableOpacity 
-                style={styles.editButton}
-                onPress={() => handleEditShop(shop)}
+            <TouchableOpacity onPress={() => handleDetailShop(shop)} key={shop.id}>
+              <View 
+                style={[styles.companyCard, {
+                  backgroundColor: styles.isDarkMode ? '#333' : 'white',
+                  borderColor: styles.isDarkMode ? '#444' : '#eee',
+                }]}
               >
-                <Feather name="edit" size={20} color={styles.isDarkMode ? 'white' : 'black'} />
-              </TouchableOpacity>
-            </View>
+                <View style={styles.companyInfo}>
+                  <Text style={[styles.companyName, {
+                    color: styles.isDarkMode ? 'white' : 'black',
+                  }]}>{shop.name}</Text>
+                  <Text style={[styles.companyAddress, {
+                    color: styles.isDarkMode ? '#bbb' : '#666',
+                  }]}>{shop.address}</Text>
+                  <Text style={[styles.companyCity, {
+                    color: styles.isDarkMode ? '#bbb' : '#666',
+                  }]}>{shop.city}, {shop.postalCode}</Text>
+                  {shop.primaryCategory && (
+                    <Text style={[styles.companyCity, {
+                      color: styles.isDarkMode ? '#8af' : '#36f',
+                      marginTop: 4,
+                    }]}>Category: {shop.primaryCategory}</Text>
+                  )}
+                </View>
+                <TouchableOpacity 
+                  style={styles.editButton}
+                  onPress={() => handleEditShop(shop)}
+                >
+                  <Feather name="edit" size={20} color={styles.isDarkMode ? 'white' : 'black'} />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
           ))
         )}
       </ScrollView>
