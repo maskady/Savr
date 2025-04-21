@@ -69,7 +69,7 @@ const HomeTabs = () => {
           let iconName;
 
           if (route.name === "Home") iconName = "home";
-          else if (route.name === "Profile") iconName = "stats-chart";
+          else if (route.name === "Profile") iconName = "person";
           else if (route.name === "Checkout") iconName = "cart";
           else if (route.name === "My Shop") iconName = "storefront";
 
