@@ -12,7 +12,7 @@ const QuantityCartButton = ({ onQuantityChange, initialQuantity = 0, maxQuantity
       const newQuantity = 1;
       setQuantity(newQuantity);
       setIsInCart(true);
-      if (onQuantityChange) onQuantityChange(newQuantity, true);
+      if (onQuantityChange) onQuantityChange(true);
     }
   };
 
@@ -20,7 +20,7 @@ const QuantityCartButton = ({ onQuantityChange, initialQuantity = 0, maxQuantity
     if (quantity < maxQuantity) {
       const newQuantity = quantity + 1;
       setQuantity(newQuantity);
-      if (onQuantityChange) onQuantityChange(newQuantity, true);
+      if (onQuantityChange) onQuantityChange(true);
     }
   };
 
@@ -28,7 +28,7 @@ const QuantityCartButton = ({ onQuantityChange, initialQuantity = 0, maxQuantity
     if (quantity > 0) {
       const newQuantity = quantity - 1;
       setQuantity(newQuantity);
-      if (onQuantityChange) onQuantityChange(newQuantity, false);
+      if (onQuantityChange) onQuantityChange(false);
       
       // Si la quantité devient 0, retourner à l'état initial
       if (newQuantity === 0) {
