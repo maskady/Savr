@@ -1,18 +1,19 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, FlatList, useColorScheme } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StatusBar} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useCart } from '../contexts/CheckoutContext';
-import styles from '../styles/CheckoutScreenStyles';
 import OrderAndPay from '../components/OrderAndPay';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { STRIPE_PUBLISHABLE_KEY, STRIPE_MERCHANT_ID, STRIPE_URL_SCHEME } from '@env';
+import { SettingsContext } from '../contexts/SettingsContext';
+import getStyles from '../styles/CheckoutScreenStyles';
 
 const CheckoutScreen = () => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
   const navigation = useNavigation();
   const [paymentMethod, setPaymentMethod] = React.useState('card');
+  const { darkMode } = useContext(SettingsContext);
+  const [styles, setStyles] = useState(getStyles(darkMode));
   
   // Use the cart context
   const { 
@@ -51,16 +52,26 @@ const CheckoutScreen = () => {
     console.log('Payment error:', error);
     Alert.alert('Payment Error', error.message);
   };
+
+  useEffect(() => {
+    setStyles(getStyles(darkMode));
+  }, [darkMode]);
   
   if (!cartItems || cartItems.length === 0) {
     return (
-      <View style={[styles.container, isDark ? styles.darkContainer : styles.lightContainer]}>
-        <Text style={[styles.emptyText, isDark ? styles.darkText : styles.lightText]}>
-          You have no items in your cart at the moment.
-        </Text>
-      </View>
+      <>
+        <StatusBar
+          barStyle={styles.statusBar.barStyle}
+          backgroundColor={styles.statusBar.backgroundColor}
+        />
+        <View style={styles.container}>
+          <Text style={styles.emptyText}>
+            You have no items in your cart at the moment.
+          </Text>
+        </View>
+      </>
     );
-  }
+  }  
 
   // Render single product item
   const renderProductItem = (shopId, item, shopName, pickupTime) => {
@@ -68,22 +79,22 @@ const CheckoutScreen = () => {
     
     return (
 
-      <View key={shopId.toString() + item.id.toString()} style={[styles.productCard, isDark ? styles.darkCard : styles.lightCard]}>
+      <View key={shopId.toString() + item.id.toString()} style={styles.productCard}>
         <View style={styles.productInfo}>
           <View style={styles.productTextContainer}>
-            <Text style={[styles.productName, isDark ? styles.darkText : styles.lightText]}>
+            <Text style={styles.productName}>
               {item.name}
             </Text>
-            <Text style={[styles.shopName, isDark ? styles.darkSubtext : styles.lightSubtext]}>
+            <Text style={styles.shopName}>
               {shopName}
             </Text>
-            <Text style={[styles.pickupTime, isDark ? styles.darkSubtext : styles.lightSubtext]}>
+            <Text style={styles.pickupTime}>
               Pick up: {pickupTime}
             </Text>
           </View>
 
           <View style={styles.priceContainer}>
-            <Text style={[styles.discountPrice, isDark ? styles.darkText : styles.lightText]}>
+            <Text style={styles.discountPrice}>
               {item.price?.toFixed(2)} €
             </Text>
             <Text style={styles.originalPrice}>
@@ -94,26 +105,26 @@ const CheckoutScreen = () => {
         
         {/* Quantity */}
         <View style={styles.quantitySelector}>
-          <Text style={[styles.quantityLabel, isDark ? styles.darkText : styles.lightText]}>
+          <Text style={styles.quantityLabel}>
             Quantity:
           </Text>
           <View style={styles.quantityControls}>
             <TouchableOpacity 
-              style={[styles.quantityButton, isDark ? styles.darkButton : styles.lightButton]} 
+              style={styles.quantityButton} 
               onPress={() => handleQuantityChange(shopId, item, -1)}
             >
-              <Text style={[styles.quantityButtonText, styles.quantityButtonTextDark]}>-</Text>
+              <Text style={styles.quantityButtonText}>-</Text>
             </TouchableOpacity>
             
-            <Text style={[styles.quantityValue, isDark ? styles.darkText : styles.lightText]}>
+            <Text style={styles.quantityValue}>
               {quantity}
             </Text>
             
             <TouchableOpacity 
-              style={[styles.quantityButton, isDark ? styles.darkButton : styles.lightButton]} 
+              style={styles.quantityButton} 
               onPress={() => handleQuantityChange(shopId, item, 1)}
             >
-              <Text style={[styles.quantityButtonText, styles.quantityButtonTextDark]}>+</Text>
+              <Text style={styles.quantityButtonText}>+</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -123,7 +134,7 @@ const CheckoutScreen = () => {
 
   return (
 
-    <View style={[styles.container, isDark ? styles.darkContainer : styles.lightContainer]}>
+    <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
         {/* Header */}
         <View style={styles.header}>
@@ -131,16 +142,16 @@ const CheckoutScreen = () => {
             style={styles.backButton} 
             onPress={() => navigation.goBack()}
           >
-            <FontAwesome name="arrow-left" size={20} color={isDark ? "#fff" : "#333"} />
+            <FontAwesome name="arrow-left" size={20} color={darkMode ? "#fff" : "#333"} />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, isDark ? styles.darkText : styles.lightText]}>
+          <Text style={styles.headerTitle}>
             Checkout
           </Text>
         </View>
         
         {/* Products List */}
         <View style={styles.productsList}>
-          <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText, styles.itemsHeader]}>
+          <Text style={styles.sectionTitle}>
             Your Items ({itemCount})
           </Text>
           
@@ -150,7 +161,7 @@ const CheckoutScreen = () => {
         </View>
 
         {/* Summary */}
-        <View style={[styles.section, isDark ? styles.darkCard : styles.lightCard]}>
+        <View style={styles.section}>
 
           {/* <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText]}>
             Summary
@@ -186,10 +197,10 @@ const CheckoutScreen = () => {
           {/* <View style={styles.divider} /> */}
           
           <View style={styles.totalRow}>
-            <Text style={[styles.totalLabel, isDark ? styles.darkText : styles.lightText]}>
+            <Text style={styles.totalLabel}>
               Total
             </Text>
-            <Text style={[styles.totalValue, isDark ? styles.darkText : styles.lightText]}>
+            <Text style={styles.totalValue}>
               {total?.toFixed(2)} €
             </Text>
           </View>
