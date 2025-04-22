@@ -36,7 +36,7 @@ const HomeTabs = () => {
     if (user?.roleId === "shop") {
       fetchMyShop();
     }
-  }, [navigation, user?.roleId]);
+  }, [user?.roleId]);
 
   
 

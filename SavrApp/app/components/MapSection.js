@@ -207,10 +207,10 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
           onRegionChange && onRegionChange(newRegion);
         }}
         showsUserLocation={true}
-        followsUserLocation={true}
+        followsUserLocation={false} // If true, region will be updated to user's location - user cannot move on map
         showsCompass={true}
         showsMyLocationButton={false} // Disable default button, we'll use our own
-        showsBuildings={true}
+        showsBuildings={false}
         showsScale={true}
         userLocationUpdateInterval={30000} // Update user location every 30 seconds - Andorid specific, iOS uses the default
         userLocationFastestInterval={10000} // Fastest interval to receive updates - Android specific, iOS uses the default
