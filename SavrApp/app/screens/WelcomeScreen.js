@@ -8,20 +8,21 @@ import {
   StatusBar,
   Image,
   Platform,
-  Appearance,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { checkUserExists } from "../utils/authApi";
 import { useTranslation, Trans } from 'react-i18next';
 import getStyles from "../styles/AuthStyles";
+import { SettingsContext } from "../contexts/SettingsContext";
 
 const WelcomeScreen = () => {
   const [email, setEmail] = useState("");
   const { t } = useTranslation();
   const navigation = useNavigation();
   
-  const [styles, setStyles] = useState(getStyles());
+  const { darkMode } = useContext(SettingsContext);
+  const [styles, setStyles] = useState(getStyles(darkMode));
   
   const inputAccessoryWelcomeEmail = "inputAccessoryWelcomeEmail";
 
@@ -59,14 +60,8 @@ const WelcomeScreen = () => {
   };
 
   useEffect(() => {
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setStyles(getStyles());  
-    });
-  
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+    setStyles(getStyles(darkMode));
+  }, [darkMode]);
 
   return (
     <SafeAreaView style={styles.flexContainer}>

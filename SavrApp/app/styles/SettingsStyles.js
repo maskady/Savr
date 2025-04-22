@@ -1,9 +1,19 @@
-import { StyleSheet, Appearance } from "react-native";
-import { Colors } from "./Common";
+import { StyleSheet } from "react-native";
+import { COLORS } from "../constants/colors";
 
-const getStyles = () => {
-  const theme = Appearance.getColorScheme();
-  const isDarkMode = theme === "dark";
+const getStyles = (darkMode) => {
+  // Définition du thème basé sur le paramètre darkMode
+  const theme = {
+    background: darkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+    text: darkMode ? COLORS.textDark : COLORS.textLight,
+    border: darkMode ? COLORS.borderDark : COLORS.borderLight,
+    inputBackground: darkMode ? COLORS.grey800 : COLORS.surface,
+    placeholder: darkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
+    primary: darkMode ? COLORS.primaryDark : COLORS.primaryLight,
+    overlay: darkMode ? COLORS.overlayDark : COLORS.overlayLight,
+    disabled: COLORS.disabled,
+    error: COLORS.error,
+  };
 
   return StyleSheet.create({
     passwordInput: {
@@ -11,39 +21,39 @@ const getStyles = () => {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      borderColor: isDarkMode ? "#444" : "#ddd",
-      backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
+      borderColor: theme.border,
+      backgroundColor: theme.inputBackground,
     },
     eyeIconContainer: {
       padding: 10,
       minWidth: 45,
     },
     eyeIcon: {
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: theme.text,
       size: 20,
     },
     backIcon: {
       size: 24,
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: theme.text,
     },  
     loaderContainer: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
+      backgroundColor: theme.background,
     },
     loader: {
-      color: "#0000ff",
+      color: COLORS.info,
     },
     safeArea: {
       flex: 1,
-      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
+      backgroundColor: theme.background,
     },
     settingsGlobalContainer: {
       flex: 1,
       justifyContent: "space-around",
       alignItems: "center",
-      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
+      backgroundColor: theme.background,
     },
     titleContainer: {
       flexDirection: "row",
@@ -51,7 +61,7 @@ const getStyles = () => {
       justifyContent: "center",
     },
     gearIcon: {
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: theme.text,
       size: 24,
       marginRight: 20,
       marginLeft: 10,
@@ -59,7 +69,7 @@ const getStyles = () => {
     settingsTitle: {
       fontSize: 20,
       fontWeight: "bold",
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: theme.text,
     },
     settingsFormContainer: {
       width: "100%",
@@ -73,10 +83,10 @@ const getStyles = () => {
       marginBottom: 20,
       fontSize: 14,
       fontFamily: "PoppinsRegular",
-      borderColor: isDarkMode ? "#444" : "#ddd",
-      backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
-      color: isDarkMode ? Colors.White : Colors.Black,
-      placeholderTextColor: isDarkMode ? Colors.lightGrey : Colors.darkGrey,
+      borderColor: theme.border,
+      backgroundColor: theme.inputBackground,
+      color: theme.text,
+      placeholderTextColor: theme.placeholder,
     },
     editableInputContainer: {
       flexDirection: "row",
@@ -85,9 +95,9 @@ const getStyles = () => {
     },
     editableInput: {
       width: "80%",
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: theme.text,
       fontSize: 14,
-      placeholderTextColor: isDarkMode ? Colors.lightGrey : Colors.darkGrey,
+      placeholderTextColor: theme.placeholder,
     },
     editIconContainer: {
       padding: 10,
@@ -95,7 +105,7 @@ const getStyles = () => {
       minWidth: 45,
     },
     editIcon: {
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: theme.text,
       size: 20,
     },
     editablePasswordContainer: {
@@ -109,30 +119,30 @@ const getStyles = () => {
     },
     cancelButton: {
       width: "45%",
-      borderColor: Colors.classicGrey,
-      backgroundColor: Colors.classicGrey,
-      color: Colors.White,
+      borderColor: COLORS.grey500,
+      backgroundColor: COLORS.grey500,
+      color: COLORS.textDark,
     },
     cancelButtonText: {
       width: "100%",
       height: 50,
       textAlign: "center",
       textAlignVertical: "center",
-      color: Colors.White,
+      color: COLORS.textDark,
       fontSize: 16,
       fontWeight: "bold",
     },
     submitButton: {
       width: "45%",
-      backgroundColor: Colors.White,
-      color: isDarkMode ? Colors.White : Colors.Black,
+      backgroundColor: theme.primary,
+      color: theme.text,
     },
     submitButtonText: {
       width: "100%",
       height: 50,
       textAlign: "center",
       textAlignVertical: "center",
-      color: Colors.Black,
+      color: darkMode ? COLORS.textLight : COLORS.textDark,
       fontSize: 16,
       fontWeight: "bold",
     },
@@ -150,16 +160,16 @@ const getStyles = () => {
     },
     privacyPolicyIcon: {
       size: 20,
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: theme.text,
     },
     privacyPolicyText: {
       fontSize: 16,
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: theme.text,
       textDecorationLine: 'underline',
       marginLeft: 8,
     },
     button: {
-      backgroundColor: "#ff4d4d",
+      backgroundColor: COLORS.error,
       paddingVertical: 12,
       paddingHorizontal: 20,
       borderRadius: 8,
@@ -167,7 +177,7 @@ const getStyles = () => {
       marginVertical: 10,
     },
     buttonText: {
-      color: "#fff",
+      color: COLORS.textDark,
       fontSize: 16,
       fontWeight: "600",
     },
@@ -183,20 +193,20 @@ const getStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      borderColor: isDarkMode ? '#444' : '#ddd',
-      backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
+      borderColor: theme.border,
+      backgroundColor: theme.inputBackground,
     },
     selectedText: {
       fontSize: 14,
       fontFamily: 'PoppinsRegular',
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: theme.text,
     },
     dropdownList: {
       marginTop: 5,
       borderWidth: 1,
       borderRadius: 8,
-      borderColor: isDarkMode ? '#444' : '#ddd',
-      backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
+      borderColor: theme.border,
+      backgroundColor: theme.inputBackground,
       maxHeight: 150,
       overflow: 'hidden',
     },
@@ -207,10 +217,10 @@ const getStyles = () => {
     itemText: {
       fontSize: 14,
       fontFamily: 'PoppinsRegular',
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: theme.text,
     },
     logoutButton: {
-      backgroundColor: "#ff4d4d",
+      backgroundColor: COLORS.error,
       paddingVertical: 12,
       paddingHorizontal: 20,
       borderRadius: 8,
@@ -218,13 +228,13 @@ const getStyles = () => {
       marginVertical: 10,
     },
     logoutButtonText: {
-      color: "#fff",
+      color: COLORS.textDark,
       fontSize: 18,
       fontWeight: "bold",
     },
     statusBar: {
-      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
-      barStyle: isDarkMode ? "light-content" : "dark-content",
+      backgroundColor: theme.background,
+      barStyle: darkMode ? "light-content" : "dark-content",
     },
     settingsDropDown: {
       container: {
@@ -232,7 +242,7 @@ const getStyles = () => {
         zIndex: 1000,
         width: 40, 
         paddingLeft: 15,
-        color: isDarkMode ? Colors.White : Colors.Black,
+        color: theme.text,
       },
       gearButton: {
         width: 40,
@@ -244,7 +254,7 @@ const getStyles = () => {
       },
       plusIcon: {
         fontSize: 24,
-        color: isDarkMode ? Colors.White : Colors.Black,
+        color: theme.text,
         fontWeight: 'bold',
       },
       dropdownMenu: {
@@ -252,9 +262,9 @@ const getStyles = () => {
         top: 45,
         right: -15,
         width: 200, 
-        backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
+        backgroundColor: theme.inputBackground,
         borderWidth: 1,
-        borderColor: isDarkMode ? Colors.darkGrey : Colors.lightGrey,
+        borderColor: theme.border,
         borderRadius: 5,
         overflow: 'hidden',
         zIndex: 1001,
@@ -263,11 +273,11 @@ const getStyles = () => {
       option: {
         padding: 12,
         borderBottomWidth: 1,
-        borderBottomColor: isDarkMode ? Colors.darkGrey : Colors.lightGrey,
+        borderBottomColor: theme.border,
       },
       optionText: {
         fontSize: 14,
-        color: isDarkMode ? Colors.White : Colors.Black,
+        color: theme.text,
       },
       overlay: {
         position: 'absolute',
@@ -279,7 +289,7 @@ const getStyles = () => {
       },
       settingsIcon: {
         size: 24,
-        color: isDarkMode ? Colors.White : Colors.Black,
+        color: theme.text,
       }
     }
   });

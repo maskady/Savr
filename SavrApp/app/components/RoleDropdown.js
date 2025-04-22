@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Appearance } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; // pour une icône de flèche
-import getStyles from '../styles/SettingsStyles';
+import getStyles from '../styles/AppStyles';
 
 const whichRoles = (highestRole) => {
   if (highestRole === 'admin') {
@@ -18,9 +18,14 @@ const whichRoles = (highestRole) => {
 
 export default function RoleDropdown({ selectedRole, onSelectRole, highestRole }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [styles, setStyles] = useState(getStyles());
   const [roles, setRoles] = useState([]);
 
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   const toggleDropdown = () => setIsOpen(prev => !prev);
   const handleSelect = (role) => {
     onSelectRole(role);
@@ -50,29 +55,29 @@ export default function RoleDropdown({ selectedRole, onSelectRole, highestRole }
   }, []);
 
   return (
-    <View style={[styles.dropdownContainer, roles[0] === 'user' ? { display: 'none' } : {}]}>
-      <TouchableOpacity style={styles.dropdownHeader} onPress={toggleDropdown}>
-        <Text style={styles.selectedText}>
+    <View style={[styles.roleDropdown.container, roles[0] === 'user' ? { display: 'none' } : {}]}>
+      <TouchableOpacity style={styles.roleDropdown.header} onPress={toggleDropdown}>
+        <Text style={styles.roleDropdown.selectedText}>
           {selectedRole || 'Sélectionner un rôle'}
         </Text>
         <MaterialIcons
           name={isOpen ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
           size={24}
-          color={styles.isDarkMode ? '#fff' : '#000'}
+          color={styles.roleDropdown.icon.color}
         />
       </TouchableOpacity>
 
       {isOpen && (
-        <View style={styles.dropdownList}>
+        <View style={styles.roleDropdown.list}>
           <FlatList
             data={roles}
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={styles.dropdownItem}
+                style={styles.roleDropdown.item}
                 onPress={() => handleSelect(item)}
               >
-                <Text style={styles.itemText}>{item}</Text>
+                <Text style={styles.roleDropdown.itemText}>{item}</Text>
               </TouchableOpacity>
             )}
           />

@@ -1,37 +1,25 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, Appearance } from 'react-native';
+import getStyles from '../styles/AppStyles';
 import MapView, { Marker } from 'react-native-maps';
 
 import supercluster from "supercluster";
 
-const StyleMarker = StyleSheet.create({
-    container: {
-        flexDirection: "column",
-        alignSelf: "flex-start"
-    },
-    bubble: {
-        flex: 0,
-        flexDirection: "row",
-        alignSelf: "flex-start",
-        backgroundColor: "#ffbbbb",
-        padding: 4,
-        borderRadius: 4,
-        borderColor: "#ffbbbb",
-        borderWidth: 1
-    },
-    count: {
-        color: "#fff",
-        fontSize: 13
-    }
-});
-
-const ClusterMarker = ({ count }) => (
-    <View style={StyleMarker.container}>
-        <View style={StyleMarker.bubble}>
-            <Text style={StyleMarker.count}>{count}</Text>
+const ClusterMarker = ({ count }) => {
+    const [styles, setStyles] = useState(getStyles());
+    useEffect(() => {
+      const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+      return () => sub.remove();
+    }, []);
+    
+    return (
+        <View style={styles.mapDemo.markerContainer}>
+            <View style={styles.mapDemo.markerBubble}>
+                <Text style={styles.mapDemo.markerCount}>{count}</Text>
+            </View>
         </View>
-    </View>
-);
+    );
+};
 
 function getZoomLevel(longitudeDelta) {
     const angle = longitudeDelta;
@@ -69,17 +57,6 @@ export function getCluster(places, region) {
         cluster
     };
 }
-const Style = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFill
-  }
-});
 
 const INITIAL_POSITION = {
   latitude: 41.924447,
@@ -97,6 +74,7 @@ const COORDS = [
 ];
 
 export default function MapDemo (){
+    const styles = getStyles();
     const [region, setRegion] = useState(INITIAL_POSITION);
 
     const renderMarker = (marker, index) => {
@@ -128,29 +106,23 @@ export default function MapDemo (){
         );
     };
 
+    const allCoords = COORDS.map(c => ({
+        geometry: {
+            coordinates: [c.lon, c.lat]
+        }
+    }));
 
-        
+    const cluster = getCluster(allCoords, region);
 
-        const allCoords = COORDS.map(c => ({
-            geometry: {
-                coordinates: [c.lon, c.lat]
-            }
-        }));
-
-        const cluster = getCluster(allCoords, region);
-
-        return (
-
-                <MapView
-                    style={Style.map}
-                    loadingIndicatorColor={"#ffbbbb"}
-                    loadingBackgroundColor={"#ffbbbb"}
-                    region={region}
-                    onRegionChangeComplete={region => setRegion(region)}
-                >
-                    {cluster.markers.map((marker, index) => renderMarker(marker, index))}
-                </MapView>
-
-        );
-
+    return (
+        <MapView
+            style={styles.mapDemo.map}
+            loadingIndicatorColor={"#ffbbbb"}
+            loadingBackgroundColor={"#ffbbbb"}
+            region={region}
+            onRegionChangeComplete={region => setRegion(region)}
+        >
+            {cluster.markers.map((marker, index) => renderMarker(marker, index))}
+        </MapView>
+    );
 }

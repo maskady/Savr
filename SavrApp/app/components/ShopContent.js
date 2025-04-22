@@ -1,6 +1,7 @@
 // components/ShopContent.js
-import React, {useState, useEffect} from 'react';
-import { Alert, View, Text, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import { Alert, View, Text, FlatList, ActivityIndicator, TouchableOpacity, Appearance } from 'react-native';
+import getStyles from '../styles/AppStyles';
 import ImageManager from './ImageManager'; // adjust path
 import { getAvailableProductVariantsForShop } from '../utils/api';
 import ShopInfoSection from './ShopInfoSection';
@@ -10,9 +11,15 @@ import ShopMapSection from './ShopMapSection';
 import ShopProductList from './ShopProductList';
 
 export default function ShopContent({
-  shop, variants, setVariants, loading, setLoading, error, setError, editMode, colors, primaryCategoryName,
+  shop, variants, setVariants, loading, setLoading, error, setError, editMode, primaryCategoryName,
   user, onCall, onNavigate, onInputChange, onImagesChange, onImagePress
 }) {
+
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -47,21 +54,21 @@ export default function ShopContent({
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color={colors.primary}/>
-        <Text style={{ color:colors.text, marginTop:12 }}>Loading shop details…</Text>
+      <View style={styles.shopContent.center}>
+        <ActivityIndicator style={styles.shopContent.loadingIndicator}/>
+        <Text style={[styles.shopContent.loadingText]}>Loading shop details…</Text>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.center}>
-        <Text style={{ color:colors.text }}>
+      <View style={styles.shopContent.center}>
+        <Text style={[styles.shopContent.errorText]}>
           {error instanceof Error ? error.message : String(error)}
         </Text>
-        <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]} onPress={onNavigate}>
-          <Text style={styles.buttonText}>Go Back</Text>
+        <TouchableOpacity style={[styles.shopContent.button]} onPress={onNavigate}>
+          <Text style={styles.shopContent.buttonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -79,14 +86,13 @@ export default function ShopContent({
             onImagesChange={onImagesChange}
             onImagePress={onImagePress}
           />
-          <View style={{padding:16}}>
+          <View style={styles.shopContent.containerPadding}>
 
             <ShopInfoSection
               shop={shop}
               setVariants={setVariants}
               variants
               editMode={editMode}
-              colors={colors}
               primaryCategoryName={primaryCategoryName}
               user={user}
               onInputChange={onInputChange}
@@ -103,7 +109,6 @@ export default function ShopContent({
               description={shop.description}
               editMode={editMode}
               onChange={text => onInputChange('description', text)}
-              colors={colors}
             />
 
             <ContactSection
@@ -112,7 +117,6 @@ export default function ShopContent({
               onCall={onCall}
               onNavigate={onNavigate}
               onInputChange={onInputChange}
-              colors={colors}
             />
 
             <ShopMapSection
@@ -120,7 +124,6 @@ export default function ShopContent({
               longitude={shop.longitude}
               name={shop.name}
               onNavigate={onNavigate}
-              colors={colors}
             />
           </View>
         </>
@@ -130,9 +133,3 @@ export default function ShopContent({
     />
   );
 }
-
-const styles = StyleSheet.create({
-  center: { flex:1, justifyContent:'center', alignItems:'center', padding:20 },
-  button: { padding:12, borderRadius:8, marginTop:16 },
-  buttonText: { color:'#fff', fontWeight:'bold' },
-});

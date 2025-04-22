@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
   View, 
   ScrollView, 
@@ -8,34 +8,23 @@ import {
   Appearance,
   Alert,
   Image,
-  Platform,
-  ActivityIndicator
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import getStyles from '../styles/NewCompanyStyles'; 
+import getStyles from '../styles/CompanyShopStyles'; 
 import { getToken } from '../utils/token';
 import { Ionicons, FontAwesome6 } from '@expo/vector-icons';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const CompanyUpdateScreen = ({ route, navigation }) => {
   const [company, setCompany] = useState(route.params.company);
-  const [styles, setStyles] = useState(getStyles());
+  const { darkMode } = useContext(SettingsContext);
+  const [styles, setStyles] = useState(getStyles(darkMode));
   
   const [errors, setErrors] = useState({});
   
   useEffect(() => {
-    const handleThemeChange = ({ colorScheme }) => {
-      console.log("Theme changed:", colorScheme);
-      if (colorScheme) {
-        setStyles(getStyles());
-      }
-    };
-    
-    const subscription = Appearance.addChangeListener(handleThemeChange);
-    
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+    setStyles(getStyles(darkMode));
+  }, [darkMode]);
   
   const validateForm = () => {
     let tempErrors = {};
@@ -186,7 +175,7 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome6 name="arrow-left" size={24} color={Appearance.getColorScheme() === 'dark' ? '#FFFFFF' : '#000000'} />
+          <FontAwesome6 name="arrow-left" size={24} color={darkMode ? 'white' : 'black'} />
         </TouchableOpacity>
         <Text style={styles.title}>Update Company</Text>
         <Ionicons name="trash" size={24} color="red" onPress={handleDeleteCompany} />
@@ -199,7 +188,7 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
           value={company.name}
           onChangeText={(text) => handleInputChange('name', text)}
           placeholder="Name of the company"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
         {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
       </View>
@@ -211,7 +200,7 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
           value={company.description}
           onChangeText={(text) => handleInputChange('description', text)}
           placeholder="Description of the company"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           multiline
           numberOfLines={4}
         />
@@ -224,7 +213,7 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
           value={company.address}
           onChangeText={(text) => handleInputChange('address', text)}
           placeholder="Address"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
       </View>
       
@@ -236,7 +225,7 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
             value={company.postalCode}
             onChangeText={(text) => handleInputChange('postalCode', text)}
             placeholder="ZIP Code"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            placeholderTextColor={styles.input.placeholderTextColor}
           />
         </View>
         
@@ -247,7 +236,7 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
             value={company.city}
             onChangeText={(text) => handleInputChange('city', text)}
             placeholder="City"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            placeholderTextColor={styles.input.placeholderTextColor}
           />
         </View>
       </View>
@@ -259,7 +248,7 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
           value={company.country}
           onChangeText={(text) => handleInputChange('country', text)}
           placeholder="Country"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
       </View>
       
@@ -270,7 +259,7 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
           value={company.phone}
           onChangeText={(text) => handleInputChange('phone', text)}
           placeholder="+1234567890"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           keyboardType="phone-pad"
         />
         {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
@@ -283,7 +272,7 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
           value={company.email}
           onChangeText={(text) => handleInputChange('email', text)}
           placeholder="email@example.com"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           keyboardType="email-address"
           autoCapitalize="none"
         />

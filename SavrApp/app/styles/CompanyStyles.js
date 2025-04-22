@@ -1,15 +1,25 @@
-import { StyleSheet, Appearance } from "react-native";
-import { Colors } from "./Common";
+import { StyleSheet } from "react-native";
+import { COLORS } from "../constants/colors";
 
-const getStyles = () => {
-  const theme = Appearance.getColorScheme();
-  const isDarkMode = theme === "dark";
+const getStyles = (darkMode) => {
+
+  const themeColors = {
+    background: darkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+    text: darkMode ? COLORS.textDark : COLORS.textLight,
+    border: darkMode ? COLORS.borderDark : COLORS.borderLight,
+    shadow: darkMode ? COLORS.overlayDark : COLORS.overlayLight,
+    card: darkMode ? COLORS.grey800 : COLORS.surface,
+    addButton: darkMode ? COLORS.primaryLight : COLORS.primaryDark,
+  };
 
   return StyleSheet.create({
-    isDarkMode: isDarkMode,
+    statusBar: {
+      backgroundColor: themeColors.background,
+      barStyle: darkMode ? 'light-content' : 'dark-content',
+    },
     safeArea: {
       flex: 1,
-      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
+      backgroundColor: themeColors.background,
     },
     header: {
       flexDirection: 'row',
@@ -18,18 +28,22 @@ const getStyles = () => {
       paddingHorizontal: 20,
       paddingVertical: 15,
       borderBottomWidth: 1,
+      borderBottomColor: themeColors.border,
+      backgroundColor: themeColors.background,
     },
     headerTitle: {
       fontSize: 22,
       fontWeight: 'bold',
+      color: themeColors.text,
     },
     addButton: {
-      backgroundColor: '#000',
+      backgroundColor: themeColors.addButton,
       borderRadius: 50,
       width: 40,
       height: 40,
       justifyContent: 'center',
       alignItems: 'center',
+      color: themeColors.addButton,
     },
     scrollContainer: {
       flex: 1,
@@ -45,7 +59,9 @@ const getStyles = () => {
       padding: 16,
       marginBottom: 12,
       borderWidth: 1,
-      shadowColor: '#000',
+      borderColor: themeColors.border,
+      backgroundColor: themeColors.card,
+      shadowColor: themeColors.shadow,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
@@ -58,13 +74,16 @@ const getStyles = () => {
       fontSize: 16,
       fontWeight: 'bold',
       marginBottom: 4,
+      color: themeColors.text,
     },
     companyAddress: {
       fontSize: 14,
       marginBottom: 2,
+      color: themeColors.text,
     },
     companyCity: {
       fontSize: 14,
+      color: themeColors.text,
     },
     editButton: {
       padding: 8,
@@ -76,6 +95,6 @@ const getStyles = () => {
       paddingTop: 50,
     },
   });
-}
+};
 
 export default getStyles;

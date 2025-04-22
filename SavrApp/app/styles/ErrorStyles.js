@@ -1,40 +1,52 @@
 import { StyleSheet } from 'react-native';
+import { COLORS } from "../constants/colors";
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    padding: 20,
-  },
-  image: {
-    width: 200,
-    height: 200,
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  message: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: '#4A90E2',
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 25,
-  },
-  buttonText: {
-    color: '#FFF',
-    fontSize: 16,
-  },
-});
+const getStyles = (darkMode) => {
 
-export default styles;
+  const themeColors = {
+    background: darkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+    text: darkMode ? COLORS.textDark : COLORS.textLight,
+    subText: darkMode ? COLORS.grey300 : COLORS.grey600,
+    buttonBackground: darkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+    buttonText: darkMode ? COLORS.textDark : COLORS.textLight,
+  };
+
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: themeColors.background,
+      padding: 20,
+    },
+    image: {
+      width: 200,
+      height: 200,
+      marginBottom: 30,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: themeColors.text,
+      marginBottom: 10,
+    },
+    message: {
+      fontSize: 16,
+      color: themeColors.subText,
+      textAlign: 'center',
+      marginBottom: 20,
+    },
+    button: {
+      backgroundColor: themeColors.buttonBackground,
+      paddingVertical: 12,
+      paddingHorizontal: 25,
+      borderRadius: 25,
+    },
+    buttonText: {
+      color: themeColors.buttonText,
+      fontSize: 16,
+    },
+  });
+};
+
+export default getStyles;

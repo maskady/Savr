@@ -8,6 +8,7 @@ import getStyles from "../styles/SettingsStyles";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
 import { saveUserData } from "../utils/api";
 import { AuthContext } from "../contexts/AuthContext";
+import { SettingsContext } from "../contexts/SettingsContext";
 
 const SettingsScreen = () => {
   const [firstName, setFirstName] = useState("");
@@ -22,6 +23,7 @@ const SettingsScreen = () => {
   const [editableEmail, setEditableEmail] = useState(false);
   const [editablePassword, setEditablePassword] = useState(false);
 
+  const { darkMode } = useContext(SettingsContext);
   const [styles, setStyles] = useState(getStyles());
 
   const [showActualPassword, setShowActualPassword] = useState(false);
@@ -91,21 +93,9 @@ const SettingsScreen = () => {
     setLastName(user.lastName);
     setEmail(user.email);
 
-    const handleThemeChange = ({ colorScheme }) => {
-      console.log("Theme changed:", colorScheme);
-      if (colorScheme) {
-        setStyles(getStyles());
-      }
-    };
+    setStyles(getStyles(darkMode));
 
-    
-    const subscription = Appearance.addChangeListener(handleThemeChange);
-
-    return () => {
-      subscription.remove();
-    };
-
-  }, []);
+  }, [darkMode]);
 
   if (!user) {
     return (

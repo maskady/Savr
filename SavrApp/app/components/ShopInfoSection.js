@@ -1,77 +1,79 @@
 // components/ShopInfoSection.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  Modal,
-  StyleSheet
+  Appearance
 } from 'react-native';
 import { Star } from 'lucide-react-native';
-import { businessCategories } from '../constants/businessCategories';
 import { useNavigation } from '@react-navigation/native';
 import CategoryDropdown from './CategoryDropdown';
+import getStyles from '../styles/AppStyles';
+import { COLORS } from '../constants/colors';
 
 export default function ShopInfoSection({
   shop,
   setVariants,
   editMode,
-  colors,
   primaryCategoryName,
   user,
   onInputChange
 }) {
-
   const navigation = useNavigation();
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.shopInfoSection.container}>
       {editMode === 'view' ? (
         <>
-          <Text style={[styles.name, { color: colors.text }]}>
+          <Text style={styles.shopInfoSection.name}>
             {shop.name}
           </Text>
           {shop.rating != null && (
-            <View style={styles.ratingRow}>
+            <View style={styles.shopInfoSection.ratingRow}>
               {[1,2,3,4,5].map(i => (
                 <Star
                   key={i}
                   size={16}
-                  fill={i <= Math.round(shop.rating) ? colors.primary : 'none'}
-                  color={i <= Math.round(shop.rating) ? colors.primary : colors.subtext}
+                  fill={i <= Math.round(shop.rating) ? styles.shopInfoSection.starIcon.fillColorTrue : styles.shopInfoSection.starIcon.fillColorFalse}
+                  color={i <= Math.round(shop.rating) ? styles.shopInfoSection.starIcon.colorTrue : styles.shopInfoSection.starIcon.colorFalse}
                 />
               ))}
-              <Text style={[styles.ratingText, { color: colors.subtext }]}>
+              <Text style={styles.shopInfoSection.ratingText}>
                 {shop.rating.toFixed(1)} ({shop.ratings || 0})
               </Text>
             </View>
           )}
           {primaryCategoryName && (
-            <Text style={[styles.category, { color: colors.subtext }]}>
+            <Text style={styles.shopInfoSection.category}>
               {primaryCategoryName}
             </Text>
           )}
           {/* If roleId >= 'shop' then show "Post New Product" Button*/}
           {user?.roleId != 'user' && ( 
               <TouchableOpacity
-                style={[styles.postButton, { backgroundColor: colors.primary }]}
+                style={styles.shopInfoSection.postButton}
                 onPress={() => navigation.navigate('PostProduct', { shop: shop, setVariants: setVariants })}
                 >
-                <Text style={styles.buttonText}>Post New Product</Text>
+                <Text style={styles.shopInfoSection.postButtonText}>Post New Product</Text>
               </TouchableOpacity>
             )}
         </>
       ) : (
         <>
           <TextInput
-            style={[styles.nameInput, { borderColor: colors.border, color: colors.text }]}
+            style={styles.shopInfoSection.nameInput}
             value={shop.name}
             onChangeText={text => onInputChange('name', text)}
             placeholder="Shop Name"
-            placeholderTextColor={colors.subtext}
           />
-          <Text style={[styles.label, { color: colors.subtext }]}>
+          <Text style={styles.shopInfoSection.label}>
             Shop Name (displayed to customers)
           </Text>
 
@@ -81,47 +83,3 @@ export default function ShopInfoSection({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { marginBottom: 24,  },
-  name: { fontSize: 24, fontWeight: 'bold', marginBottom: 8 },
-  ratingRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  ratingText: { marginLeft: 8, fontSize: 14 },
-  category: { fontSize: 16, marginBottom: 16 },
-  postButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignSelf: 'flex-start'
-  },
-  postText: { color: '#fff', fontWeight: 'bold' },
-  nameInput: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 8
-  },
-  label: { fontSize: 12, marginTop: 4, marginBottom: 12 },
-  dropdownTrigger: {
-    padding: 12,
-    borderWidth: 1,
-    borderRadius: 4
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  dropdownMenu: {
-    backgroundColor: '#fff',
-    width: 250,
-    borderRadius: 4,
-    maxHeight: 300
-  },
-  dropdownItem: {
-    paddingVertical: 8,
-    paddingHorizontal: 12
-  }
-});

@@ -1,16 +1,17 @@
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  StyleSheet
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, Text, TouchableOpacity, Modal, Appearance } from 'react-native';
+import getStyles from '../styles/AppStyles';
 import { businessCategories } from "../constants/businessCategories";
 import { COLORS } from '../constants/colors';
 import { t } from 'i18next';
 
 const CategoryDropdown = ({shop, onInputChange, category}) => {
+    const [styles, setStyles] = useState(getStyles());
+    useEffect(() => {
+      const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+      return () => sub.remove();
+    }, []);
+
     const colors = COLORS;
 
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
@@ -27,7 +28,7 @@ const CategoryDropdown = ({shop, onInputChange, category}) => {
     return (
         <>
         <TouchableOpacity
-            style={[styles.dropdownTrigger, { borderColor: colors.border }]}
+            style={styles.categoryDropdown.dropdownTrigger}
             onPress={() => setShowCategoryDropdown(true)}
         >
             <Text style={{ color: textColor }}>
@@ -41,15 +42,15 @@ const CategoryDropdown = ({shop, onInputChange, category}) => {
                 onRequestClose={() => setShowCategoryDropdown(false)}
             >
                 <TouchableOpacity
-                    style={styles.modalOverlay}
+                    style={styles.categoryDropdown.modalOverlay}
                     activeOpacity={1}
                     onPress={() => setShowCategoryDropdown(false)}
                 >
-                <View style={styles.dropdownMenu}>
+                <View style={styles.categoryDropdown.dropdownMenu}>
                     {Object.entries(businessCategories).map(([key, cat]) => (
                     <TouchableOpacity
                         key={key}
-                        style={styles.dropdownItem}
+                        style={styles.categoryDropdown.dropdownItem}
                         onPress={() => {
                             onInputChange('primaryCategory', key);
                             setShowCategoryDropdown(false);
@@ -65,30 +66,5 @@ const CategoryDropdown = ({shop, onInputChange, category}) => {
         </>
     );
 };
-
-const styles = StyleSheet.create({
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  dropdownMenu: {
-    backgroundColor: '#fff',
-    width: 250,
-    borderRadius: 4,
-    maxHeight: 300
-  },
-  dropdownItem: {
-    paddingVertical: 8,
-    paddingHorizontal: 12
-  },
-  dropdownTrigger: {
-    padding: 12,
-    borderWidth: 1,
-    borderRadius: 4
-  },
-})
 
 export default CategoryDropdown;

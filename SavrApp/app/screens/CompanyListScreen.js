@@ -5,32 +5,21 @@ import getStyles from '../styles/CompanyStyles';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { getToken } from '../utils/token';
 import { AuthContext } from '../contexts/AuthContext';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const CompanyListScreen = () => {
-  const theme = Appearance.getColorScheme();
-  console.log('Current theme:', theme);
-  const [companyStyles, setCompanyStyles] = useState(getStyles());
+  const { darkMode } = useContext(SettingsContext);
+  const [companyStyles, setCompanyStyles] = useState(getStyles(darkMode));
   const navigation = useNavigation(); 
   const { user } = useContext(AuthContext); 
   const route = useRoute();
   const from = route.params?.from || null; 
 
   useEffect(() => {
-    const handleThemeChange = ({ colorScheme }) => {
-      if (colorScheme) {
-        setCompanyStyles(getStyles()); 
-      }
-    };
-
-    const subscription = Appearance.addChangeListener(handleThemeChange);
-
     retrieveCompanies();
 
-    return () => {
-      subscription.remove();
-    };
-
-  }, []);
+    setCompanyStyles(getStyles(darkMode));
+  }, [darkMode]);
 
   
   // State to hold the companies data - will be replaced with API data later
@@ -90,47 +79,43 @@ const CompanyListScreen = () => {
   if (!companies) {
     return (
       <View style={companyStyles.loadingContainer}>
-        <Text style={[companyStyles.loadingText, { color: companyStyles.isDarkMode ? 'white' : 'black' }]}>Loading...</Text>
+        <Text style={companyStyles.loadingText}>Loading...</Text>
       </View>
     );
   }
 
   return (
     <SafeAreaView style={companyStyles.safeArea}>
-      <StatusBar barStyle={companyStyles.isDarkMode ? "light-content" : "dark-content"} />
+      <StatusBar
+        barStyle={companyStyles.statusBar.barStyle}
+        backgroundColor={companyStyles.statusBar.backgroundColor}
+      />
       
       {/* Header with title and add button */}
-      <View style={[companyStyles.header, {
-        borderBottomColor: companyStyles.isDarkMode ? '#444' : '#eee',
-        backgroundColor: companyStyles.isDarkMode ? 'black' : 'white',
-      }]}>
+      <View style={companyStyles.header}>
         <View style={{ flexDirection: 'row'}}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <FontAwesome6 name="arrow-left" size={24} color={companyStyles.isDarkMode ? 'white' : 'black'} style={{ marginRight: 10, marginTop: 5 }} />
+            <FontAwesome6 name="arrow-left" size={24} color={darkMode ? 'white' : 'black'} style={{ marginRight: 10, marginTop: 5 }} />
           </TouchableOpacity>
-          <Text style={[companyStyles.headerTitle, {
-            color: companyStyles.isDarkMode ? 'white' : 'black',
-          }]}>My Companies</Text>
+          <Text style={companyStyles.headerTitle}>My Companies</Text>
         </View>
 
         <TouchableOpacity 
           style={companyStyles.addButton} 
           onPress={handleAddCompany}
         >
-          <AntDesign name="plus" size={24} color="white" />
+          <AntDesign name="plus" size={24} color={darkMode ? 'black' : 'white'} />
         </TouchableOpacity>
       </View>
       
       {/* Scrollable list of companies */}
       <ScrollView 
-        style={[companyStyles.scrollContainer, {
-          backgroundColor: companyStyles.isDarkMode ? 'black' : 'white',
-        }]}
+        style={companyStyles.scrollContainer}
         contentContainerStyle={companyStyles.contentContainer}
       >
         {companies?.length === 0 ? (
           <View style={companyStyles.emptyContainer}>
-            <Text style={{ color: companyStyles.isDarkMode ? 'white' : 'black' }}>
+            <Text style={{ color: darkMode ? 'white' : 'black' }}>
               You don't have any companies yet. Tap the + button to add one.
             </Text>
           </View>
@@ -141,27 +126,18 @@ const CompanyListScreen = () => {
               onPress={() => handleOpenCompany(company)}
             >
               <View 
-                style={[companyStyles.companyCard, {
-                  backgroundColor: companyStyles.isDarkMode ? '#333' : 'white',
-                  borderColor: companyStyles.isDarkMode ? '#444' : '#eee',
-                }]}
+                style={companyStyles.companyCard}
               >
                 <View style={companyStyles.companyInfo}>
-                  <Text style={[companyStyles.companyName, {
-                    color: companyStyles.isDarkMode ? 'white' : 'black',
-                  }]}>{company.name}</Text>
-                  <Text style={[companyStyles.companyAddress, {
-                    color: companyStyles.isDarkMode ? '#bbb' : '#666',
-                  }]}>{company.address}</Text>
-                  <Text style={[companyStyles.companyCity, {
-                    color: companyStyles.isDarkMode ? '#bbb' : '#666',
-                  }]}>{company.city}</Text>
+                  <Text style={companyStyles.companyName}>{company.name}</Text>
+                  <Text style={companyStyles.companyAddress}>{company.address}</Text>
+                  <Text style={companyStyles.companyCity}>{company.city}</Text>
                 </View>
                 <TouchableOpacity 
                   style={companyStyles.editButton}
                   onPress={() => handleEditCompany(company.id)}
                 >
-                  <Feather name="edit" size={20} color={companyStyles.isDarkMode ? 'white' : 'black'} />
+                  <Feather name="edit" size={20} color={darkMode ? 'white' : 'black'} />
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>

@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, Appearance, ActivityIndicator, TouchableOpacity } from 'react-native';
+import getStyles from '../styles/AppStyles';
 import { useStripe, initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native';
-import { Appearance } from 'react-native';
 import { request } from '../utils/request';
 import { APP_NAME } from '@env';
 
 const OrderAndPay = ({ orderId, cartItems, onPaymentSuccess, onPaymentError }) => {
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
@@ -172,11 +178,11 @@ const OrderAndPay = ({ orderId, cartItems, onPaymentSuccess, onPaymentError }) =
   }, [currentOrderId]);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.orderAndPay.container}>
       <TouchableOpacity 
         style={[
-          styles.payButton, 
-          (loading) && styles.disabledButton
+          styles.orderAndPay.payButton, 
+          loading && styles.orderAndPay.disabledButton
         ]} 
         disabled={loading}
         onPress={onOrderAndPay}
@@ -184,43 +190,12 @@ const OrderAndPay = ({ orderId, cartItems, onPaymentSuccess, onPaymentError }) =
         {loading ? (
           <ActivityIndicator size="small" color="#FFFFFF" />
         ) : (
-          <Text style={styles.payButtonText}>Order and Pay</Text>
+          <Text style={styles.orderAndPay.payButtonText}>Order and Pay</Text>
         )}
       </TouchableOpacity>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: 'transparent',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#000000',
-  },
-  titleDark: {
-    color: '#FFFFFF',
-  },
-  payButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    paddingVertical: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  disabledButton: {
-    backgroundColor: '#CCCCCC',
-  },
-  payButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
 
 export default OrderAndPay; 

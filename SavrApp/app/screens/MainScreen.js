@@ -1,3 +1,4 @@
+// TODO: Refactor styles
 import React, { useState, useEffect, useContext } from 'react';
 
 import { View, FlatList, ActivityIndicator, Text, Appearance, StatusBar } from 'react-native';

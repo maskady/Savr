@@ -1,8 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, Appearance } from 'react-native';
+import getStyles from '../styles/AppStyles';
 import { FontAwesome6 } from '@expo/vector-icons';
 
+
 const AddOptionsDropdown = ({ onCreateCompany, onCreateShop, role }) => {
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   const [isOpen, setIsOpen] = useState(false);
   const dropdownHeight = useRef(new Animated.Value(0)).current;
   
@@ -26,10 +34,10 @@ const AddOptionsDropdown = ({ onCreateCompany, onCreateShop, role }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.addOptionsDropdown.container}>
       <TouchableOpacity 
         style={[
-          styles.addButton, 
+          styles.addOptionsDropdown.addButton, 
           isOpen && {
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
@@ -43,7 +51,7 @@ const AddOptionsDropdown = ({ onCreateCompany, onCreateShop, role }) => {
       </TouchableOpacity>
 
       <Animated.View style={[
-        styles.dropdownMenu,
+        styles.addOptionsDropdown.dropdownMenu,
         { 
           height: dropdownHeight, 
           opacity: dropdownHeight.interpolate({
@@ -53,19 +61,19 @@ const AddOptionsDropdown = ({ onCreateCompany, onCreateShop, role }) => {
         }
       ]}>
         <TouchableOpacity
-          style={styles.option}
+          style={styles.addOptionsDropdown.option}
           onPress={() => handleOptionSelect(onCreateCompany)}
         >
-          <Text style={styles.optionText}>Create a new company</Text>
+          <Text style={styles.addOptionsDropdown.optionText}>Create a new company</Text>
         </TouchableOpacity>
         
         {
           role === 'admin' || role === 'company' ? (
             <TouchableOpacity
-              style={[styles.option, { borderBottomWidth: 0, paddingBottom: 0 }]}
+              style={[styles.addOptionsDropdown.option, { borderBottomWidth: 0, paddingBottom: 0 }]}
               onPress={() => handleOptionSelect(onCreateShop)}
             >
-              <Text style={styles.optionText}>Create a new shop</Text>
+              <Text style={styles.addOptionsDropdown.optionText}>Create a new shop</Text>
             </TouchableOpacity>
           ) : null
         }
@@ -74,7 +82,7 @@ const AddOptionsDropdown = ({ onCreateCompany, onCreateShop, role }) => {
       
       {isOpen && (
         <TouchableOpacity 
-          style={styles.overlay}
+          style={styles.addOptionsDropdown.overlay}
           onPress={() => setIsOpen(false)}
           activeOpacity={0}
         />
@@ -82,67 +90,5 @@ const AddOptionsDropdown = ({ onCreateCompany, onCreateShop, role }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    zIndex: 1000,
-    width: 40, 
-    paddingLeft: 15,
-  },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  plusIcon: {
-    fontSize: 24,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  dropdownMenu: {
-    position: 'absolute',
-    top: 45,
-    right: -15,
-    width: 200, 
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    overflow: 'hidden',
-    zIndex: 1001,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  option: {
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  optionText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 45,
-    left: -1000,
-    right: -1000,
-    bottom: -1000,
-    zIndex: 999,
-  },
-});
 
 export default AddOptionsDropdown;

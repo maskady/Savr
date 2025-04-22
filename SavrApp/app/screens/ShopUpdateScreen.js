@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
   View, 
   ScrollView, 
@@ -8,43 +8,31 @@ import {
   Appearance,
   Alert,
   Image,
-  Platform,
-  ActivityIndicator
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import getStyles from '../styles/NewCompanyStyles'; 
+import getStyles from '../styles/CompanyShopStyles'; 
 import { getToken } from '../utils/token';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const ShopUpdateScreen = ({ route }) => {
   const [shop, setShop] = useState(route.params.shop);
-  const [styles, setStyles] = useState(getStyles());
   const [categoryInput, setCategoryInput] = useState('');
   const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState({});
   const navigation = useNavigation(); 
 
-  useEffect(() => {
-    const handleThemeChange = ({ colorScheme }) => {
-      console.log("Theme changed:", colorScheme);
-      if (colorScheme) {
-        setStyles(getStyles());
-      }
-    };
-    
-    const subscription = Appearance.addChangeListener(handleThemeChange);
+  const { darkMode } = useContext(SettingsContext);
+  const [styles] = useState(getStyles(darkMode));
 
+  useEffect(() => {
     fetchCategories();
     if (shop.categories && !shop.categories.includes(shop.primaryCategory)) {
       shop.categories.push(shop.primaryCategory);
     }
-    
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+  }, [darkMode]);
   
   const validateForm = () => {
     let tempErrors = {};
@@ -281,7 +269,7 @@ const ShopUpdateScreen = ({ route }) => {
           value={shop.name}
           onChangeText={(text) => handleInputChange('name', text)}
           placeholder="Name of the shop"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
         {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
       </View>
@@ -293,7 +281,7 @@ const ShopUpdateScreen = ({ route }) => {
           value={String(shop.companyId)}
           onChangeText={(text) => handleInputChange('companyId', text)}
           placeholder="Company ID"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           keyboardType="numeric"
         />
         {errors.companyId && <Text style={styles.errorText}>{errors.companyId}</Text>}
@@ -306,7 +294,7 @@ const ShopUpdateScreen = ({ route }) => {
           value={shop.description}
           onChangeText={(text) => handleInputChange('description', text)}
           placeholder="Description of the shop"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           multiline
           numberOfLines={4}
         />
@@ -319,7 +307,7 @@ const ShopUpdateScreen = ({ route }) => {
           value={shop.address}
           onChangeText={(text) => handleInputChange('address', text)}
           placeholder="Address"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
       </View>
       
@@ -331,7 +319,7 @@ const ShopUpdateScreen = ({ route }) => {
             value={shop.postalCode}
             onChangeText={(text) => handleInputChange('postalCode', text)}
             placeholder="ZIP Code"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            placeholderTextColor={styles.input.placeholderTextColor}
           />
         </View>
         
@@ -342,7 +330,7 @@ const ShopUpdateScreen = ({ route }) => {
             value={shop.city}
             onChangeText={(text) => handleInputChange('city', text)}
             placeholder="City"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            placeholderTextColor={styles.input.placeholderTextColor}
           />
         </View>
       </View>
@@ -354,7 +342,7 @@ const ShopUpdateScreen = ({ route }) => {
           value={shop.country}
           onChangeText={(text) => handleInputChange('country', text)}
           placeholder="Country"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
       </View>
       
@@ -366,7 +354,7 @@ const ShopUpdateScreen = ({ route }) => {
             value={shop.latitude ? String(shop.latitude) : ''}
             onChangeText={(text) => handleInputChange('latitude', text)}
             placeholder="Latitude"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            placeholderTextColor={styles.input.placeholderTextColor}
             keyboardType="numeric"
           />
           {errors.latitude && <Text style={styles.errorText}>{errors.latitude}</Text>}
@@ -379,7 +367,7 @@ const ShopUpdateScreen = ({ route }) => {
             value={shop.longitude ? String(shop.longitude) : ''}
             onChangeText={(text) => handleInputChange('longitude', text)}
             placeholder="Longitude"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            placeholderTextColor={styles.input.placeholderTextColor}
             keyboardType="numeric"
           />
           {errors.longitude && <Text style={styles.errorText}>{errors.longitude}</Text>}
@@ -393,7 +381,7 @@ const ShopUpdateScreen = ({ route }) => {
           value={shop.phone}
           onChangeText={(text) => handleInputChange('phone', text)}
           placeholder="+1234567890"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           keyboardType="phone-pad"
         />
         {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
@@ -406,7 +394,7 @@ const ShopUpdateScreen = ({ route }) => {
           value={shop.email}
           onChangeText={(text) => handleInputChange('email', text)}
           placeholder="email@example.com"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           keyboardType="email-address"
           autoCapitalize="none"
         />

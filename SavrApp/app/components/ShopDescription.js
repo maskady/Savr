@@ -1,41 +1,44 @@
 // components/ShopDescription.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   TextInput,
-  StyleSheet
+  Appearance
 } from 'react-native';
+import getStyles from '../styles/AppStyles';
+import { COLORS } from '../constants/colors';
 
 export default function ShopDescription({
   description,
   editMode,
   onChange,
-  colors
 }) {
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
   return (
-    <View style={[styles.container, { borderColor: colors.border }]}>
-      <Text style={[styles.title, { color: colors.text }]}>Shop Description</Text>
+    <View style={styles.shopDescription.container}>
+      <Text style={styles.shopDescription.title}>Shop Description</Text>
       {editMode === 'view' ? (
-        <Text style={[styles.text, { color: colors.subtext }]}>
+        <Text style={styles.shopDescription.text}>
           {description || 'No description available for this shop.'}
         </Text>
       ) : (
         <>
           <TextInput
-            style={[
-              styles.textInput,
-              { borderColor: colors.border, color: colors.text }
-            ]}
+            style={styles.shopDescription.input}
             value={description}
             onChangeText={onChange}
             placeholder="Enter shop description"
-            placeholderTextColor={colors.subtext}
+            placeholderTextColor={COLORS.placeholder}
             multiline
             numberOfLines={4}
             textAlignVertical="top"
           />
-          <Text style={[styles.label, { color: colors.subtext }]}>
+          <Text style={styles.shopDescription.label}>
             Describe your shop to attract customers
           </Text>
         </>
@@ -43,20 +46,3 @@ export default function ShopDescription({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    borderBottomWidth: 1
-  },
-  title: { fontSize: 18, fontWeight: 'bold', marginBottom: 12 },
-  text: { fontSize: 16, lineHeight: 24 },
-  textInput: {
-    fontSize: 16,
-    lineHeight: 24,
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 8,
-    marginBottom: 4
-  },
-  label: { fontSize: 12, marginTop: 4 }
-});
