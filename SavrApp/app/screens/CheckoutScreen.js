@@ -7,12 +7,12 @@ import styles from '../styles/CheckoutScreenStyles';
 import OrderAndPay from '../components/OrderAndPay';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { STRIPE_PUBLISHABLE_KEY, STRIPE_MERCHANT_ID, STRIPE_URL_SCHEME } from '@env';
+import { request } from '../utils/request';
 
 const CheckoutScreen = () => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const navigation = useNavigation();
-  const [paymentMethod, setPaymentMethod] = React.useState('card');
   
   // Use the cart context
   const { 
@@ -23,7 +23,6 @@ const CheckoutScreen = () => {
     itemCount,
   } = useCart();
   
-  // Fake data for delivery and service fees - TODO: Replace with actual data
   const deliveryFee = 0;
   const serviceFee = 0;
   
@@ -37,14 +36,10 @@ const CheckoutScreen = () => {
       removeFromCart(shopId, item.id);
     }
   };
-  
-  const handlePayment = () => {
-    navigation.navigate('CardPayment', { amount: total });
-  };
 
   const handlePaymentSuccess = (paymentData) => {
-    console.log('Payment successful:', paymentData);
-    // TODO: Handle payment success
+    request('PUT', `/payment/${paymentData.id}/update-payment-status`);
+    navigation.navigate('OrderDetails', { orderId: paymentData.id }); 
   };
 
   const handlePaymentError = (error) => {
