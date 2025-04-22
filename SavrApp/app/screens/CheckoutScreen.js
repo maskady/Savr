@@ -38,8 +38,10 @@ const CheckoutScreen = () => {
   };
 
   const handlePaymentSuccess = (paymentData) => {
-    request('PUT', `/payment/${paymentData.id}/update-payment-status`);
-    navigation.navigate('OrderDetails', { orderId: paymentData.id }); 
+    setTimeout(() => {
+      request('PUT', `/payment/${paymentData.id}/update-payment-status`);
+      navigation.navigate('OrderDetails', { orderId: paymentData.id }); 
+    }, 1000);
   };
 
   const handlePaymentError = (error) => {
