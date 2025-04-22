@@ -1,19 +1,31 @@
 import { StyleSheet, Appearance } from "react-native";
+import { COLORS } from "./Common";
 
-const getStyles = () => {
-  const theme = Appearance.getColorScheme();
-  const isDarkMode = theme === "dark";
+const getStyles = (darkMode) => {
+
+  const theme = {
+    background: darkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+    border: darkMode ? COLORS.grey700 : COLORS.grey200,
+    text: darkMode ? COLORS.textLight : COLORS.textDark,
+    subText: darkMode ? COLORS.grey300 : COLORS.grey600,
+    placeholder: darkMode ? COLORS.grey300 : COLORS.grey500,
+    inputBackground: darkMode ? COLORS.grey800 : COLORS.white,
+    buttonBackground: darkMode ? COLORS.textLight : COLORS.textDark,
+    buttonText: darkMode ? COLORS.textDark : COLORS.textLight,
+    link: darkMode ? COLORS.white : COLORS.black,
+    shadow: darkMode ? COLORS.grey800 : COLORS.grey300,
+  };
 
   return StyleSheet.create({
     flexContainer: {
       flex: 1,
-      backgroundColor: isDarkMode ? "#121212" : "white",
+      backgroundColor: theme.background,
     },
     divider: {
       height: 1,
       width: "40%",
       marginVertical: 10,
-      backgroundColor: isDarkMode ? "#666" : "#ccc",
+      backgroundColor: theme.border,
     },
     lineDivider: {
       flexDirection: "row",
@@ -32,7 +44,7 @@ const getStyles = () => {
       textAlign: "center",
       marginTop: 60,
       marginBottom: 40,
-      color: isDarkMode ? "white" : "black",
+      color: theme.text,
     },
     formContainer: {
       width: "100%",
@@ -42,13 +54,13 @@ const getStyles = () => {
       fontWeight: "bold",
       textAlign: "center",
       marginBottom: 8,
-      color: isDarkMode ? "white" : "black",
+      color: theme.text,
     },
     subheading: {
       fontSize: 14,
       textAlign: "center",
       marginBottom: 24,
-      color: isDarkMode ? "#bbb" : "#666",
+      color: theme.subText,
     },
     input: {
       height: 50,
@@ -57,9 +69,9 @@ const getStyles = () => {
       paddingHorizontal: 15,
       marginBottom: 20,
       fontSize: 15,
-      borderColor: isDarkMode ? "#444" : "#ddd",
-      backgroundColor: isDarkMode ? "#333" : "white",
-      color: isDarkMode ? "white" : "black",
+      borderColor: theme.border,
+      backgroundColor: theme.inputBackground,
+      color: theme.text,
     },
     continueButton: {
       height: 50,
@@ -67,17 +79,17 @@ const getStyles = () => {
       justifyContent: "center",
       alignItems: "center",
       marginBottom: 15,
-      backgroundColor: isDarkMode ? "white" : "black",
+      backgroundColor: theme.buttonBackground,
     },
     continueButtonText: {
       fontSize: 16,
       fontWeight: "500",
-      color: isDarkMode ? "black" : "white",
+      color: theme.buttonText,
     },
     orText: {
       textAlign: "center",
       marginVertical: 15,
-      color: isDarkMode ? "#bbb" : "#666",
+      color: theme.subText,
     },
     googleButton: {
       flexDirection: "row",
@@ -85,7 +97,7 @@ const getStyles = () => {
       borderRadius: 8,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "#f5f5f5",
+      backgroundColor: COLORS.grey100,
       marginBottom: 20,
     },
     googleIcon: {
@@ -96,21 +108,21 @@ const getStyles = () => {
     googleButtonText: {
       fontSize: 16,
       fontWeight: "500",
-      color: "black",
+      color: COLORS.black,
     },
     termsText: {
       fontSize: 12,
       textAlign: "center",
-      color: isDarkMode ? "#bbb" : "#666",
+      color: theme.subText,
     },
     link: {
       fontWeight: "bold",
-      color: isDarkMode ? "#fff" : "#000",
+      color: theme.link,
     },
     bottomBar: {
       height: 5,
       width: 40,
-      backgroundColor: "#000",
+      backgroundColor: COLORS.black,
       borderRadius: 3,
       alignSelf: "center",
       marginBottom: 8,
@@ -130,28 +142,29 @@ const getStyles = () => {
       textAlign: "center",
       marginTop: 40,
       marginBottom: 30,
+      color: theme.text,
     },
     statusBar: {
-      backgroundColor: isDarkMode ? "#121212" : "white",
-      barStyle: isDarkMode ? "light-content" : "dark-content",
+      backgroundColor: theme.background,
+      barStyle: darkMode ? "light-content" : "dark-content",
     },
     placeholderText: {
-      color: isDarkMode ? "#bbb" : "#666",
+      color: theme.placeholder,
     },
     backButton: {
       padding: 8,
     },
     backIcon: {
-      color: isDarkMode ? "white" : "black",
+      color: theme.text,
     },
     disabledInput: {
-      backgroundColor: "#f1f1f1",
-      color: isDarkMode ? "#aaa" : "#666",
+      backgroundColor: COLORS.grey100,
+      color: darkMode ? COLORS.grey400 : COLORS.grey600,
     },
     passwordInput: {
-      borderColor: isDarkMode ? "#444" : "#ddd",
-      backgroundColor: isDarkMode ? "#333" : "white",
-      color: isDarkMode ? "white" : "black",
+      borderColor: theme.border,
+      backgroundColor: theme.inputBackground,
+      color: theme.text,
     },
     keyboardAvoidingView: {
       flex: 1,
