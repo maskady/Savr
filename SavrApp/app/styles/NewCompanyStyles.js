@@ -6,6 +6,7 @@ const getStyles = (darkMode) => {
   const textColor = darkMode ? COLORS.textDark : COLORS.textLight;
   const borderColor = darkMode ? COLORS.borderDark : COLORS.borderLight;
   const inputBgColor = darkMode ? COLORS.grey800 : COLORS.surface;
+  const placeholderColor = darkMode ? COLORS.placeholderDark : COLORS.placeholderLight;
 
   return StyleSheet.create({
     container: {
@@ -47,6 +48,7 @@ const getStyles = (darkMode) => {
       borderColor,
       backgroundColor: inputBgColor,
       color: textColor,
+      placeholderTextColor: placeholderColor,
     },
     inputError: {
       borderColor: COLORS.error,
