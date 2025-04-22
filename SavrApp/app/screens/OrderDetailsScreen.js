@@ -20,9 +20,9 @@ const Colors = {
   Grey: '#333333',        
   lightGrey: '#CCCCCC',   
   darkGrey: '#666666',    
-  Success: '#444444',      
+  Success: 'lightgreen',    
   Error: '#000000',        
-  Warning: '#888888',      
+  Warning: 'red',  
   Info: '#555555',      
 };
 
@@ -94,9 +94,12 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   };
 
   const getStatusColor = (status) => {
+    // "pen" -- Pending "pai" -- Paid "con" -- Confirmed "pre" -- Preparing "del" -- Delivered "com" -- Completed "can" -- Cancelled "nos" -- Not Show
     switch (status.toLowerCase()) {
       case 'pen':
         return Colors.Warning;
+      case 'pai':
+        return Colors.Success;
       case 'con':
         return Colors.Success;
       case 'pre':
