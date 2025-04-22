@@ -10,7 +10,7 @@ export const request = async (endpoint, method, body, query={}) => {
   let URL = `${API_URI}${endpoint}`;
   if (query) URL += `?${new URLSearchParams(query)}`;
   
-  console.log("REQUEST", URL, "method", method, "body", body, "TokenIsAvailable", token ? "Yes" : "No", "query", query);
+  // console.log("REQUEST", URL, "method", method, "body", body, "TokenIsAvailable", token ? "Yes" : "No", "query", query);
   const response = await fetch(URL, {
     method,
     headers,

@@ -16,9 +16,13 @@ import { SettingsContext } from '../contexts/SettingsContext';
 const Colors = {
   Primary: '#000000',      
   Grey: '#333333',        
+
   Success: '#444444',      
+  lightGrey: '#CCCCCC',   
+  darkGrey: '#666666',       
+
   Error: '#000000',        
-  Warning: '#888888',      
+  Warning: 'red',  
   Info: '#555555',      
 };
 
@@ -87,9 +91,12 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   };
 
   const getStatusColor = (status) => {
+    // "pen" -- Pending "pai" -- Paid "con" -- Confirmed "pre" -- Preparing "del" -- Delivered "com" -- Completed "can" -- Cancelled "nos" -- Not Show
     switch (status.toLowerCase()) {
       case 'pen':
         return Colors.Warning;
+      case 'pai':
+        return Colors.Success;
       case 'con':
         return Colors.Success;
       case 'pre':

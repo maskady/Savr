@@ -3,6 +3,7 @@ import React, { createContext, useState, useMemo, useEffect } from 'react';
 import { getShops } from '../utils/api';
 import { businessCategories } from '../constants/businessCategories';
 import { throttle } from 'lodash';
+import { request } from '../utils/request';
 import haversine from 'haversine-distance';
 
 export const ShopContext = createContext();
@@ -12,6 +13,9 @@ export const ShopProvider = ({ children }) => {
   const [allShops, setAllShops] = useState([]);
   const [activeCategories, setActiveCategories] = useState([]);
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
+  const [myShop, setMyShop] = useState([]);
+  const [regionBoundedShops, setRegionBoundedShops] = useState([]);
+  const [currentMapRegion, setCurrentMapRegion] = useState(null);
 
   useEffect(() => {
     const keys = Object.keys(businessCategories);
@@ -78,6 +82,20 @@ export const ShopProvider = ({ children }) => {
     );
   };
 
+  const fetchMyShop = async () => {
+    try {
+      const { response, data } = await request('/shop', 'GET', null, { onlyMyShops: true });
+      if (response.ok) {
+        setMyShop(data.data[0]);
+        console.log("Shop data:", data.data[0]);
+      } else {
+        console.error("Failed to fetch shop:", response.statusText);
+      }
+    } catch (err) {
+      console.error("Request error:", err);
+    }
+  };
+
   // State for filtered shops and updater
   const [filteredShops, setFilteredShops] = useState([]);
   // State for search query
@@ -87,6 +105,7 @@ export const ShopProvider = ({ children }) => {
   useEffect(() => {
     // Start with all shops
     let filtered = shops;
+    console.log(shops);
 
     // Apply search filter if query exists
     if (searchQuery.trim() !== '') {
@@ -105,6 +124,51 @@ export const ShopProvider = ({ children }) => {
     setFilteredShops(filtered);
   }, [shops, activeCategories, searchQuery]);
 
+  const filterShopsByRegion = (region, shopsToFilter = shops) => {
+    if (!region) return [];
+    
+    // Save the current region
+    setCurrentMapRegion(region);
+    
+    // Calculate map boundaries
+    const buffer = {
+      latBuffer: region.latitudeDelta * 0.01,
+      lngBuffer: region.longitudeDelta * 0.01
+    };
+    
+    const halfLat = region.latitudeDelta / 2;
+    const halfLng = region.longitudeDelta / 2;
+    const northLat = region.latitude + halfLat + buffer.latBuffer;
+    const southLat = region.latitude - halfLat - buffer.latBuffer;
+    const eastLng = region.longitude + halfLng + buffer.lngBuffer;
+    const westLng = region.longitude - halfLng - buffer.lngBuffer;
+    
+    // Filter shops within the map boundaries
+    const filtered = shopsToFilter.filter((shop) => {
+      if (!shop.latitude || !shop.longitude) return false;
+      
+      const shopLat = shop.latitude;
+      const shopLng = shop.longitude;
+      
+      return (
+        shopLat <= northLat && 
+        shopLat >= southLat && 
+        shopLng <= eastLng && 
+        shopLng >= westLng
+      );
+    });
+    
+    // Update the state with filtered shops
+    setRegionBoundedShops(filtered);
+    return filtered;
+  };
+
+  useEffect(() => {
+    if (shops.length > 0 && currentMapRegion) {
+      filterShopsByRegion(currentMapRegion);
+    }
+  }, [shops]);
+
   return (
     <ShopContext.Provider value={{
       shops,
@@ -119,7 +183,13 @@ export const ShopProvider = ({ children }) => {
       updateShopInContext,
       setFilteredShops,
       searchQuery,
-      setSearchQuery
+      setSearchQuery,
+      fetchMyShop,
+      myShop,
+      filterShopsByRegion,
+      regionBoundedShops,
+      currentMapRegion,
+      setCurrentMapRegion,
     }}>
       {children}
     </ShopContext.Provider>

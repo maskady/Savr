@@ -6,9 +6,10 @@ import { useCart } from '../contexts/CheckoutContext';
 import OrderAndPay from '../components/OrderAndPay';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { STRIPE_PUBLISHABLE_KEY, STRIPE_MERCHANT_ID, STRIPE_URL_SCHEME } from '@env';
+
 import { SettingsContext } from '../contexts/SettingsContext';
 import getStyles from '../styles/CheckoutStyles';
-
+import { request } from '../utils/request';
 
 const CheckoutScreen = () => {
   const navigation = useNavigation();
@@ -22,6 +23,7 @@ const CheckoutScreen = () => {
     removeFromCart, 
     getCartTotal,
     itemCount,
+    clearCart
   } = useCart();
   
   const deliveryFee = 0;
@@ -37,14 +39,13 @@ const CheckoutScreen = () => {
       removeFromCart(shopId, item.id);
     }
   };
-  
-  const handlePayment = () => {
-    navigation.navigate('CardPayment', { amount: total });
-  };
 
   const handlePaymentSuccess = (paymentData) => {
-    console.log('Payment successful:', paymentData);
-    // TODO: Handle payment success
+    setTimeout(() => {
+      request('PUT', `/payment/${paymentData.id}/update-payment-status`);
+      navigation.navigate('OrderDetails', { orderId: paymentData.id }); 
+      clearCart();
+    }, 1000);
   };
 
   const handlePaymentError = (error) => {
@@ -163,6 +164,7 @@ const CheckoutScreen = () => {
             )}
           </View>
 
+
           {/* Summary */}
           <View style={styles.section}>
 
@@ -210,12 +212,13 @@ const CheckoutScreen = () => {
           </View>
         </ScrollView>
 
-        {/* Payment button */}
-        <View style={styles.bottomContainer}>
-          <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} merchantIdentifier={STRIPE_MERCHANT_ID} urlScheme={STRIPE_URL_SCHEME} >
-            <OrderAndPay orderId={63} total={total} onPaymentSuccess={handlePaymentSuccess} onPaymentError={handlePaymentError} cartItems={cartItems} />
-          </StripeProvider>
-        </View>
+
+      {/* Payment button */}
+      <View style={styles.bottomContainer}>
+        <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} merchantIdentifier={STRIPE_MERCHANT_ID} urlScheme={STRIPE_URL_SCHEME} >
+          <OrderAndPay total={total} onPaymentSuccess={handlePaymentSuccess} onPaymentError={handlePaymentError} cartItems={cartItems} />
+        </StripeProvider>
+
       </View>
     </>
   );

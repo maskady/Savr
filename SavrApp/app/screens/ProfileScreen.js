@@ -122,9 +122,7 @@ const ProfileScreen = () => {
   const fetchOrders = async () => {
     try {
       setError(null);
-      const parameters = user.roleId === 'admin' ? null : 'orderUserId=' + user.id;
-      const { response, data } = await request('/order', 'GET', null, parameters);
-
+      const { response, data } = await request('/order', 'GET');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

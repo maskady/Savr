@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { SettingsContext } from "../contexts/SettingsContext";
@@ -12,7 +12,10 @@ import ShopScreen from "../screens/ShopScreen";
 
 import { CartContext } from "../contexts/CheckoutContext";
 import { AuthContext } from "../contexts/AuthContext";
+import { ShopContext } from "../contexts/ShopContext";
 import CompanyListScreen from "../screens/CompanyListScreen";
+
+import { request } from "../utils/request";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,49 +25,20 @@ const HomeTabs = () => {
 
   const { addToCart, clearCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
+  const { fetchMyShop } = useContext(ShopContext);
 
   console.log("User roleId:", user?.roleId);
 
   useEffect(() => {
     const state = navigation.getState();
     console.log("All route names:", state.routeNames);
-  }, [navigation]);
+  
+    if (user?.roleId === "shop") {
+      fetchMyShop();
+    }
+  }, [navigation, user?.roleId]);
 
-  const dummyShop = {
-    "id": 10,
-    "name": "Kahvila konditoria Aino",
-    "description": "Best coffee in town",
-    "address": "Merikoskenkatu 9",
-    "postalCode": "90500",
-    "city": "Oulu",
-    "country": "Finland",
-    "phone": "+385911234567",
-    "email": "kahvila@example.com",
-    "companyId": 9,
-    "latitude": 65.0254999,
-    "longitude": 25.4696293,
-    "dtcreated": "2025-03-30T18:12:38.701Z",
-    "dtupdated": "2025-03-30T18:12:38.701Z",
-    "dtdeleted": null,
-    "rating": 5,
-    "ratings": 5,
-    "dtremoved": null,
-    "primaryCategory": "florist",
-    "images": [
-      {
-        "alt": "Uploaded Image",
-        "url": "/public/images/image-1744310284147-4198645356823.webp",
-        "type": "uploaded"
-      },
-      {
-        "alt": "Uploaded Image",
-        "url": "/public/images/image-1744310323270-0962859202703.webp",
-        "type": "uploaded"
-      }
-    ],
-    "currencyId": "eur",
-    "categories": []
-  }
+  
 
   return (
     <Tab.Navigator
@@ -91,7 +65,7 @@ const HomeTabs = () => {
     >
       <Tab.Screen name="Home" component={MainScreen} />
       { user?.roleId === 'shop' ? (
-        <Tab.Screen name="My Shop" component={ShopScreen} initialParams={{shop: dummyShop}} />
+        <Tab.Screen name="My Shop" component={ShopScreen} initialParams={{myShop: true}} />
       )
       : user?.roleId === 'company' ? (
         <Tab.Screen name="My Company" component={CompanyListScreen} initialParams={{from: 'home'}} />

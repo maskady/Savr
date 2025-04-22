@@ -10,6 +10,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
+import { request } from '../utils/request';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { SettingsContext } from '../contexts/SettingsContext';
@@ -23,6 +24,7 @@ const Colors = {
   Warning: '#888888',      
   Info: '#555555',      
 };
+
 
 const OrdersScreen = () => {
   const route = useRoute();
@@ -51,10 +53,12 @@ const OrdersScreen = () => {
   };
 
   const getStatusColor = (status) => {
-    // "pen" -- Pending "con" -- Confirmed "pre" -- Preparing "del" -- Delivered "com" -- Completed "can" -- Cancelled "nos" -- Not Show
+    // "pen" -- Pending "pai" -- Paid "con" -- Confirmed "pre" -- Preparing "del" -- Delivered "com" -- Completed "can" -- Cancelled "nos" -- Not Show
     switch (status.toLowerCase()) {
       case 'pen':
         return Colors.Warning;
+      case 'pai':
+        return Colors.Success;
       case 'con':
         return Colors.Success;
       case 'pre':

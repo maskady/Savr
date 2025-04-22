@@ -12,7 +12,7 @@ import { SettingsContext } from '../contexts/SettingsContext';
 import getStyles from '../styles/AppStyles';
 import { ShopContext } from '../contexts/ShopContext';
 import { getUserLocation, startLocationUpdates, stopLocationUpdates, isDifferentRegion } from '../utils/location';
-
+import haversine from 'haversine-distance';
 
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
@@ -26,6 +26,7 @@ const MainScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [locationUpdateInterval, setLocationUpdateInterval] = useState(null);
   const [searchActive, setSearchActive] = useState(false);
+
   
   const {
     shops,
@@ -35,6 +36,10 @@ const MainScreen = () => {
     activeCategories,
     fetchShopsIfNeeded,
     setActiveCategories,
+    filterShopsByRegion,
+    regionBoundedShops,
+    currentMapRegion,
+    setCurrentMapRegion,
   } = useContext(ShopContext);
 
 
@@ -49,8 +54,6 @@ const MainScreen = () => {
 
       setRegion(currentRegion);
       setUserLocation(currentRegion);
-      console.log('userLocation--------', currentRegion);
-
 
       // Fetch shops based on current region
       fetchShopsIfNeeded(currentRegion);
@@ -62,7 +65,6 @@ const MainScreen = () => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       setStyles(getStyles());
     });
-
 
     // Cleanup function
     return () => {
@@ -81,6 +83,8 @@ const MainScreen = () => {
       setSearchActive(true);
     }
   };
+
+
 
   // While loading, display the activity indicator with a message.
   if (isLoading || region === null) {
@@ -145,11 +149,13 @@ const MainScreen = () => {
       <View style={styles.mapContainer}>
         <MapSection
           region={region}
-          setRegion={(newRegion) => {
+          onRegionChange={(newRegion) => {
             if (newRegion && isDifferentRegion(newRegion, region)) {  
               setRegion(newRegion);
               fetchShopsIfNeeded(newRegion);
             }
+
+            filterShopsByRegion(newRegion);
           }}
           shops={filteredShops}
           onShopSelect={handleSelect}
@@ -159,7 +165,7 @@ const MainScreen = () => {
       </View>
       <BottomSheet>
         <FlatList
-          data={filteredShops}
+          data={regionBoundedShops}
           keyExtractor={(shop) => shop.id.toString()}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}

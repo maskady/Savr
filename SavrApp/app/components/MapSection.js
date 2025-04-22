@@ -201,7 +201,8 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
         style={styles.map}
         region={region}
         onRegionChangeComplete={(newRegion) => {
-          setRegion(newRegion);
+          console.log('newregion',newRegion );
+          // setRegion(newRegion);
           debouncedUpdateClusters(newRegion);
           onRegionChange && onRegionChange(newRegion);
         }}

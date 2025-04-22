@@ -24,6 +24,7 @@ const ShopScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { user } = useContext(AuthContext);
+
   const { updateShopInContext } = useContext(ShopContext);
   
   // Apply theme styles  
@@ -31,6 +32,7 @@ const ShopScreen = () => {
   const styles = getStyles(darkMode);
 
   const [shop, setShop] = useState(route.params?.shop || null);
+
   const [oldShop, setOldShop] = useState(route.params?.shop || null);
   const [variants, setVariants] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -43,6 +45,7 @@ const ShopScreen = () => {
   // get primary category name from businessCategories object 
   const primaryCategoryName = businessCategories[shop?.primaryCategory]?.name || shop?.primaryCategory;
 
+
   const goBackOrHome = async () => {
     await handleSaveChanges();
 
@@ -52,9 +55,10 @@ const ShopScreen = () => {
       navigation.navigate('HomeTabs', { screen: 'Home' });
     }
   };
+  
 
   const handleInputChange = (field, value) => {
-    setShop(prev => ({
+    shop = (prev => ({
       ...prev,
       [field]: value
     }));
@@ -64,7 +68,6 @@ const ShopScreen = () => {
   useEffect(() => {
     const fetchShopDetails = async () => {
       if (!shop?.id) return;
-
       setLoading(true);
       try {
         const details = await getShopById(shop.id);
@@ -83,7 +86,7 @@ const ShopScreen = () => {
             }];
           }
 
-          setShop({ ...data, images: shopImages, categories });
+          shop = ({ ...data, images: shopImages, categories });
         }
       } catch (err) {
         console.error('Error fetching shop details:', err);
@@ -151,7 +154,7 @@ const ShopScreen = () => {
       const updatedShop = { ...shop, images: shop.images.filter(image => image.type !== 'placeholder') };
       
       // Update the shop in local state
-      setShop(updatedShop);
+      shop = (updatedShop);
       
       // Update the shop in the backend
       await updateShop(shop.id, updatedShop);
@@ -178,7 +181,7 @@ const ShopScreen = () => {
   };
 
   const discardChanges = () => {
-    setShop(oldShop);
+    shop = (oldShop);
     setHasChanges(false);
     setEditMode('view');
     setIsSaving(false);
@@ -193,7 +196,7 @@ const ShopScreen = () => {
   };
 
   const handleImagesChange = (updatedImages) => {
-    setShop(prev => ({
+    shop = (prev => ({
       ...prev,
       images: updatedImages
     }));

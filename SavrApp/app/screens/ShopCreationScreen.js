@@ -17,6 +17,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { SettingsContext } from '../contexts/SettingsContext';
+import { request } from '../utils/request';
+import { AuthContext } from '../contexts/AuthContext';
 
 const ShopCreationScreen = () => {
   const navigation = useNavigation();
@@ -44,9 +46,13 @@ const ShopCreationScreen = () => {
     primaryCategory: '',
     images: []
   });
+
+  const [emailOwnership, setEmailOwnership] = useState('');
   
   const [categoryInput, setCategoryInput] = useState('');
   const [errors, setErrors] = useState({});
+
+  const { user } = useContext(AuthContext);
   
   useEffect(() => {
     setStyles(getStyles(darkMode));
@@ -100,6 +106,22 @@ const ShopCreationScreen = () => {
         Alert.alert("Success", "Shop created successfully!", [
           { text: "OK", onPress: () => navigation.navigate('ShopList', { company: { id: dataToSend.companyId } }) }
         ]);
+
+        if (shop.email !== emailOwnership) {
+          const ownershipResponse = await request('/ownership/shop', 'POST', null, {
+            userId: user.id,
+            shopId: data.data.id,
+            email: emailOwnership,
+          });
+
+          if (ownershipResponse.ok) {
+            console.log("Ownership request sent successfully.");
+          }
+          else {
+            console.error("Error sending ownership request:", ownershipResponse.error);
+            Alert.alert("Error", "Failed to send ownership request.", [{ text: "OK" }]);
+          }
+        }
       } else {
         Alert.alert("Error", data.message || "Failed to create shop.", [{ text: "OK" }]);
       }
@@ -321,7 +343,52 @@ const ShopCreationScreen = () => {
             placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
           />
         </View>
-        
+
+      </View>
+      
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Phone Number *</Text>
+        <TextInput
+          style={[styles.input, errors.phone && styles.inputError]}
+          value={shop.phone}
+          onChangeText={(text) => handleInputChange('phone', text)}
+          placeholder="+1234567890"
+          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          keyboardType="phone-pad"
+        />
+        {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
+      </View>
+      
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Email *</Text>
+        <TextInput
+          style={[styles.input, errors.email && styles.inputError]}
+          value={shop.email}
+          onChangeText={(text) => handleInputChange('email', text)}
+          placeholder="email@example.com"
+          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Ownership *</Text>
+        <TextInput
+          style={[styles.input, errors.email && styles.inputError]}
+          value={emailOwnership}
+          onChangeText={(text) => setEmailOwnership(text)}
+          placeholder="it can be your email or the email of the owner"
+          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+      </View>
+      
+      {/* Categories */}
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Categories *</Text>
         <View style={styles.rowContainer}>
           <View style={[styles.inputGroup, {flex: 1, marginRight: 10}]}>
             <Text style={styles.label}>Latitude *</Text>
