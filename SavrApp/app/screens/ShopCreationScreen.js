@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
   View, 
   ScrollView, 
@@ -8,21 +8,24 @@ import {
   Appearance,
   Alert,
   Image,
-  Platform
+  StatusBar,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import getStyles from '../styles/NewCompanyStyles'; // Réutilisation du même style
+import getStyles from '../styles/CompanyShopStyles'; 
 import { getToken } from '../utils/token';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const ShopCreationScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { companyId } = route.params || {}; // Récupérer le companyId depuis les paramètres
+  const { companyId } = route.params || {}; 
   
-  const [styles, setStyles] = useState(getStyles());
+  const { darkMode } = useContext(SettingsContext);
+  const [styles, setStyles] = useState(getStyles(darkMode));
+
   const [categories, setCategories] = useState([]);
   
   const [shop, setShop] = useState({
@@ -46,21 +49,10 @@ const ShopCreationScreen = () => {
   const [errors, setErrors] = useState({});
   
   useEffect(() => {
-    const handleThemeChange = ({ colorScheme }) => {
-      console.log("Theme changed:", colorScheme);
-      if (colorScheme) {
-        setStyles(getStyles());
-      }
-    };
-    
-    const subscription = Appearance.addChangeListener(handleThemeChange);
+    setStyles(getStyles(darkMode));
     
     fetchCategories();
-    
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+  }, [darkMode]);
   
   const validateForm = () => {
     let tempErrors = {};
@@ -246,271 +238,233 @@ const ShopCreationScreen = () => {
     
   
   return (
-    <ScrollView style={styles.container}>
-      <View style={{flexDirection: 'row', marginBottom: 20}}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome6 name="arrow-left" size={24} color={Appearance.getColorScheme() === 'dark' ? '#FFFFFF' : '#000000'} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Create Shop</Text>
-      </View>
-      
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Shop Name *</Text>
-        <TextInput
-          style={[styles.input, errors.name && styles.inputError]}
-          value={shop.name}
-          onChangeText={(text) => handleInputChange('name', text)}
-          placeholder="Name of the shop"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-        />
-        {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
-      </View>
-      
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Description *</Text>
-        <TextInput
-          style={[styles.input, styles.textArea]}
-          value={shop.description}
-          onChangeText={(text) => handleInputChange('description', text)}
-          placeholder="Description of the shop"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-          multiline
-          numberOfLines={4}
-        />
-      </View>
-      
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Address *</Text>
-        <TextInput
-          style={styles.input}
-          value={shop.address}
-          onChangeText={(text) => handleInputChange('address', text)}
-          placeholder="Address"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-        />
-      </View>
-      
-      <View style={styles.rowContainer}>
-        <View style={[styles.inputGroup, {flex: 1, marginRight: 10}]}>
-          <Text style={styles.label}>ZIP Code *</Text>
-          <TextInput
-            style={styles.input}
-            value={shop.postalCode}
-            onChangeText={(text) => handleInputChange('postalCode', text)}
-            placeholder="ZIP Code"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-          />
-        </View>
-        
-        <View style={[styles.inputGroup, {flex: 2}]}>
-          <Text style={styles.label}>City *</Text>
-          <TextInput
-            style={styles.input}
-            value={shop.city}
-            onChangeText={(text) => handleInputChange('city', text)}
-            placeholder="City"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-          />
-        </View>
-      </View>
-      
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Country *</Text>
-        <TextInput
-          style={styles.input}
-          value={shop.country}
-          onChangeText={(text) => handleInputChange('country', text)}
-          placeholder="Country"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-        />
-      </View>
-      
-      <View style={styles.rowContainer}>
-        <View style={[styles.inputGroup, {flex: 1, marginRight: 10}]}>
-          <Text style={styles.label}>Latitude *</Text>
-          <TextInput
-            style={[styles.input, errors.latitude && styles.inputError]}
-            value={String(shop.latitude)}
-            onChangeText={(text) => handleInputChange('latitude', text)}
-            placeholder="Latitude"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-            keyboardType="numeric"
-          />
-          {errors.latitude && <Text style={styles.errorText}>{errors.latitude}</Text>}
-        </View>
-        
-        <View style={[styles.inputGroup, {flex: 1}]}>
-          <Text style={styles.label}>Longitude *</Text>
-          <TextInput
-            style={[styles.input, errors.longitude && styles.inputError]}
-            value={String(shop.longitude)}
-            onChangeText={(text) => handleInputChange('longitude', text)}
-            placeholder="Longitude"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-            keyboardType="numeric"
-          />
-          {errors.longitude && <Text style={styles.errorText}>{errors.longitude}</Text>}
-        </View>
-      </View>
-      
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Phone Number *</Text>
-        <TextInput
-          style={[styles.input, errors.phone && styles.inputError]}
-          value={shop.phone}
-          onChangeText={(text) => handleInputChange('phone', text)}
-          placeholder="+1234567890"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-          keyboardType="phone-pad"
-        />
-        {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
-      </View>
-      
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Email *</Text>
-        <TextInput
-          style={[styles.input, errors.email && styles.inputError]}
-          value={shop.email}
-          onChangeText={(text) => handleInputChange('email', text)}
-          placeholder="email@example.com"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-      </View>
-      
-      {/* Categories */}
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Categories *</Text>
-        <View style={styles.rowContainer}>
-          <View style={[styles.input, {flex: 3, marginRight: 10, justifyContent: 'center'}]}>
-            <Picker
-              selectedValue={categoryInput}
-              onValueChange={(itemValue) => setCategoryInput(itemValue)}
-              style={{height: 50, color: Appearance.getColorScheme() === 'dark' ? '#FFFFFF' : '#000000'}}
-            >
-              <Picker.Item label="Select a category" value="" />
-              {categories.map((cat, index) => (
-                <Picker.Item key={index} label={cat} value={cat} />
-              ))}
-            </Picker>
-          </View>
-          <TouchableOpacity 
-            style={[styles.imagePickerButton, {flex: 1, marginTop: 0}]} 
-            onPress={addCategory}
-            disabled={!categoryInput}
-          >
-            <Text style={styles.imagePickerButtonText}>Add</Text>
+    <>
+      <StatusBar
+        barStyle={styles.statusBar.barStyle}
+        backgroundColor={styles.statusBar.backgroundColor}
+      />
+      <ScrollView style={styles.container}>
+        <View style={{flexDirection: 'row', marginBottom: 20}}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <FontAwesome6 name="arrow-left" size={24} color={Appearance.getColorScheme() === 'dark' ? '#FFFFFF' : '#000000'} />
           </TouchableOpacity>
+          <Text style={styles.title}>Create Shop</Text>
         </View>
         
-        <View style={styles.categoriesContainer}>
-          {shop.categories.map((category, index) => (
-            <View key={index} style={styles.categoryItem}>
-              <TouchableOpacity 
-                style={[
-                  styles.categoryButton, 
-                  category === shop.primaryCategory && styles.primaryCategoryButton
-                ]}
-                onPress={() => setPrimaryCategory(category)}
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Shop Name *</Text>
+          <TextInput
+            style={[styles.input, errors.name && styles.inputError]}
+            value={shop.name}
+            onChangeText={(text) => handleInputChange('name', text)}
+            placeholder="Name of the shop"
+            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          />
+          {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+        </View>
+        
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Description *</Text>
+          <TextInput
+            style={[styles.input, styles.textArea]}
+            value={shop.description}
+            onChangeText={(text) => handleInputChange('description', text)}
+            placeholder="Description of the shop"
+            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            multiline
+            numberOfLines={4}
+          />
+        </View>
+        
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Address *</Text>
+          <TextInput
+            style={styles.input}
+            value={shop.address}
+            onChangeText={(text) => handleInputChange('address', text)}
+            placeholder="Address"
+            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          />
+        </View>
+        
+        <View style={styles.rowContainer}>
+          <View style={[styles.inputGroup, {flex: 1, marginRight: 10}]}>
+            <Text style={styles.label}>ZIP Code *</Text>
+            <TextInput
+              style={styles.input}
+              value={shop.postalCode}
+              onChangeText={(text) => handleInputChange('postalCode', text)}
+              placeholder="ZIP Code"
+              placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            />
+          </View>
+          
+          <View style={[styles.inputGroup, {flex: 2}]}>
+            <Text style={styles.label}>City *</Text>
+            <TextInput
+              style={styles.input}
+              value={shop.city}
+              onChangeText={(text) => handleInputChange('city', text)}
+              placeholder="City"
+              placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            />
+          </View>
+        </View>
+        
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Country *</Text>
+          <TextInput
+            style={styles.input}
+            value={shop.country}
+            onChangeText={(text) => handleInputChange('country', text)}
+            placeholder="Country"
+            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          />
+        </View>
+        
+        <View style={styles.rowContainer}>
+          <View style={[styles.inputGroup, {flex: 1, marginRight: 10}]}>
+            <Text style={styles.label}>Latitude *</Text>
+            <TextInput
+              style={[styles.input, errors.latitude && styles.inputError]}
+              value={String(shop.latitude)}
+              onChangeText={(text) => handleInputChange('latitude', text)}
+              placeholder="Latitude"
+              placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+              keyboardType="numeric"
+            />
+            {errors.latitude && <Text style={styles.errorText}>{errors.latitude}</Text>}
+          </View>
+          
+          <View style={[styles.inputGroup, {flex: 1}]}>
+            <Text style={styles.label}>Longitude *</Text>
+            <TextInput
+              style={[styles.input, errors.longitude && styles.inputError]}
+              value={String(shop.longitude)}
+              onChangeText={(text) => handleInputChange('longitude', text)}
+              placeholder="Longitude"
+              placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+              keyboardType="numeric"
+            />
+            {errors.longitude && <Text style={styles.errorText}>{errors.longitude}</Text>}
+          </View>
+        </View>
+        
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Phone Number *</Text>
+          <TextInput
+            style={[styles.input, errors.phone && styles.inputError]}
+            value={shop.phone}
+            onChangeText={(text) => handleInputChange('phone', text)}
+            placeholder="+1234567890"
+            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            keyboardType="phone-pad"
+          />
+          {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
+        </View>
+        
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Email *</Text>
+          <TextInput
+            style={[styles.input, errors.email && styles.inputError]}
+            value={shop.email}
+            onChangeText={(text) => handleInputChange('email', text)}
+            placeholder="email@example.com"
+            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+        </View>
+        
+        {/* Categories */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Categories *</Text>
+          <View style={styles.rowContainer}>
+            <View style={[styles.input, {flex: 3, marginRight: 10, justifyContent: 'center'}]}>
+              <Picker
+                selectedValue={categoryInput}
+                onValueChange={(itemValue) => setCategoryInput(itemValue)}
+                style={{height: 50, color: Appearance.getColorScheme() === 'dark' ? '#FFFFFF' : '#000000'}}
               >
-                <Text 
+                <Picker.Item label="Select a category" value="" />
+                {categories.map((cat, index) => (
+                  <Picker.Item key={index} label={cat} value={cat} />
+                ))}
+              </Picker>
+            </View>
+            <TouchableOpacity 
+              style={[styles.imagePickerButton, {flex: 1, marginTop: 0}]} 
+              onPress={addCategory}
+              disabled={!categoryInput}
+            >
+              <Text style={styles.imagePickerButtonText}>Add</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <View style={styles.categoriesContainer}>
+            {shop.categories.map((category, index) => (
+              <View key={index} style={styles.categoryItem}>
+                <TouchableOpacity 
                   style={[
-                    styles.categoryText,
-                    category === shop.primaryCategory && styles.primaryCategoryText
+                    styles.categoryButton, 
+                    category === shop.primaryCategory && styles.primaryCategoryButton
                   ]}
+                  onPress={() => setPrimaryCategory(category)}
                 >
-                  {category}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={styles.removeCategoryButton} 
-                onPress={() => removeCategory(index)}
-              >
-                <Text style={styles.removeImageText}>×</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+                  <Text 
+                    style={[
+                      styles.categoryText,
+                      category === shop.primaryCategory && styles.primaryCategoryText
+                    ]}
+                  >
+                    {category}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.removeCategoryButton} 
+                  onPress={() => removeCategory(index)}
+                >
+                  <Text style={styles.removeImageText}>×</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+          {shop.categories.length > 0 && (
+            <Text style={styles.helperText}>
+              Tap on a category to set it as primary. Current primary: {shop.primaryCategory || 'None'}
+            </Text>
+          )}
         </View>
-        {shop.categories.length > 0 && (
-          <Text style={styles.helperText}>
-            Tap on a category to set it as primary. Current primary: {shop.primaryCategory || 'None'}
-          </Text>
-        )}
-      </View>
-      
-      {/* Images */}
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Images *</Text>
-        <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
-          <Text style={styles.imagePickerButtonText}>Add Image</Text>
-        </TouchableOpacity>
         
-        <View style={styles.imagesContainer}>
-          {shop.images.map((image, index) => (
-            <View key={index} style={styles.imageItem}>
-              <Image source={{ uri: image.url }} style={styles.thumbnail} />
-              <TouchableOpacity 
-                style={styles.removeImageButton} 
-                onPress={() => removeImage(index)}
-              >
-                <Text style={styles.removeImageText}>×</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+        {/* Images */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Images *</Text>
+          <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
+            <Text style={styles.imagePickerButtonText}>Add Image</Text>
+          </TouchableOpacity>
+          
+          <View style={styles.imagesContainer}>
+            {shop.images.map((image, index) => (
+              <View key={index} style={styles.imageItem}>
+                <Image source={{ uri: image.url }} style={styles.thumbnail} />
+                <TouchableOpacity 
+                  style={styles.removeImageButton} 
+                  onPress={() => removeImage(index)}
+                >
+                  <Text style={styles.removeImageText}>×</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
-      
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Create Shop</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <Text style={styles.submitButtonText}>Create Shop</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </>
   );
-};
-
-const extraStyles = {
-  categoriesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 10,
-  },
-  categoryItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 10,
-    marginBottom: 10,
-  },
-  categoryButton: {
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  primaryCategoryButton: {
-    backgroundColor: '#007bff',
-  },
-  primaryCategoryText: {
-    color: 'white',
-  },
-  removeCategoryButton: {
-    marginLeft: 5,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#ff4d4f',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-};
-
-// Fusionner les styles supplémentaires avec getStyles
-const getShopStyles = () => {
-  const baseStyles = getStyles();
-  return {
-    ...baseStyles,
-    ...extraStyles,
-  };
 };
 
 export default ShopCreationScreen;

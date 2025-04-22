@@ -1,3 +1,4 @@
+// TODO: Refactor styles
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import {
   View,

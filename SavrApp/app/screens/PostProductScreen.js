@@ -1,35 +1,33 @@
-// app/screens/PostProductScreen.js
 import React, { useState, useContext, useEffect } from 'react';
 import {
   Text,
   TextInput,
   TouchableOpacity,
   ScrollView,
-  StyleSheet,
   Alert,
   ActivityIndicator,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SettingsContext } from '../contexts/SettingsContext';
 import { getShopProducts, postProduct, postProductVariant, updateProduct } from '../utils/api';
-import {COLORS} from '../constants/colors';
 import CategoryDropdown from '../components/CategoryDropdown';
 import ImageManager from '../components/ImageManager';
-
+import getStyles from '../styles/PostProductStyles';
 
 const PostProductScreen = () => {
   const route = useRoute();
   const shop = route.params?.shop || {};
   const setVariants = route.params?.setVariants || (() => {});
   const navigation = useNavigation();
+  
   const { darkMode } = useContext(SettingsContext);
+  const [ styles, setStyles ] = useState(getStyles(darkMode));
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [originalPrice, setOriginalPrice] = useState('');
   const [category, setCategory] = useState('');
-  const [imageUri, setImageUri] = useState(null);
   const [images, setImages] = useState([]);
   const [quantity, setQuantity] = useState('');
   const [loading, setLoading] = useState(false);
@@ -51,7 +49,9 @@ const PostProductScreen = () => {
       setShopProducts(products);
     }
     fetchShopProducts();
-  }, []);
+
+    setStyles(getStyles(darkMode)); 
+  }, [darkMode]);
 
   const onImagesChange = (newImages) => {
     setImages(newImages);
@@ -159,34 +159,27 @@ const PostProductScreen = () => {
     ]);
   }
 
-  const colors = COLORS;
-
   return (
     <ScrollView
-      contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}
+      contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
       {/** Cancel button */}
       <TouchableOpacity
-        style={[styles.cancelButton, { backgroundColor: colors.secondary }]}
-        // replace above line by style={[styles.cancelButton, { backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary }]}
+        style={styles.cancelButton}
         onPress={handleCancel}
       >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.submitText}>Cancel</Text>
-        )}
+        <Text style={styles.submitText}>Cancel</Text>
+      </TouchableOpacity>
 
       {/** Product Name */}
-      </TouchableOpacity>
-      <Text style={[styles.label, { color: colors.text }]}>Product Name *</Text>
+      <Text style={styles.label}>Product Name *</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.border }]}
+        style={styles.input}
         value={name}
         onChangeText={onNameChange}
         placeholder="Enter product name"
-        placeholderTextColor={colors.placeholder}
+        placeholderTextColor={styles.input.placeholderTextColor}
         returnKeyType='default'
       />
       {showSuggestions && suggestions.length > 0 && (
@@ -209,50 +202,46 @@ const PostProductScreen = () => {
       )}
 
       {/** Description */}
-      <Text style={[styles.label, { color: colors.text }]}>Description *</Text>
+      <Text style={styles.label}>Description *</Text>
       <TextInput
-        style={[
-          styles.input,
-          styles.textArea,
-          { backgroundColor: colors.inputBg, borderColor: colors.border },
-        ]}
+        style={[styles.input, styles.textArea]}
         value={description}
         onChangeText={setDescription}
         placeholder="Enter a short description"
-        placeholderTextColor={colors.placeholder}
+        placeholderTextColor={styles.input.placeholderTextColor}
         multiline
         numberOfLines={4}
         returnKeyType='default'
       />
 
       {/** Original Price */}
-      <Text style={[styles.label, { color: colors.text }]}>Original Price *</Text>
+      <Text style={styles.label}>Original Price *</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.border }]}
+        style={styles.input}
         value={originalPrice}
         onChangeText={setOriginalPrice}
         placeholder="0.00"
-        placeholderTextColor={colors.placeholder}
+        placeholderTextColor={styles.input.placeholderTextColor}
         keyboardType="decimal-pad"
         returnKeyType='done'
       />
 
       {/** Price */}
-      <Text style={[styles.label, { color: colors.text }]}>Price *</Text>
+      <Text style={styles.label}>Price *</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.border }]}
+        style={styles.input}
         value={price}
         onChangeText={setPrice}
         placeholder="0.00"
-        placeholderTextColor={colors.placeholder}
+        placeholderTextColor={styles.input.placeholderTextColor}
         keyboardType="decimal-pad"
         returnKeyType='done'
       />
 
       {/** Quantity */}
-      <Text style={[styles.label, { color: colors.text }]}>Quantity *</Text>
+      <Text style={styles.label}>Quantity *</Text>
       <TextInput
-        style={[styles.input, { backgroundColor: colors.inputBg, borderColor: colors.border }]}
+        style={styles.input}
         value={quantity.toString()}
         onChangeText={(text) => {
           console.log("Quantity", text);
@@ -261,32 +250,34 @@ const PostProductScreen = () => {
           } else {
             setQuantity(parseInt(text))
           }
-          
         }}
         placeholder="Enter quantity"
-        placeholderTextColor={colors.placeholder}
+        placeholderTextColor={styles.input.placeholderTextColor}
         keyboardType="numeric"
         returnKeyType='done'
       />
 
       {/** Category */}
-      <Text style={[styles.label, { color: colors.text }]}>Category</Text>
-      <CategoryDropdown shop={shop} onInputChange={onCategoryInputChange} category={category} />
+      <Text style={styles.label}>Category</Text>
+      <View style={styles.dropdownContainer}>
+        <CategoryDropdown shop={shop} onInputChange={onCategoryInputChange} category={category} />
+      </View>
 
       {/** Image Picker */}
-      <Text style={[styles.label, { color: colors.text }]}>Image</Text>
-      <ImageManager
-        images={images}
-        height={250}
-        editMode={'edit'}
-        onImagesChange={onImagesChange}
-        onImagePress={() => {}}
-        
-      />
+      <Text style={styles.label}>Image</Text>
+      <View style={styles.imageManagerContainer}>
+        <ImageManager
+          images={images}
+          height={250}
+          editMode={'edit'}
+          onImagesChange={onImagesChange}
+          onImagePress={() => {}}
+        />
+      </View>
 
       {/** Submit button*/}
       <TouchableOpacity
-        style={[styles.submitButton, { backgroundColor: colors.primary }]}
+        style={styles.submitButton}
         onPress={handleSubmit}
         disabled={loading}
       >
@@ -299,72 +290,5 @@ const PostProductScreen = () => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-  label: {
-    fontSize: 16,
-    marginTop: 12,
-  },
-  input: {
-    marginTop: 8,
-    padding: 12,
-    borderWidth: 1,
-    borderRadius: 6,
-    fontSize: 16,
-  },
-  cancelButton: {
-    paddingVertical: 6,
-    borderRadius: 6,
-    alignItems: 'center',
-    width: '30%',
-    alignSelf: 'flex-end',
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  imagePicker: {
-    marginTop: 8,
-    height: 200,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderRadius: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imagePreview: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 6,
-  },
-  submitButton: {
-    marginTop: 24,
-    paddingVertical: 14,
-    borderRadius: 6,
-    alignItems: 'center',
-  },
-  submitText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  suggestionsContainer: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
-    maxHeight: 150,
-    marginBottom: 8,
-  },
-  suggestionItem: {
-    padding: 12,
-  },
-  suggestionText: {
-    fontSize: 16,
-  },
-});
 
 export default PostProductScreen;

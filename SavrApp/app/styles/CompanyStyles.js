@@ -9,7 +9,7 @@ const getStyles = (darkMode) => {
     border: darkMode ? COLORS.borderDark : COLORS.borderLight,
     shadow: darkMode ? COLORS.overlayDark : COLORS.overlayLight,
     card: darkMode ? COLORS.grey800 : COLORS.surface,
-    addButton: darkMode ? COLORS.textDark : COLORS.textLight,
+    addButton: darkMode ? COLORS.primaryLight : COLORS.primaryDark,
   };
 
   return StyleSheet.create({
@@ -43,6 +43,7 @@ const getStyles = (darkMode) => {
       height: 40,
       justifyContent: 'center',
       alignItems: 'center',
+      color: themeColors.addButton,
     },
     scrollContainer: {
       flex: 1,

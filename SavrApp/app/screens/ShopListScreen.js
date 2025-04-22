@@ -1,15 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Appearance } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
 import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';
-import getStyles from '../styles/CompanyStyles'; // Réutilisation du même fichier de style
+import getStyles from '../styles/CompanyStyles'; 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getToken } from '../utils/token';
 import { AuthContext } from '../contexts/AuthContext';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const ShopListScreen = () => {
-  const theme = Appearance.getColorScheme();
-  console.log('Current theme:', theme);
-  const [styles, setStyles] = useState(getStyles());
   const navigation = useNavigation();
   const route = useRoute();
   const { company } = route.params || { company: { id: null, name: 'All Shops' } };
@@ -19,21 +17,12 @@ const ShopListScreen = () => {
   const [shops, setShops] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const { darkMode } = useContext(SettingsContext);
+  const styles = getStyles(darkMode);
+
   useEffect(() => {
-    const handleThemeChange = ({ colorScheme }) => {
-      if (colorScheme) {
-        setStyles(getStyles());
-      }
-    };
-
-    const subscription = Appearance.addChangeListener(handleThemeChange);
-
     retrieveShops();
-
-    return () => {
-      subscription.remove();
-    };
-  }, [company.id]);
+  }, [company.id, darkMode]);
 
   const retrieveShops = async () => {
     setIsLoading(true);
@@ -92,77 +81,60 @@ const ShopListScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={styles.isDarkMode ? "light-content" : "dark-content"} />
+      <StatusBar barStyle={styles.statusBar.barStyle} backgroundColor={styles.statusBar.backgroundColor} />
       
       {/* Header avec le nom de la compagnie et bouton d'ajout */}
-      <View style={[styles.header, {
-        borderBottomColor: styles.isDarkMode ? '#444' : '#eee',
-        backgroundColor: styles.isDarkMode ? 'black' : 'white',
-      }]}>
+      <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome6 name="arrow-left" size={24} color={styles.isDarkMode ? 'white' : 'black'} />
+          <FontAwesome6 name="arrow-left" size={24} color={styles.headerTitle.color} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, {
-          color: styles.isDarkMode ? 'white' : 'black',
-        }]}>{company.name ? `${company.name} - Shops` : 'All Shops'}</Text>
+        <Text style={styles.headerTitle}>
+          {company.name ? `${company.name} - Shops` : 'All Shops'}
+        </Text>
         <TouchableOpacity 
           style={styles.addButton} 
           onPress={handleAddShop}
         >
-          <AntDesign name="plus" size={24} color="white" />
+          <AntDesign name="plus" size={24} color={darkMode ? 'black' : 'white'} />
         </TouchableOpacity>
       </View>
       
       {/* Liste déroulante des shops */}
       <ScrollView 
-        style={[styles.scrollContainer, {
-          backgroundColor: styles.isDarkMode ? 'black' : 'white',
-        }]}
+        style={styles.scrollContainer}
         contentContainerStyle={styles.contentContainer}
       >
         {isLoading ? (
           <View style={styles.emptyContainer}>
-            <Text style={{ color: styles.isDarkMode ? 'white' : 'black' }}>
+            <Text style={{ color: styles.companyName.color }}>
               Loading shops...
             </Text>
           </View>
         ) : shops.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <Text style={{ color: styles.isDarkMode ? 'white' : 'black' }}>
+            <Text style={{ color: styles.companyName.color }}>
               No shops found. Tap the + button to add one.
             </Text>
           </View>
         ) : (
           shops.map((shop) => (
             <TouchableOpacity onPress={() => handleDetailShop(shop)} key={shop.id}>
-              <View 
-                style={[styles.companyCard, {
-                  backgroundColor: styles.isDarkMode ? '#333' : 'white',
-                  borderColor: styles.isDarkMode ? '#444' : '#eee',
-                }]}
-              >
+              <View style={styles.companyCard}>
                 <View style={styles.companyInfo}>
-                  <Text style={[styles.companyName, {
-                    color: styles.isDarkMode ? 'white' : 'black',
-                  }]}>{shop.name}</Text>
-                  <Text style={[styles.companyAddress, {
-                    color: styles.isDarkMode ? '#bbb' : '#666',
-                  }]}>{shop.address}</Text>
-                  <Text style={[styles.companyCity, {
-                    color: styles.isDarkMode ? '#bbb' : '#666',
-                  }]}>{shop.city}, {shop.postalCode}</Text>
+                  <Text style={styles.companyName}>{shop.name}</Text>
+                  <Text style={styles.companyAddress}>{shop.address}</Text>
+                  <Text style={styles.companyCity}>{shop.city}, {shop.postalCode}</Text>
                   {shop.primaryCategory && (
-                    <Text style={[styles.companyCity, {
-                      color: styles.isDarkMode ? '#8af' : '#36f',
-                      marginTop: 4,
-                    }]}>Category: {shop.primaryCategory}</Text>
+                    <Text style={[styles.companyCity, { marginTop: 4 }]}>
+                      Category: {shop.primaryCategory}
+                    </Text>
                   )}
                 </View>
                 <TouchableOpacity 
                   style={styles.editButton}
                   onPress={() => handleEditShop(shop)}
                 >
-                  <Feather name="edit" size={20} color={styles.isDarkMode ? 'white' : 'black'} />
+                  <Feather name="edit" size={20} color={styles.companyName.color} />
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
