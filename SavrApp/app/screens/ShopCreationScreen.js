@@ -16,6 +16,8 @@ import { getToken } from '../utils/token';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { request } from '../utils/request';
+import { AuthContext } from '../contexts/AuthContext';
 
 const ShopCreationScreen = () => {
   const navigation = useNavigation();
@@ -41,9 +43,13 @@ const ShopCreationScreen = () => {
     primaryCategory: '',
     images: []
   });
+
+  const [emailOwnership, setEmailOwnership] = useState('');
   
   const [categoryInput, setCategoryInput] = useState('');
   const [errors, setErrors] = useState({});
+
+  const { user } = useContext(AuthContext);
   
   useEffect(() => {
     const handleThemeChange = ({ colorScheme }) => {
@@ -108,6 +114,22 @@ const ShopCreationScreen = () => {
         Alert.alert("Success", "Shop created successfully!", [
           { text: "OK", onPress: () => navigation.navigate('ShopList', { company: { id: dataToSend.companyId } }) }
         ]);
+
+        if (shop.email !== emailOwnership) {
+          const ownershipResponse = await request('/ownership/shop', 'POST', null, {
+            userId: user.id,
+            shopId: data.data.id,
+            email: emailOwnership,
+          });
+
+          if (ownershipResponse.ok) {
+            console.log("Ownership request sent successfully.");
+          }
+          else {
+            console.error("Error sending ownership request:", ownershipResponse.error);
+            Alert.alert("Error", "Failed to send ownership request.", [{ text: "OK" }]);
+          }
+        }
       } else {
         Alert.alert("Error", data.message || "Failed to create shop.", [{ text: "OK" }]);
       }
@@ -378,6 +400,19 @@ const ShopCreationScreen = () => {
           autoCapitalize="none"
         />
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Ownership *</Text>
+        <TextInput
+          style={[styles.input, errors.email && styles.inputError]}
+          value={emailOwnership}
+          onChangeText={(text) => setEmailOwnership(text)}
+          placeholder="it can be your email or the email of the owner"
+          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
       </View>
       
       {/* Categories */}
