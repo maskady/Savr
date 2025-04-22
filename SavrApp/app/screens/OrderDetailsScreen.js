@@ -15,12 +15,7 @@ import { SettingsContext } from '../contexts/SettingsContext';
 
 const Colors = {
   Primary: '#000000',      
-  Secondary: '#333333',    
-  White: '#FFFFFF',       
-  Black: '#000000',       
   Grey: '#333333',        
-  lightGrey: '#CCCCCC',   
-  darkGrey: '#666666',    
   Success: '#444444',      
   Error: '#000000',        
   Warning: '#888888',      
