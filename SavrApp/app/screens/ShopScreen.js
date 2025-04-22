@@ -31,7 +31,8 @@ const ShopScreen = () => {
   const { darkMode } = useContext(SettingsContext);
   const styles = getStyles(darkMode);
 
-  const [shop, setShop] = useState(route.params?.shop || null);
+  //const [shop, setShop] = useState(route.params?.shop || null);
+  let shop = route.params?.shop || null;
 
   const [oldShop, setOldShop] = useState(route.params?.shop || null);
   const [variants, setVariants] = useState([]);
@@ -46,8 +47,8 @@ const ShopScreen = () => {
   const primaryCategoryName = businessCategories[shop?.primaryCategory]?.name || shop?.primaryCategory;
 
 
-  const goBackOrHome = async () => {
-    await handleSaveChanges();
+  const goBackOrHome = () => {
+    handleSaveChanges();
 
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -86,7 +87,7 @@ const ShopScreen = () => {
             }];
           }
 
-          shop = ({ ...data, images: shopImages, categories });
+          shop = { ...data, images: shopImages, categories };
         }
       } catch (err) {
         console.error('Error fetching shop details:', err);
