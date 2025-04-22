@@ -199,7 +199,7 @@ const CheckoutScreen = () => {
       {/* Payment button */}
       <View style={styles.bottomContainer}>
         <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} merchantIdentifier={STRIPE_MERCHANT_ID} urlScheme={STRIPE_URL_SCHEME} >
-          <OrderAndPay orderId={63} total={total} onPaymentSuccess={handlePaymentSuccess} onPaymentError={handlePaymentError} cartItems={cartItems} />
+          <OrderAndPay total={total} onPaymentSuccess={handlePaymentSuccess} onPaymentError={handlePaymentError} cartItems={cartItems} />
         </StripeProvider>
       </View>
     </View>
