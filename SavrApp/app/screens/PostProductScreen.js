@@ -7,7 +7,6 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  Image,
   Alert,
   ActivityIndicator,
 } from 'react-native';
