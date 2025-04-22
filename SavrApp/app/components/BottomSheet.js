@@ -2,6 +2,7 @@ import React, { useRef, useContext, useState } from 'react';
 import { Animated, PanResponder, Dimensions, View } from 'react-native';
 import { SettingsContext } from '../contexts/SettingsContext';
 import getStyles from '../styles/BottomSheetStyles';
+import { COLORS } from '../constants/colors';
 
 
 const BottomSheet = ({ children }) => {
@@ -87,7 +88,7 @@ const BottomSheet = ({ children }) => {
         {
           height: SHEET_HEIGHT,
           transform: [{ translateY: sheetAnim }],
-          backgroundColor: darkMode ? '#121212' : '#fff',
+          backgroundColor: darkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
         },
       ]}
     >

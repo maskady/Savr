@@ -1,25 +1,22 @@
 // components/FullScreenImageModal.js
 import React from 'react';
-import { Modal, View, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { Modal, View, TouchableOpacity, Image } from 'react-native';
+import getStyles from '../styles/AppStyles';
+import { COLORS } from '../constants/colors';
 import { ArrowLeft } from 'lucide-react-native';
 
 export default function FullScreenImageModal({ image, onClose }) {
+  const styles = getStyles();
   return (
     <Modal visible={!!image} transparent animationType="fade" onRequestClose={onClose}>
-      <View style={styles.overlay}>
-        <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-          <ArrowLeft size={24} color="#fff" />
+      <View style={styles.fullScreenImageModal.overlay}>
+        <TouchableOpacity onPress={onClose} style={styles.fullScreenImageModal.closeBtn}>
+          <ArrowLeft size={24} color={styles.fullScreenImageModal.icon.color} />
         </TouchableOpacity>
         {image && (
-          <Image source={{ uri: image.url }} style={styles.image} resizeMode="contain"/>
+          <Image source={{ uri: image.url }} style={styles.fullScreenImageModal.image} resizeMode="contain"/>
         )}
       </View>
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  overlay: { flex:1, backgroundColor:'rgba(0,0,0,0.9)', justifyContent:'center', alignItems:'center' },
-  closeBtn: { position:'absolute', top:40, left:20, padding:10, zIndex:10 },
-  image: { width:'100%', height:'80%' },
-});
