@@ -2,12 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import { 
   View, 
   Text, 
-  StyleSheet, 
   ScrollView, 
   Image, 
   TouchableOpacity, 
   ActivityIndicator,
-  Appearance
+  StatusBar,
 } from 'react-native';
 import { request } from '../utils/request';
 import { FontAwesome6 } from '@expo/vector-icons';
