@@ -133,87 +133,92 @@ const CheckoutScreen = () => {
   };
 
   return (
-
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton} 
-            onPress={() => navigation.goBack()}
-          >
-            <FontAwesome name="arrow-left" size={20} color={darkMode ? "#fff" : "#333"} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>
-            Checkout
-          </Text>
-        </View>
-        
-        {/* Products List */}
-        <View style={styles.productsList}>
-          <Text style={styles.sectionTitle}>
-            Your Items ({itemCount})
-          </Text>
-          
-          {cartItems.flatMap(shop => 
-            shop.items.map(item => renderProductItem(shop.shopId, item, shop.shopName, shop.pickupTime))
-          )}
-        </View>
-
-        {/* Summary */}
-        <View style={styles.section}>
-
-          {/* <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText]}>
-            Summary
-          </Text> */}
-          
-          {/* <View style={styles.priceSummaryRow}>
-            <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
-              Sub-total ({itemCount} item{itemCount > 1 ? 's' : ''})
-            </Text>
-            <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
-              {subtotal?.toFixed(2)} €
-            </Text>
-          </View> */}
-          
-          {/* <View style={styles.priceSummaryRow}>
-            <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
-              Service fee
-            </Text>
-            <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
-              {serviceFee?.toFixed(2)} €
-            </Text>
-          </View> */}
-          
-          {/* <View style={styles.priceSummaryRow}>
-            <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
-              Shipping fee
-            </Text>
-            <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
-              {deliveryFee?.toFixed(2)} €
-            </Text>
-          </View> */}
-          
-          {/* <View style={styles.divider} /> */}
-          
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>
-              Total
-            </Text>
-            <Text style={styles.totalValue}>
-              {total?.toFixed(2)} €
+    <>
+      <StatusBar
+        barStyle={styles.statusBar.barStyle}
+        backgroundColor={styles.statusBar.backgroundColor}
+      />
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity 
+              style={styles.backButton} 
+              onPress={() => navigation.goBack()}
+            >
+              <FontAwesome name="arrow-left" size={20} color={darkMode ? "#fff" : "#333"} />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>
+              Checkout
             </Text>
           </View>
-        </View>
-      </ScrollView>
+          
+          {/* Products List */}
+          <View style={styles.productsList}>
+            <Text style={styles.sectionTitle}>
+              Your Items ({itemCount})
+            </Text>
+            
+            {cartItems.flatMap(shop => 
+              shop.items.map(item => renderProductItem(shop.shopId, item, shop.shopName, shop.pickupTime))
+            )}
+          </View>
 
-      {/* Payment button */}
-      <View style={styles.bottomContainer}>
-        <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} merchantIdentifier={STRIPE_MERCHANT_ID} urlScheme={STRIPE_URL_SCHEME} >
-          <OrderAndPay orderId={63} total={total} onPaymentSuccess={handlePaymentSuccess} onPaymentError={handlePaymentError} cartItems={cartItems} />
-        </StripeProvider>
+          {/* Summary */}
+          <View style={styles.section}>
+
+            {/* <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText]}>
+              Summary
+            </Text> */}
+            
+            {/* <View style={styles.priceSummaryRow}>
+              <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
+                Sub-total ({itemCount} item{itemCount > 1 ? 's' : ''})
+              </Text>
+              <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
+                {subtotal?.toFixed(2)} €
+              </Text>
+            </View> */}
+            
+            {/* <View style={styles.priceSummaryRow}>
+              <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
+                Service fee
+              </Text>
+              <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
+                {serviceFee?.toFixed(2)} €
+              </Text>
+            </View> */}
+            
+            {/* <View style={styles.priceSummaryRow}>
+              <Text style={[styles.summaryLabel, isDark ? styles.darkSubtext : styles.lightSubtext]}>
+                Shipping fee
+              </Text>
+              <Text style={[styles.summaryValue, isDark ? styles.darkText : styles.lightText]}>
+                {deliveryFee?.toFixed(2)} €
+              </Text>
+            </View> */}
+            
+            {/* <View style={styles.divider} /> */}
+            
+            <View style={styles.totalRow}>
+              <Text style={styles.totalLabel}>
+                Total
+              </Text>
+              <Text style={styles.totalValue}>
+                {total?.toFixed(2)} €
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+
+        {/* Payment button */}
+        <View style={styles.bottomContainer}>
+          <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY} merchantIdentifier={STRIPE_MERCHANT_ID} urlScheme={STRIPE_URL_SCHEME} >
+            <OrderAndPay orderId={63} total={total} onPaymentSuccess={handlePaymentSuccess} onPaymentError={handlePaymentError} cartItems={cartItems} />
+          </StripeProvider>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 

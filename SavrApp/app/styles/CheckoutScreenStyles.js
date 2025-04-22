@@ -88,7 +88,7 @@ const getStyles = (darkMode) => {
     discountPrice: {
       fontSize: 18,
       fontWeight: 'bold',
-      color: COLORS.primary,
+      color: theme.text,
     },
     originalPrice: {
       fontSize: 14,
@@ -122,7 +122,7 @@ const getStyles = (darkMode) => {
     quantityButtonText: {
       fontSize: 20,
       fontWeight: 'bold',
-      color: COLORS.primary,
+      color: theme.text,
     },
     quantityValue: {
       fontSize: 16,
