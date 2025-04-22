@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation} from '@react-navigation/native';
-import styles from '../styles/ErrorStyles';
+import getStyles from '../styles/ErrorStyles';
+import { SettingsContext } from '../context/SettingsContext';
 
 const ErrorScreen = () => {
   const navigation = useNavigation();
+  const { darkMode } = useContext(SettingsContext);
+  const [ styles, setStyles ] = useState(getStyles(darkMode));
+
+  useEffect(() => {
+    setStyles(getStyles(darkMode));
+  }, [darkMode]);
 
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA2L2pvYjIwNS1iZWUtMTBjLmpwZw.jpg    ' }}
+        source={{ uri: 'https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA2L2pvYjIwNS1iZWUtMTBjLmpwZw.jpg' }}
         style={styles.image}
       />
       <Text style={styles.title}>Whoops, there was an error</Text>
