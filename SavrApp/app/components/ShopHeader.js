@@ -9,10 +9,6 @@ export default function ShopHeader({
   onBack, onSave, onToggleEdit, onShare
 }) {
   const [styles, setStyles] = useState(getStyles());
-  useEffect(() => {
-    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
-    return () => sub.remove();
-  }, []);
   return (
     <View style={styles.shopHeader.header}>
       <TouchableOpacity onPress={onBack} style={styles.shopHeader.backButton}>

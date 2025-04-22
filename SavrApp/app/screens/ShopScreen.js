@@ -97,7 +97,7 @@ const ShopScreen = () => {
     };
 
     fetchShopDetails();
-  }, [shop?.id, darkMode]);
+  }, [shop?.id]);
 
   const handleCall = () => {
     if (shop?.phone) {
