@@ -7,18 +7,15 @@ import {
   ScrollView,
   Dimensions,
   Appearance,
-  StatusBar,
-  Platform,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { LineChart, BarChart } from 'react-native-chart-kit';
+import { LineChart } from 'react-native-chart-kit';
 import SettingsDropdown from '../components/SettingsDropdown';
 import getStyles from '../styles/AppStyles';
 import { useNavigation } from '@react-navigation/native';
-import { businessCategories, businessCategoriesColors } from '../constants/businessCategories';
-import CategoryFilter from '../components/CategoryFilter';
 import { AuthContext } from '../contexts/AuthContext';
 import { request } from '../utils/request';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -106,9 +103,12 @@ const ProfileScreen = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
-  const [styles, setStyles] = useState(getStyles());
   const navigation = useNavigation();
   const { user } = useContext(AuthContext);
+
+  const { darkMode } = useContext(SettingsContext);
+  const [styles, setStyles] = useState(getStyles());
+  
 
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
@@ -186,7 +186,7 @@ const ProfileScreen = () => {
             width={screenWidth * 0.9}
             height={200}
             yAxisSuffix="€"
-            chartConfig={styles.lineChartConfig}
+            chartConfig={styles.chartConfig}
             verticalLabelRotation={45}
             bezier
             style={styles.chartStyle}
