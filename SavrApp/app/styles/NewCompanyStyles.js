@@ -9,6 +9,10 @@ const getStyles = (darkMode) => {
   const placeholderColor = darkMode ? COLORS.placeholderDark : COLORS.placeholderLight;
 
   return StyleSheet.create({
+    statusBar: {
+      backgroundColor: darkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+      barStyle: darkMode ? "light-content" : "dark-content",  
+    },
     container: {
       flex: 1,
       backgroundColor,
@@ -129,6 +133,38 @@ const getStyles = (darkMode) => {
       fontSize: 12,
       color: darkMode ? COLORS.grey300 : COLORS.placeholder,
       marginTop: 5,
+    },
+    categoriesContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginTop: 10,
+    },
+    categoryItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginRight: 10,
+      marginBottom: 10,
+    },
+    categoryButton: {
+      backgroundColor: darkMode ? COLORS.grey800 : COLORS.surface,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderRadius: 20,
+    },
+    primaryCategoryButton: {
+      backgroundColor: darkMode ? COLORS.textDark : COLORS.textLight,
+    },
+    primaryCategoryText: {
+      color: darkMode ? COLORS.textLight : COLORS.textDark,
+    },
+    removeCategoryButton: {
+      marginLeft: 5,
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: COLORS.error,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });
 };
