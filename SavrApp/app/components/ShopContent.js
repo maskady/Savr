@@ -2,7 +2,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { Alert, View, Text, FlatList, ActivityIndicator, TouchableOpacity, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
 import ImageManager from './ImageManager'; // adjust path
 import { getAvailableProductVariantsForShop } from '../utils/api';
 import ShopInfoSection from './ShopInfoSection';
