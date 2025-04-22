@@ -53,7 +53,8 @@ const ImageGallery = ({
     if (url.startsWith('http') || url.startsWith('https')) {
       return url;
     }
-    return `${HOST_URL}${url}`;
+    const host_url_without_slash = HOST_URL.endsWith('/') ? HOST_URL.slice(0, -1) : HOST_URL;
+    return `${host_url_without_slash}${url}`;
   };
 
   // Render each image
