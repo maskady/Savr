@@ -1,26 +1,24 @@
-// components/ShopMapSection.js
-import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, Text, Appearance } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import getStyles from '../styles/AppStyles';
 
 export default function ShopMapSection({
   latitude,
   longitude,
   name,
   onNavigate,
-  colors
 }) {
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
   if (latitude == null || longitude == null) return null;
-
   return (
-    <View style={styles.container}>
+    <View style={styles.shopMapSection.container}>
       <MapView
-        style={styles.map}
+        style={styles.shopMapSection.map}
         initialRegion={{
           latitude,
           longitude,
@@ -31,32 +29,11 @@ export default function ShopMapSection({
         <Marker coordinate={{ latitude, longitude }} title={name} />
       </MapView>
       <TouchableOpacity
-        style={[styles.button, { backgroundColor: colors.primary }]}
+        style={styles.shopMapSection.button}
         onPress={onNavigate}
       >
-        <Text style={styles.buttonText}>Get Directions</Text>
+        <Text style={styles.shopMapSection.buttonText}>Get Directions</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 24,
-    height: 200,
-    borderRadius: 8,
-    overflow: 'hidden'
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject
-  },
-  button: {
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20
-  },
-  buttonText: { color: '#fff', fontWeight: 'bold' }
-});

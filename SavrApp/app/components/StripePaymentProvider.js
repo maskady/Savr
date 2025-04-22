@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, Appearance } from 'react-native';
+import getStyles from '../styles/AppStyles';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { request } from '../utils/request';
 
 const StripePaymentProvider = ({ children }) => {
   const [publishableKey, setPublishableKey] = useState('');
   const [loading, setLoading] = useState(true);
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
 
   const fetchPublishableKey = async () => {
     try {
@@ -37,7 +43,7 @@ const StripePaymentProvider = ({ children }) => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={styles.stripePaymentProvider.loadingContainer}>
         <ActivityIndicator size="large" color="#007AFF" />
       </View>
     );
@@ -53,13 +59,5 @@ const StripePaymentProvider = ({ children }) => {
     </StripeProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default StripePaymentProvider; 
