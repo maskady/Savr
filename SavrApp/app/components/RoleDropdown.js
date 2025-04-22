@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Appearance } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; // pour une icône de flèche
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
 
 const whichRoles = (highestRole) => {
   if (highestRole === 'admin') {
@@ -19,9 +18,14 @@ const whichRoles = (highestRole) => {
 
 export default function RoleDropdown({ selectedRole, onSelectRole, highestRole }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [styles, setStyles] = useState(getStyles());
   const [roles, setRoles] = useState([]);
 
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   const toggleDropdown = () => setIsOpen(prev => !prev);
   const handleSelect = (role) => {
     onSelectRole(role);

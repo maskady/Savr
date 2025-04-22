@@ -1,12 +1,16 @@
-import React, {useState} from 'react';
-import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, Text, TouchableOpacity, Modal, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
 import { businessCategories } from "../constants/businessCategories";
 import { COLORS } from '../constants/colors';
 import { t } from 'i18next';
 
 const CategoryDropdown = ({shop, onInputChange, category}) => {
-    const styles = getStyles();
+    const [styles, setStyles] = useState(getStyles());
+    useEffect(() => {
+      const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+      return () => sub.remove();
+    }, []);
 
     const colors = COLORS;
 

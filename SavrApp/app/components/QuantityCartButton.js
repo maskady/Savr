@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
 import { FontAwesome } from '@expo/vector-icons'; 
 
 
 const QuantityCartButton = ({ onQuantityChange, initialQuantity = 0, maxQuantity = 99 }) => {
-  const styles = getStyles();
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   const [quantity, setQuantity] = useState(initialQuantity);
   const [isInCart, setIsInCart] = useState(initialQuantity > 0);
 

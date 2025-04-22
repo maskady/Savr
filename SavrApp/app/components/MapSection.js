@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Appearance } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Supercluster from 'supercluster';
 import { debounce } from 'lodash';
@@ -12,6 +12,11 @@ import { getUserLocation, startLocationUpdates, stopLocationUpdates } from '../u
 
 const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) => {
   const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   const [clusters, setClusters] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [locationUpdateInterval, setLocationUpdateInterval] = useState(null);

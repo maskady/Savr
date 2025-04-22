@@ -6,6 +6,7 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  View,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SettingsContext } from '../contexts/SettingsContext';
@@ -102,11 +103,13 @@ const PostProductScreen = () => {
         console.log('[PostProductScreen] Updating product with data:', productToPost);
         await updateProduct(existing.id, productToPost);
         productId = existing.id;
+        console.log("Existing Product ID", productResponse.data.id);
 
       } else {
         console.log('[PostProductScreen] Posting product with data:', productToPost);
         productResponse = await postProduct(productToPost);
-        productId = productResponse.id;
+        console.log("New Product ID", productResponse.data.id);
+        productId = productResponse.data.id;
       }
       console.log("Product ID", productId);
       const productVariantToPost = {

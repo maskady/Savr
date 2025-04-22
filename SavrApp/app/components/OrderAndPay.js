@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, Appearance, ActivityIndicator, TouchableOpacity } from 'react-native';
 import getStyles from '../styles/AppStyles';
 import { useStripe, initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native';
-import { Appearance } from 'react-native';
 import { request } from '../utils/request';
 import { APP_NAME } from '@env';
 
 const OrderAndPay = ({ orderId, cartItems, onPaymentSuccess, onPaymentError }) => {
-  const styles = getStyles();
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);

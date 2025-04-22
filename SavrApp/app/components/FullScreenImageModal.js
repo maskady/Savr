@@ -1,12 +1,17 @@
 // components/FullScreenImageModal.js
-import React from 'react';
-import { Modal, View, TouchableOpacity, Image } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { Modal, View, TouchableOpacity, Image, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
 import { ArrowLeft } from 'lucide-react-native';
 
 export default function FullScreenImageModal({ image, onClose }) {
-  const styles = getStyles();
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
+  
   return (
     <Modal visible={!!image} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.fullScreenImageModal.overlay}>

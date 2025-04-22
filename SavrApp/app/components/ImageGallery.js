@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { View, Image, Dimensions, FlatList, TouchableOpacity, Text } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Image, Dimensions, FlatList, TouchableOpacity, Text, Appearance } from 'react-native';
 import { HOST_URL } from '@env';
 import getStyles from '../styles/AppStyles';
 const { width, height } = Dimensions.get('window');
@@ -21,7 +21,13 @@ const ImageGallery = ({
   showIndicators = true,
   onImagePress
 }) => {
-  const styles = getStyles();
+
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef(null);
 

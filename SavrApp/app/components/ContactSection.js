@@ -1,6 +1,6 @@
 // components/ContactSection.js
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { View, Text, TextInput, TouchableOpacity, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
 import { COLORS } from '../constants/colors';
 import { Phone, MapPin } from 'lucide-react-native';
@@ -12,7 +12,12 @@ export default function ContactSection({
   onNavigate,
   onInputChange,
 }) {
-  const styles = getStyles();
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   return (
     <View style={styles.contactSection.container}>
       <Text style={styles.contactSection.title}>Contact & Location</Text>

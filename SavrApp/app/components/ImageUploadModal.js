@@ -1,13 +1,17 @@
 // components/ImageUploadModal.js
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { Modal, View, Text, TouchableOpacity, Image, ActivityIndicator, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
 import useImageUpload from '../hooks/useImageUpload';
 import { Camera, Upload, X } from 'lucide-react-native';
 
 export default function ImageUploadModal({ visible, onClose, onUploadSuccess }) {
-  const styles = getStyles();
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   const { image, uploading, pickImage, uploadImage } = useImageUpload();
 
   const handleUpload = async () => {

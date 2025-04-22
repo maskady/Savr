@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
 import MapView, { Marker } from 'react-native-maps';
 
 import supercluster from "supercluster";
 
 const ClusterMarker = ({ count }) => {
-    const styles = getStyles();
+    const [styles, setStyles] = useState(getStyles());
+    useEffect(() => {
+      const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+      return () => sub.remove();
+    }, []);
+    
     return (
         <View style={styles.mapDemo.markerContainer}>
             <View style={styles.mapDemo.markerBubble}>

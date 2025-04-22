@@ -1,10 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
 import { FontAwesome6 } from '@expo/vector-icons';
 
+
 const AddOptionsDropdown = ({ onCreateCompany, onCreateShop, role }) => {
-  const styles = getStyles();
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
   const [isOpen, setIsOpen] = useState(false);
   const dropdownHeight = useRef(new Animated.Value(0)).current;
   

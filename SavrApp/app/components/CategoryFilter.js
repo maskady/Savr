@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { FlatList, TouchableOpacity, Text, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { FlatList, TouchableOpacity, Text, View, Appearance } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SettingsContext } from '../contexts/SettingsContext';
 import Search from './Search';
@@ -17,7 +17,11 @@ const CategoryFilter = ({
   searchComponent=false,
 }) => {
   const { darkMode } = useContext(SettingsContext);
-  const styles = getStyles();
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
 
   const sortedCategories = categories.sort((a, b) => {
     // Custom sorting logic: more important categories in begginning

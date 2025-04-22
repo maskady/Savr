@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
 import { SettingsContext } from '../contexts/SettingsContext';
 import { getDistance } from 'geolib';
@@ -9,7 +9,12 @@ import { HOST_URL } from '@env';
 const ListItem = ({ shop, onSelect, userLocation }) => {
   const {darkMode} = useContext(SettingsContext);
 
-  const styles = getStyles();
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+  
 
   let distance = null;
   let distanceUnit = null;

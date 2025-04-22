@@ -41,8 +41,8 @@ export default function ShopInfoSection({
                 <Star
                   key={i}
                   size={16}
-                  fill={i <= Math.round(shop.rating) ? styles.shopInfoSection.fillColorTrue : styles.shopInfoSection.fillColorFalse}
-                  color={i <= Math.round(shop.rating) ? styles.shopInfoSection.fillColorTrue : styles.shopInfoSection.fillColorFalse}
+                  fill={i <= Math.round(shop.rating) ? styles.shopInfoSection.starIcon.fillColorTrue : styles.shopInfoSection.starIcon.fillColorFalse}
+                  color={i <= Math.round(shop.rating) ? styles.shopInfoSection.starIcon.colorTrue : styles.shopInfoSection.starIcon.colorFalse}
                 />
               ))}
               <Text style={styles.shopInfoSection.ratingText}>
