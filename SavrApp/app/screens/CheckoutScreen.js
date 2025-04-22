@@ -21,6 +21,7 @@ const CheckoutScreen = () => {
     removeFromCart, 
     getCartTotal,
     itemCount,
+    clearCart
   } = useCart();
   
   const deliveryFee = 0;
@@ -41,6 +42,7 @@ const CheckoutScreen = () => {
     setTimeout(() => {
       request('PUT', `/payment/${paymentData.id}/update-payment-status`);
       navigation.navigate('OrderDetails', { orderId: paymentData.id }); 
+      clearCart();
     }, 1000);
   };
 
