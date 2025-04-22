@@ -666,7 +666,7 @@ const getStyles = () => {
         justifyContent: 'flex-end',
       },
       modalContent: {
-        //backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+        backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         paddingBottom: 20,
@@ -929,6 +929,65 @@ const getStyles = () => {
         fontSize: 12,
         marginTop: 4,
         color: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
+      },
+    },
+    shopInfoSection: {
+      container: {
+        marginBottom: 24,
+      },
+      name: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 8,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+      },
+      ratingRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+      },
+      ratingText: {
+        marginLeft: 8,
+        fontSize: 14,
+        color: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
+      },
+      category: {
+        fontSize: 16,
+        marginBottom: 16,
+        color: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
+      },
+      postButton: {
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 8,
+        alignSelf: 'flex-start',
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
+      },
+      postButtonText: {
+        fontWeight: 'bold',
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+      },
+      nameInput: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        borderWidth: 1,
+        borderColor: isDarkMode ? COLORS.borderDark : COLORS.borderLight,
+        borderRadius: 8,
+        padding: 8,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+        placeholderTextColor: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
+      },
+      label: {
+        fontSize: 12,
+        marginTop: 4,
+        marginBottom: 12,
+        color: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
+      },
+      starIcon: {
+        fillColorTrue: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
+        fillColorFalse: 'none',
+        colorTrue: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
+        colorFalse: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
       },
     },
     shopHeader: {
