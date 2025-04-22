@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { COLORS } from './Common';
+import { COLORS } from "../constants/colors";
 
 const getStyles = (darkMode) => {
 
