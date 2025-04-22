@@ -1,3 +1,4 @@
+// TODO: Refactor styles
 import React, { useState, useContext, useEffect } from "react";
 import {
   SafeAreaView,

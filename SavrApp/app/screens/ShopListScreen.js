@@ -1,3 +1,4 @@
+// TODO: Refactor styles
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Appearance } from 'react-native';
 import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';

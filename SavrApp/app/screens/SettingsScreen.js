@@ -1,3 +1,4 @@
+// TODO: Refactor styles
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { View, Appearance, SafeAreaView, Text, ActivityIndicator, TouchableOpacity, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";

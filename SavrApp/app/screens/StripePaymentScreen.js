@@ -1,3 +1,4 @@
+// TODO: Refactor styles
 import React from 'react';
 import { 
   View, 
