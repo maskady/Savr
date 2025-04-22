@@ -220,7 +220,7 @@ const ShopScreen = () => {
             Shop information not available
           </Text>
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary }]}
+            style={[styles.button, { backgroundColor: colors.primary }]}
             onPress={goBackOrHome}
           >
             <Text style={styles.buttonText}>Go Back</Text>

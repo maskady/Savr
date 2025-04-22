@@ -56,7 +56,7 @@ export default function ShopContent({
   if (loading) {
     return (
       <View style={styles.shopContent.center}>
-        <ActivityIndicator size="large" color={isDarkMode ? COLORS.primaryDark : COLORS.primary}/>
+        <ActivityIndicator size="large" color={colors.primary}/>
         <Text style={[styles.shopContent.loadingText, { color: colors.text }]}>Loading shop details…</Text>
       </View>
     );
@@ -68,7 +68,7 @@ export default function ShopContent({
         <Text style={[styles.shopContent.errorText, { color: colors.text }]}>
           {error instanceof Error ? error.message : String(error)}
         </Text>
-        <TouchableOpacity style={[styles.shopContent.button, { backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary }]} onPress={onNavigate}>
+        <TouchableOpacity style={[styles.shopContent.button, { backgroundColor: colors.primary }]} onPress={onNavigate}>
           <Text style={styles.shopContent.buttonText}>Go Back</Text>
         </TouchableOpacity>
       </View>

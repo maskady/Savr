@@ -48,9 +48,9 @@ export const COLORS = {
   background:   '#FFFFFF',  // app background (light mode)
   onBackground: '#000000',  // text/icons on background
 
-    // Primary/secondary variants
-    primaryLight:   'darkgreen',
-    primaryDark:    'lightgreen',
+  // Primary/secondary variants
+  primaryLight:   'darkgreen',
+  primaryDark:    'lightgreen',
 
   // Overlay/transparency helpers
   overlayLight: 'rgba(255,255,255,0.12)',

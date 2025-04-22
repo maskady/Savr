@@ -31,7 +31,7 @@ export default function ShopMapSection({
         <Marker coordinate={{ latitude, longitude }} title={name} />
       </MapView>
       <TouchableOpacity
-        style={[styles.button, { backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary }]}
+        style={[styles.button, { backgroundColor: colors.primary }]}
         onPress={onNavigate}
       >
         <Text style={styles.buttonText}>Get Directions</Text>
