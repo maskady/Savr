@@ -726,6 +726,7 @@ const getStyles = () => {
         padding: 16,
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
       },
       price: {
         fontSize: 24,
