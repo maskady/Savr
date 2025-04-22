@@ -1,27 +1,19 @@
-// styles.js
-import { StyleSheet, Appearance } from "react-native";
+import { StyleSheet } from "react-native";
+import { COLORS } from "../constants/colors";
 
-const Colors = {
-  Black: "#000000",
-  White: "#FFFFFF",
-  Grey: "#1E1E1E",
-  lightGrey: "#888888",
-  darkGrey: "#444444",
-  classicGrey: "#555555",
-  Red: "#FF3B30",
-};
-
-const getStyles = () => {
-  const theme = Appearance.getColorScheme();
-  const isDarkMode = theme === "dark";
+const getStyles = (darkMode) => {
+  const backgroundColor = darkMode ? COLORS.backgroundDark : COLORS.backgroundLight;
+  const textColor = darkMode ? COLORS.textDark : COLORS.textLight;
+  const borderColor = darkMode ? COLORS.borderDark : COLORS.borderLight;
+  const inputBgColor = darkMode ? COLORS.grey800 : COLORS.surface;
 
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: isDarkMode ? Colors.Black : Colors.White,
+      backgroundColor,
       padding: 20,
     },
-    header:{
+    header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -30,7 +22,7 @@ const getStyles = () => {
     title: {
       fontSize: 24,
       fontWeight: 'bold',
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: textColor,
       textAlign: 'center',
       marginLeft: 10,
     },
@@ -44,7 +36,7 @@ const getStyles = () => {
     label: {
       fontSize: 16,
       marginBottom: 8,
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: textColor,
     },
     input: {
       height: 50,
@@ -52,24 +44,24 @@ const getStyles = () => {
       borderRadius: 8,
       paddingHorizontal: 15,
       fontSize: 14,
-      borderColor: isDarkMode ? Colors.darkGrey : "#ddd",
-      backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
-      color: isDarkMode ? Colors.White : Colors.Black,
+      borderColor,
+      backgroundColor: inputBgColor,
+      color: textColor,
     },
     inputError: {
-      borderColor: Colors.Red,
+      borderColor: COLORS.error,
     },
     textArea: {
       height: 100,
       textAlignVertical: 'top',
     },
     errorText: {
-      color: Colors.Red,
+      color: COLORS.error,
       fontSize: 14,
       marginTop: 5,
     },
     submitButton: {
-      backgroundColor: isDarkMode ? Colors.White : Colors.Black,
+      backgroundColor: darkMode ? COLORS.textDark : COLORS.textLight,
       padding: 15,
       borderRadius: 8,
       alignItems: 'center',
@@ -77,21 +69,21 @@ const getStyles = () => {
       marginBottom: 30,
     },
     submitButtonText: {
-      color: isDarkMode ? Colors.Black : Colors.White,
+      color: darkMode ? COLORS.textLight : COLORS.textDark,
       fontSize: 18,
       fontWeight: 'bold',
     },
     imagePickerButton: {
-      backgroundColor: isDarkMode ? Colors.Grey : Colors.White,
+      backgroundColor: inputBgColor,
       padding: 15,
       borderRadius: 8,
       alignItems: 'center',
       borderWidth: 1,
-      borderColor: isDarkMode ? Colors.darkGrey : "#ddd",
+      borderColor,
       borderStyle: 'dashed',
     },
     imagePickerButtonText: {
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: textColor,
       fontSize: 16,
     },
     imagesContainer: {
@@ -110,13 +102,13 @@ const getStyles = () => {
       height: '100%',
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: isDarkMode ? Colors.darkGrey : "#ddd",
+      borderColor,
     },
     removeImageButton: {
       position: 'absolute',
       top: -10,
       right: -10,
-      backgroundColor: Colors.Red,
+      backgroundColor: COLORS.error,
       width: 24,
       height: 24,
       borderRadius: 12,
@@ -124,16 +116,16 @@ const getStyles = () => {
       alignItems: 'center',
     },
     removeImageText: {
-      color: isDarkMode ? Colors.White : Colors.Black,
+      color: textColor,
       fontSize: 18,
       fontWeight: 'bold',
     },
     categoryText: {
-      color: isDarkMode ? Colors.White : "#333",
+      color: textColor,
     },
     helperText: {
       fontSize: 12,
-      color: isDarkMode ? Colors.White : '#777',
+      color: darkMode ? COLORS.grey300 : COLORS.placeholder,
       marginTop: 5,
     },
   });

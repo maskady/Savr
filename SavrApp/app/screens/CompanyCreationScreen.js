@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
   View, 
   ScrollView, 
@@ -14,9 +14,11 @@ import getStyles from '../styles/NewCompanyStyles';
 import { getToken } from '../utils/token';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const CompanyCreationScreen = () => {
-  const [styles, setStyles] = useState(getStyles());
+  const { darkMode } = useContext(SettingsContext);
+  const [styles, setStyles] = useState(getStyles(darkMode));
 
   const navigation = useNavigation();
   
@@ -35,19 +37,8 @@ const CompanyCreationScreen = () => {
   const [errors, setErrors] = useState({});
   
   useEffect(() => {
-    const handleThemeChange = ({ colorScheme }) => {
-      console.log("Theme changed:", colorScheme);
-      if (colorScheme) {
-        setStyles(getStyles());
-      }
-    };
-    
-    const subscription = Appearance.addChangeListener(handleThemeChange);
-    
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+    setStyles(getStyles(darkMode));
+  }, [darkMode]);
   
   const validateForm = () => {
     let tempErrors = {};
@@ -161,7 +152,7 @@ const CompanyCreationScreen = () => {
     <ScrollView style={styles.container}>
       <View style={{flexDirection: 'row', marginBottom: 20}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome6 name="arrow-left" size={24} color={styles.isDarkMode ? 'white' : 'black'} style={{ marginRight: 10, marginTop: 5 }} onPress={() => navigation.goBack()} />
+          <FontAwesome6 name="arrow-left" size={24} color={darkMode ? 'white' : 'black'} style={{ marginRight: 10, marginTop: 5 }} onPress={() => navigation.goBack()} />
         </TouchableOpacity>
         <Text style={styles.title}>Create Company</Text>
       </View>
