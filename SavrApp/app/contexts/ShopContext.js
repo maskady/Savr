@@ -3,6 +3,7 @@ import React, { createContext, useState, useMemo, useEffect } from 'react';
 import { getShops } from '../utils/api';
 import { businessCategories } from '../constants/businessCategories';
 import { throttle } from 'lodash';
+import { request } from '../utils/request';
 import haversine from 'haversine-distance';
 
 export const ShopContext = createContext();
@@ -12,6 +13,7 @@ export const ShopProvider = ({ children }) => {
   const [allShops, setAllShops] = useState([]);
   const [activeCategories, setActiveCategories] = useState([]);
   const [lastFetchedRegion, setLastFetchedRegion] = useState(null);
+  const [myShop, setMyShop] = useState([]);
 
   useEffect(() => {
     const keys = Object.keys(businessCategories);
@@ -78,6 +80,20 @@ export const ShopProvider = ({ children }) => {
     );
   };
 
+  const fetchMyShop = async () => {
+    try {
+      const { response, data } = await request('/shop', 'GET', null, { onlyMyShops: true });
+      if (response.ok) {
+        setMyShop(data.data[0]);
+        console.log("Shop data:", data.data[0]);
+      } else {
+        console.error("Failed to fetch shop:", response.statusText);
+      }
+    } catch (err) {
+      console.error("Request error:", err);
+    }
+  };
+
   // State for filtered shops and updater
   const [filteredShops, setFilteredShops] = useState([]);
   // State for search query
@@ -119,7 +135,9 @@ export const ShopProvider = ({ children }) => {
       updateShopInContext,
       setFilteredShops,
       searchQuery,
-      setSearchQuery
+      setSearchQuery,
+      fetchMyShop,
+      myShop,
     }}>
       {children}
     </ShopContext.Provider>
