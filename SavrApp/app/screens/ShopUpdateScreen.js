@@ -13,7 +13,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import getStyles from '../styles/NewCompanyStyles'; 
+import getStyles from '../styles/CompanyShopStyles'; 
 import { getToken } from '../utils/token';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
