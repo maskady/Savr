@@ -1,17 +1,18 @@
-import { StyleSheet, Appearance } from "react-native";
-import { COLORS } from "./Common";
+import { StyleSheet } from "react-native";
+import { COLORS } from "../constants/colors";
 
 const getStyles = (darkMode) => {
 
   const theme = {
     background: darkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
     border: darkMode ? COLORS.grey700 : COLORS.grey200,
-    text: darkMode ? COLORS.textLight : COLORS.textDark,
+    text: darkMode ? COLORS.textDark : COLORS.textLight,
     subText: darkMode ? COLORS.grey300 : COLORS.grey600,
     placeholder: darkMode ? COLORS.grey300 : COLORS.grey500,
     inputBackground: darkMode ? COLORS.grey800 : COLORS.white,
-    buttonBackground: darkMode ? COLORS.textLight : COLORS.textDark,
-    buttonText: darkMode ? COLORS.textDark : COLORS.textLight,
+    buttonBackground: darkMode ? COLORS.textDark : COLORS.textLight,
+    buttonText: darkMode ? COLORS.textLight : COLORS.textDark,
+    buttonDisabled: darkMode ? COLORS.grey600 : COLORS.grey400,
     link: darkMode ? COLORS.white : COLORS.black,
     shadow: darkMode ? COLORS.grey800 : COLORS.grey300,
   };
