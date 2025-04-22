@@ -36,8 +36,13 @@ const ShopScreen = () => {
     }
   };
   const { darkMode } = useContext(SettingsContext);
-  const { updateShopInContext } = useContext(ShopContext);
-  const [shop, setShop] = useState(route.params?.shop || null);
+  const { updateShopInContext, myShop } = useContext(ShopContext);
+  let shop = null;
+  if (route.params?.myShop) {
+    shop = myShop;
+  } else {
+    setShop(route.params?.shop || null);
+  }
   const [oldShop, setOldShop] = useState(route.params?.shop || null);
   const [variants, setVariants] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -49,7 +54,7 @@ const ShopScreen = () => {
   const [editMode, setEditMode] = useState('view'); // view, edit, saving
 
   // get primary category name from businessCategories object 
-  const primaryCategoryName = businessCategories[shop.primaryCategory]?.name || shop.primaryCategory;
+  const primaryCategoryName = businessCategories[shop?.primaryCategory]?.name || shop?.primaryCategory;
 
   const handleInputChange = (field, value) => {
     setShop(prev => ({
@@ -75,7 +80,6 @@ const ShopScreen = () => {
 
     const fetchShopDetails = async () => {
       if (!shop?.id) return;
-
       setLoading(true);
       try {
         const details = await getShopById(shop.id);
@@ -94,7 +98,7 @@ const ShopScreen = () => {
             }];
           }
 
-          setShop({ ...data, images: shopImages, categories });
+          shop = ({ ...data, images: shopImages, categories });
         }
       } catch (err) {
         console.error('Error fetching shop details:', err);
