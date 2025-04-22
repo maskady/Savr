@@ -1,4 +1,3 @@
-// TODO: Refactor styles
 import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   SafeAreaView,
@@ -23,7 +22,8 @@ import { registerUser } from "../utils/authApi";
 
 import { useTranslation } from 'react-i18next';
 
-import getStyles from "../styles//AuthStyles";
+import getStyles from "../styles/AuthStyles";
+import { SettingsContext } from "../contexts/SettingsContext";
 
 const RegisterScreen = () => {
   const { t } = useTranslation();
@@ -47,7 +47,8 @@ const RegisterScreen = () => {
 
   const navigation = useNavigation();
 
-  const [styles, setStyles] = useState(getStyles());
+  const { darkMode } = useContext(SettingsContext);
+  const [styles, setStyles] = useState(getStyles(darkMode));
   
   const handleSignup = async () => {
 
@@ -87,14 +88,8 @@ const RegisterScreen = () => {
   };
 
   useEffect(() => {
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setStyles(getStyles());  
-    });
-  
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+    setStyles(getStyles(darkMode));
+  }, [darkMode]);
 
   return (
     <SafeAreaView style={styles.flexContainer}>
