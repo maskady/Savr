@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   discountPrice: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.primary,
+    color: isDarkMode ? COLORS.primaryDark : COLORS.primary,
   },
   originalPrice: {
     fontSize: 14,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   quantityButtonText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.primary,
+    color: isDarkMode ? COLORS.primaryDark : COLORS.primary,
   },
   quantityButtonTextDark: {
     color: colors.darkText,
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   selectedPaymentOption: {
-    borderColor: colors.primary,
+    borderColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
     borderWidth: 2,
   },
   paymentLabel: {
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   payButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   payButtonTextDark: {
-    color: colors.primary,
+    color: isDarkMode ? COLORS.primaryDark : COLORS.primary,
   },
 });
 

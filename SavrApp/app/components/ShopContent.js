@@ -1,6 +1,8 @@
 // components/ShopContent.js
-import React, {useState, useEffect} from 'react';
-import { Alert, View, Text, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import { Alert, View, Text, FlatList, ActivityIndicator, TouchableOpacity, Appearance } from 'react-native';
+import getStyles from '../styles/AppStyles';
+import { COLORS } from '../constants/colors';
 import ImageManager from './ImageManager'; // adjust path
 import { getAvailableProductVariantsForShop } from '../utils/api';
 import ShopInfoSection from './ShopInfoSection';
@@ -13,6 +15,12 @@ export default function ShopContent({
   shop, variants, setVariants, loading, setLoading, error, setError, editMode, colors, primaryCategoryName,
   user, onCall, onNavigate, onInputChange, onImagesChange, onImagePress
 }) {
+
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -47,21 +55,21 @@ export default function ShopContent({
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color={colors.primary}/>
-        <Text style={{ color:colors.text, marginTop:12 }}>Loading shop details…</Text>
+      <View style={styles.shopContent.center}>
+        <ActivityIndicator size="large" color={isDarkMode ? COLORS.primaryDark : COLORS.primary}/>
+        <Text style={[styles.shopContent.loadingText, { color: colors.text }]}>Loading shop details…</Text>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.center}>
-        <Text style={{ color:colors.text }}>
+      <View style={styles.shopContent.center}>
+        <Text style={[styles.shopContent.errorText, { color: colors.text }]}>
           {error instanceof Error ? error.message : String(error)}
         </Text>
-        <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]} onPress={onNavigate}>
-          <Text style={styles.buttonText}>Go Back</Text>
+        <TouchableOpacity style={[styles.shopContent.button, { backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary }]} onPress={onNavigate}>
+          <Text style={styles.shopContent.buttonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -79,7 +87,7 @@ export default function ShopContent({
             onImagesChange={onImagesChange}
             onImagePress={onImagePress}
           />
-          <View style={{padding:16}}>
+          <View style={styles.shopContent.containerPadding}>
 
             <ShopInfoSection
               shop={shop}
@@ -130,9 +138,3 @@ export default function ShopContent({
     />
   );
 }
-
-const styles = StyleSheet.create({
-  center: { flex:1, justifyContent:'center', alignItems:'center', padding:20 },
-  button: { padding:12, borderRadius:8, marginTop:16 },
-  buttonText: { color:'#fff', fontWeight:'bold' },
-});

@@ -1,14 +1,21 @@
-import React, { useState, useContext } from 'react';
-import { View, TouchableOpacity, TextInput, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, TextInput, Text, Appearance } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import getStyles from '../styles/AppStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { SettingsContext } from '../contexts/SettingsContext';
-import { useRoute, useNavigation } from '@react-navigation/native';
+
 
 const Search = ({ searchActive, setSearchActive, searchQuery, onSearchQueryChange }) => {
   // const route = useRoute();
   // const { searchActive, setSearchActive, searchQuery, onSearchQueryChange } = route.params || {};
   const [submitted, setSubmitted] = useState(false);
   const { darkMode } = useContext(SettingsContext);
+
+  const [styles, setStyles] = useState(getStyles());
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
 
   const handleSubmit = () => {
     if (!searchQuery.trim()) {
@@ -32,12 +39,12 @@ const Search = ({ searchActive, setSearchActive, searchQuery, onSearchQueryChang
   };
 
   return (
-    <View style={styles.header}>
+    <View style={styles.search.header}>
       {searchActive ? (
         <TextInput
-          style={styles.searchInput}
+          style={styles.search.searchInput}
           placeholder="Search..."
-          placeholderTextColor="#666"
+          placeholderTextColor={styles.search.searchIcon.color}
           value={searchQuery}
           onChangeText={onSearchQueryChange}
           autoFocus={true}
@@ -49,13 +56,13 @@ const Search = ({ searchActive, setSearchActive, searchQuery, onSearchQueryChang
 
         />
       ) : (
-        <TouchableOpacity onPress={() => setSearchActive(true)} style={styles.searchIconContainer}>
+        <TouchableOpacity onPress={() => setSearchActive(true)} style={styles.search.searchIconContainer}>
           {searchQuery.trim() ? (
-            <Text style={{ color: darkMode ? '#fff' : '#333', fontSize: 16 }}>
+            <Text style={styles.search.searchText}>
               {searchQuery}
             </Text>
           ) : (
-            <Ionicons name="search" size={24} color={darkMode ? '#fff' : '#333'} />
+            <Ionicons name="search" size={24} color={styles.search.searchIcon.color} />
           )}
         </TouchableOpacity>
       )}
@@ -63,27 +70,5 @@ const Search = ({ searchActive, setSearchActive, searchQuery, onSearchQueryChang
   );
 };
 
-const styles = StyleSheet.create({
-  header: {
-    padding: 16,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    zIndex: 20,
-  },
-  searchIconContainer: {
-    padding: 8,
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    backgroundColor: '#fff',
-  },
-});
 
 export default Search;

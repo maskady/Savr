@@ -190,7 +190,7 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.mapSection.container}>
       <MapView
         ref={mapRef}
         style={styles.map}

@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
     borderColor: colors.lightBorder,
   },
   checkboxChecked: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
+    borderColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
   },
   saveCardText: {
     fontSize: 14,
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     borderTopColor: colors.lightBorder,
   },
   payButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   darkPayButtonText: {
-    color: colors.primary,
+    color: isDarkMode ? COLORS.primaryDark : COLORS.primary,
   },
   
   // Textes selon thèmes

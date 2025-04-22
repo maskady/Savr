@@ -38,8 +38,8 @@ export default function ShopInfoSection({
                 <Star
                   key={i}
                   size={16}
-                  fill={i <= Math.round(shop.rating) ? colors.primary : 'none'}
-                  color={i <= Math.round(shop.rating) ? colors.primary : colors.subtext}
+                  fill={i <= Math.round(shop.rating) ? isDarkMode ? COLORS.primaryDark : COLORS.primary : 'none'}
+                  color={i <= Math.round(shop.rating) ? isDarkMode ? COLORS.primaryDark : COLORS.primary : colors.subtext}
                 />
               ))}
               <Text style={[styles.ratingText, { color: colors.subtext }]}>
@@ -55,7 +55,7 @@ export default function ShopInfoSection({
           {/* If roleId >= 'shop' then show "Post New Product" Button*/}
           {user?.roleId != 'user' && ( 
               <TouchableOpacity
-                style={[styles.postButton, { backgroundColor: colors.primary }]}
+                style={[styles.postButton, { backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary }]}
                 onPress={() => navigation.navigate('PostProduct', { shop: shop, setVariants: setVariants })}
                 >
                 <Text style={styles.buttonText}>Post New Product</Text>

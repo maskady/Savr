@@ -1,14 +1,7 @@
 import React, { useState, useRef } from 'react';
-import {
-  View,
-  Image,
-  StyleSheet,
-  Dimensions,
-  FlatList,
-  TouchableOpacity,
-  Text
-} from 'react-native';
+import { View, Image, Dimensions, FlatList, TouchableOpacity, Text } from 'react-native';
 import { HOST_URL } from '@env';
+import getStyles from '../styles/AppStyles';
 const { width, height } = Dimensions.get('window');
 
 /**
@@ -28,6 +21,7 @@ const ImageGallery = ({
   showIndicators = true,
   onImagePress
 }) => {
+  const styles = getStyles();
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef(null);
 
@@ -35,10 +29,10 @@ const ImageGallery = ({
   // If no images provided, show placeholder
   if (!images || images.length === 0) {
     return (
-      <View style={[styles.container, { height }]}>
+      <View style={[styles.imageGallery.container, { height }]}>
         <Image
           source={{ uri: 'https://via.placeholder.com/400x250?text=No+Images' }}
-          style={styles.placeholderImage}
+          style={styles.imageGallery.placeholderImage}
           resizeMode="cover"
         />
       </View>
@@ -68,17 +62,17 @@ const ImageGallery = ({
     return (
       <TouchableOpacity 
         activeOpacity={0.9}
-        style={[styles.slide, { width, height }]}
+        style={[styles.imageGallery.slide, { width, height }]}
         onPress={() => onImagePress && onImagePress(item, index)}
       >
         <Image
           source={{ uri: imageUrl }}
-          style={styles.image}
+          style={styles.imageGallery.image}
           resizeMode="cover"
         />
         {item.alt && (
-          <View style={styles.captionContainer}>
-            <Text style={styles.caption}>{item.alt}</Text>
+          <View style={styles.imageGallery.captionContainer}>
+            <Text style={styles.imageGallery.caption}>{item.alt}</Text>
           </View>
         )}
       </TouchableOpacity>
@@ -86,7 +80,7 @@ const ImageGallery = ({
   };
 
   return (
-    <View style={[styles.container, { height }]}>
+    <View style={[styles.imageGallery.container, { height }]}>
       <FlatList
         ref={flatListRef}
         data={images}
@@ -99,13 +93,13 @@ const ImageGallery = ({
       />
       
       {showIndicators && images.length > 1 && (
-        <View style={styles.pagination}>
+        <View style={styles.imageGallery.pagination}>
           {images.map((_, index) => (
             <View
               key={`dot-${index}`}
               style={[
-                styles.paginationDot,
-                index === activeIndex ? styles.paginationDotActive : {},
+                styles.imageGallery.paginationDot,
+                index === activeIndex ? styles.imageGallery.paginationDotActive : {},
               ]}
             />
           ))}
@@ -114,58 +108,5 @@ const ImageGallery = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    position: 'relative',
-  },
-  slide: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
-  placeholderImage: {
-    width: '100%',
-    height: '100%',
-  },
-  pagination: {
-    position: 'absolute',
-    bottom: 10,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-  },
-  paginationDotActive: {
-    backgroundColor: '#fff',
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-  },
-  captionContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    padding: 8,
-  },
-  caption: {
-    color: '#fff',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-});
 
 export default ImageGallery; 

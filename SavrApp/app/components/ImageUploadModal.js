@@ -1,10 +1,13 @@
 // components/ImageUploadModal.js
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import getStyles from '../styles/AppStyles';
+import { COLORS } from '../constants/colors';
 import useImageUpload from '../hooks/useImageUpload';
 import { Camera, Upload, X } from 'lucide-react-native';
 
 export default function ImageUploadModal({ visible, onClose, onUploadSuccess }) {
+  const styles = getStyles();
   const { image, uploading, pickImage, uploadImage } = useImageUpload();
 
   const handleUpload = async () => {
@@ -17,53 +20,53 @@ export default function ImageUploadModal({ visible, onClose, onUploadSuccess }) 
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.modalBackground}>
-        <View style={styles.modalContainer}>
+      <View style={styles.imageUploadModal.modalBackground}>
+        <View style={styles.imageUploadModal.modalContainer}>
           <TouchableOpacity 
-            style={styles.closeButton}
+            style={styles.imageUploadModal.closeButton}
             onPress={onClose}
           >
             <X size={24} color="#fff" />
           </TouchableOpacity>
           
-          <Text style={styles.modalTitle}>Upload Image</Text>
+          <Text style={styles.imageUploadModal.modalTitle}>Upload Image</Text>
           
           {image ? (
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: image.uri }} style={styles.imagePreview} />
+            <View style={styles.imageUploadModal.imageContainer}>
+              <Image source={{ uri: image.uri }} style={styles.imageUploadModal.imagePreview} />
             </View>
           ) : (
-            <View style={styles.imagePlaceholder}>
+            <View style={styles.imageUploadModal.imagePlaceholder}>
               <Camera size={50} color="#aaa" />
-              <Text style={styles.placeholderText}>No image selected</Text>
+              <Text style={styles.imageUploadModal.placeholderText}>No image selected</Text>
             </View>
           )}
 
-          <View style={styles.buttonContainer}>
+          <View style={styles.imageUploadModal.buttonContainer}>
             <TouchableOpacity 
-              style={styles.actionButton} 
+              style={styles.imageUploadModal.actionButton} 
               onPress={pickImage}
             >
-              <View style={styles.buttonContent}>
-                <Camera size={18} color="#fff" style={styles.buttonIcon} />
-                <Text style={styles.buttonText}>Select Image</Text>
+              <View style={styles.imageUploadModal.buttonContent}>
+                <Camera size={18} color="#fff" style={styles.imageUploadModal.buttonIcon} />
+                <Text style={styles.imageUploadModal.buttonText}>Select Image</Text>
               </View>
             </TouchableOpacity>
 
             {uploading ? (
-              <View style={[styles.actionButton, styles.uploadButton]}>
+              <View style={[styles.imageUploadModal.actionButton, styles.imageUploadModal.uploadButton]}>
                 <ActivityIndicator size="small" color="#fff" />
-                <Text style={[styles.buttonText, {marginLeft: 10}]}>Uploading...</Text>
+                <Text style={[styles.imageUploadModal.buttonText, {marginLeft: 10}]}>Uploading...</Text>
               </View>
             ) : (
               <TouchableOpacity 
-                style={[styles.actionButton, styles.uploadButton, !image && styles.disabledButton]} 
+                style={[styles.imageUploadModal.actionButton, styles.imageUploadModal.uploadButton, !image && styles.imageUploadModal.disabledButton]} 
                 onPress={handleUpload}
                 disabled={!image}
               >
-                <View style={styles.buttonContent}>
-                  <Upload size={18} color="#fff" style={styles.buttonIcon} />
-                  <Text style={styles.buttonText}>Upload</Text>
+                <View style={styles.imageUploadModal.buttonContent}>
+                  <Upload size={18} color="#fff" style={styles.imageUploadModal.buttonIcon} />
+                  <Text style={styles.imageUploadModal.buttonText}>Upload</Text>
                 </View>
               </TouchableOpacity>
             )}
@@ -73,103 +76,3 @@ export default function ImageUploadModal({ visible, onClose, onUploadSuccess }) 
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  modalBackground: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.7)',
-  },
-  modalContainer: {
-    width: '90%',
-    padding: 20,
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    alignItems: 'center',
-    position: 'relative',
-    overflow: 'hidden',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    borderRadius: 20,
-    padding: 8,
-    zIndex: 10,
-  },
-  modalTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    marginTop: 10,
-  },
-  imageContainer: {
-    width: '100%',
-    marginBottom: 20,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  imagePreview: {
-    width: '100%',
-    height: 240,
-    borderRadius: 10,
-  },
-  imagePlaceholder: {
-    width: '100%',
-    height: 200,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  placeholderText: {
-    color: '#888',
-    marginTop: 10,
-    fontSize: 16,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginTop: 10,
-  },
-  actionButton: {
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 130,
-    marginHorizontal: 5,
-  },
-  uploadButton: {
-    backgroundColor: 'rgba(46,125,50,0.9)',
-  },
-  disabledButton: {
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    opacity: 0.5,
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  buttonIcon: {
-    marginRight: 8,
-  },
-});

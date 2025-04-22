@@ -171,6 +171,7 @@ const PostProductScreen = () => {
       {/** Cancel button */}
       <TouchableOpacity
         style={[styles.cancelButton, { backgroundColor: colors.secondary }]}
+        // replace above line by style={[styles.cancelButton, { backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary }]}
         onPress={handleCancel}
       >
         {loading ? (

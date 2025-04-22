@@ -18,7 +18,7 @@ export default function ContactSection({
       <Text style={styles.contactSection.title}>Contact & Location</Text>
 
       <View style={styles.contactSection.row}>
-        <Phone size={20} color={COLORS.primary} />
+        <Phone style={styles.contactSection.icon} />
         {editMode === 'view' ? (
           <TouchableOpacity onPress={onCall}>
             <Text style={styles.contactSection.text}>{shop.phone}</Text>
@@ -41,7 +41,7 @@ export default function ContactSection({
       </View>
 
       <View style={styles.contactSection.row}>
-        <MapPin size={20} color={COLORS.primary} />
+        <MapPin style={styles.contactSection.icon} />
         <View style={styles.contactSection.inputWrapper}>
           {editMode === 'view' ? (
             <TouchableOpacity onPress={onNavigate}>
