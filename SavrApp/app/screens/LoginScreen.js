@@ -11,7 +11,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
-  Appearance,
 } from "react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { storeToken } from "../utils/token";
@@ -21,6 +20,7 @@ import { loginUser } from "../utils/authApi";
 import getStyles from "../styles/AuthStyles";
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from "../contexts/AuthContext";
+import { SettingsContext } from "../contexts/SettingsContext";
 
 const LoginScreen = () => {
   const { t } = useTranslation();
@@ -31,17 +31,12 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const {login} = useContext(AuthContext);
 
-  const [styles, setStyles] = useState(getStyles());
+  const { darkMode } = useContext(SettingsContext);
+  const [styles, setStyles] = useState(getStyles(darkMode));
 
   useEffect(() => {
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setStyles(getStyles());
-    });
-  
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+    setStyles(getStyles(darkMode));
+  }, [darkMode]);
 
   const handleSignin = async () => {
     if (email === "" || password === "") {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { 
   View, 
   ScrollView, 
@@ -7,17 +7,18 @@ import {
   TouchableOpacity, 
   Appearance,
   Alert,
-  Image,
-  Platform
+  Image
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/NewCompanyStyles'; 
 import { getToken } from '../utils/token';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const CompanyCreationScreen = () => {
-  const [styles, setStyles] = useState(getStyles());
+  const { darkMode } = useContext(SettingsContext);
+  const [styles, setStyles] = useState(getStyles(darkMode));
 
   const navigation = useNavigation();
   
@@ -36,19 +37,8 @@ const CompanyCreationScreen = () => {
   const [errors, setErrors] = useState({});
   
   useEffect(() => {
-    const handleThemeChange = ({ colorScheme }) => {
-      console.log("Theme changed:", colorScheme);
-      if (colorScheme) {
-        setStyles(getStyles());
-      }
-    };
-    
-    const subscription = Appearance.addChangeListener(handleThemeChange);
-    
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+    setStyles(getStyles(darkMode));
+  }, [darkMode]);
   
   const validateForm = () => {
     let tempErrors = {};
@@ -162,7 +152,7 @@ const CompanyCreationScreen = () => {
     <ScrollView style={styles.container}>
       <View style={{flexDirection: 'row', marginBottom: 20}}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome6 name="arrow-left" size={24} color={styles.isDarkMode ? 'white' : 'black'} style={{ marginRight: 10, marginTop: 5 }} onPress={() => navigation.goBack()} />
+          <FontAwesome6 name="arrow-left" size={24} color={darkMode ? 'white' : 'black'} style={{ marginRight: 10, marginTop: 5 }} onPress={() => navigation.goBack()} />
         </TouchableOpacity>
         <Text style={styles.title}>Create Company</Text>
       </View>
@@ -174,7 +164,7 @@ const CompanyCreationScreen = () => {
           value={company.name}
           onChangeText={(text) => handleInputChange('name', text)}
           placeholder="Name of the company"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
         {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
       </View>
@@ -186,7 +176,7 @@ const CompanyCreationScreen = () => {
           value={company.description}
           onChangeText={(text) => handleInputChange('description', text)}
           placeholder="Description of the company"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           multiline
           numberOfLines={4}
         />
@@ -199,7 +189,7 @@ const CompanyCreationScreen = () => {
           value={company.address}
           onChangeText={(text) => handleInputChange('address', text)}
           placeholder="Adress"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
       </View>
       
@@ -211,7 +201,7 @@ const CompanyCreationScreen = () => {
             value={company.postalCode}
             onChangeText={(text) => handleInputChange('postalCode', text)}
             placeholder="ZIP Code"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            placeholderTextColor={styles.input.placeholderTextColor}
           />
         </View>
         
@@ -222,7 +212,7 @@ const CompanyCreationScreen = () => {
             value={company.city}
             onChangeText={(text) => handleInputChange('city', text)}
             placeholder="City"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            placeholderTextColor={styles.input.placeholderTextColor}
           />
         </View>
       </View>
@@ -234,7 +224,7 @@ const CompanyCreationScreen = () => {
           value={company.country}
           onChangeText={(text) => handleInputChange('country', text)}
           placeholder="Country"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
       </View>
       
@@ -245,7 +235,7 @@ const CompanyCreationScreen = () => {
           value={company.phone}
           onChangeText={(text) => handleInputChange('phone', text)}
           placeholder="+1234567890"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           keyboardType="phone-pad"
         />
         {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
@@ -258,7 +248,7 @@ const CompanyCreationScreen = () => {
           value={company.email}
           onChangeText={(text) => handleInputChange('email', text)}
           placeholder="email@example.com"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           keyboardType="email-address"
           autoCapitalize="none"
         />
