@@ -12,18 +12,19 @@ import { Star } from 'lucide-react-native';
 import { businessCategories } from '../constants/businessCategories';
 import { useNavigation } from '@react-navigation/native';
 import CategoryDropdown from './CategoryDropdown';
+import { COLORS } from '../constants/colors';
 
 export default function ShopInfoSection({
   shop,
   setVariants,
   editMode,
-  colors,
   primaryCategoryName,
   user,
   onInputChange
 }) {
 
   const navigation = useNavigation();
+  const colors = COLORS
 
   return (
     <View style={styles.container}>

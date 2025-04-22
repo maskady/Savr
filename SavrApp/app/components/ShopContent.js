@@ -12,7 +12,7 @@ import ShopMapSection from './ShopMapSection';
 import ShopProductList from './ShopProductList';
 
 export default function ShopContent({
-  shop, variants, setVariants, loading, setLoading, error, setError, editMode, colors, primaryCategoryName,
+  shop, variants, setVariants, loading, setLoading, error, setError, editMode, primaryCategoryName,
   user, onCall, onNavigate, onInputChange, onImagesChange, onImagePress
 }) {
 
@@ -56,8 +56,8 @@ export default function ShopContent({
   if (loading) {
     return (
       <View style={styles.shopContent.center}>
-        <ActivityIndicator size="large" color={colors.primary}/>
-        <Text style={[styles.shopContent.loadingText, { color: colors.text }]}>Loading shop details…</Text>
+        <ActivityIndicator style={styles.shopContent.loadingIndicator}/>
+        <Text style={[styles.shopContent.loadingText]}>Loading shop details…</Text>
       </View>
     );
   }
@@ -65,10 +65,10 @@ export default function ShopContent({
   if (error) {
     return (
       <View style={styles.shopContent.center}>
-        <Text style={[styles.shopContent.errorText, { color: colors.text }]}>
+        <Text style={[styles.shopContent.errorText]}>
           {error instanceof Error ? error.message : String(error)}
         </Text>
-        <TouchableOpacity style={[styles.shopContent.button, { backgroundColor: colors.primary }]} onPress={onNavigate}>
+        <TouchableOpacity style={[styles.shopContent.button]} onPress={onNavigate}>
           <Text style={styles.shopContent.buttonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
@@ -94,7 +94,6 @@ export default function ShopContent({
               setVariants={setVariants}
               variants
               editMode={editMode}
-              colors={colors}
               primaryCategoryName={primaryCategoryName}
               user={user}
               onInputChange={onInputChange}
@@ -111,7 +110,6 @@ export default function ShopContent({
               description={shop.description}
               editMode={editMode}
               onChange={text => onInputChange('description', text)}
-              colors={colors}
             />
 
             <ContactSection
@@ -120,7 +118,6 @@ export default function ShopContent({
               onCall={onCall}
               onNavigate={onNavigate}
               onInputChange={onInputChange}
-              colors={colors}
             />
 
             <ShopMapSection
@@ -128,7 +125,6 @@ export default function ShopContent({
               longitude={shop.longitude}
               name={shop.name}
               onNavigate={onNavigate}
-              colors={colors}
             />
           </View>
         </>

@@ -38,7 +38,7 @@ const ProductDetailsModal = ({ item, visible, onClose, quantityButton }) => {
           <View style={styles.productDetailsModal.header}>
             <Text style={styles.productDetailsModal.headerTitle}>{item.productName}</Text>
             <TouchableOpacity onPress={onClose} style={styles.productDetailsModal.closeButton}>
-              <Ionicons name="close" size={24} color={COLORS.textDark} />
+              <Ionicons name="close" size={24} color={styles.productDetailsModal.iconStyle.color} />
             </TouchableOpacity>
           </View>
           
@@ -79,7 +79,7 @@ const ProductDetailsModal = ({ item, visible, onClose, quantityButton }) => {
                 )}
               </View>
             ) : (
-              <View style={[styles.productDetailsModal.productImage, { width, backgroundColor: COLORS.placeholder }]}>
+              <View style={[styles.productDetailsModal.productImage, { width }, styles.productDetailsModal.productImagePlaceholder]}>
                 <Text style={styles.productDetailsModal.noImageText}>No image available</Text>
               </View>
             )}

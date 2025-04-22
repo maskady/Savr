@@ -468,7 +468,7 @@ const getStyles = () => {
       modalContainer: {
         width: '90%',
         padding: 20,
-        backgroundColor: isDarkMode ? COLORS.surface : COLORS.surface,
+        backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
         borderRadius: 15,
         alignItems: 'center',
         position: 'relative',
@@ -666,7 +666,7 @@ const getStyles = () => {
         justifyContent: 'flex-end',
       },
       modalContent: {
-        backgroundColor: COLORS.surfaceLight,
+        //backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         paddingBottom: 20,
@@ -684,10 +684,12 @@ const getStyles = () => {
         fontSize: 18,
         fontWeight: 'bold',
         flex: 1,
-        color: COLORS.textDark,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       closeButton: {
-        padding: 4,
+        padding: 2,
+        size: 24,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       productImage: {
         height: 300,
@@ -697,6 +699,12 @@ const getStyles = () => {
       noImageText: {
         color: COLORS.textLight,
         fontSize: 16,
+      },
+      productImagePlaceholder: {
+        backgroundColor: COLORS.placeholder,
+      },
+      iconStyle: {
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       indicatorContainer: {
         flexDirection: 'row',
@@ -722,7 +730,7 @@ const getStyles = () => {
         fontSize: 24,
         fontWeight: 'bold',
         marginRight: 8,
-        color: COLORS.textDark,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       discountContainer: {
         flexDirection: 'row',
@@ -731,7 +739,7 @@ const getStyles = () => {
       originalPrice: {
         fontSize: 16,
         textDecorationLine: 'line-through',
-        color: COLORS.textLight,
+        color: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
         marginRight: 8,
       },
       discountBadge: {
@@ -741,7 +749,7 @@ const getStyles = () => {
         borderRadius: 10,
       },
       discountText: {
-        color: COLORS.textLight,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
         fontWeight: 'bold',
         fontSize: 12,
       },
@@ -754,12 +762,12 @@ const getStyles = () => {
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 8,
-        color: COLORS.textDark,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       descriptionText: {
         fontSize: 16,
         lineHeight: 24,
-        color: COLORS.textDark,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       detailRow: {
         flexDirection: 'row',
@@ -768,12 +776,12 @@ const getStyles = () => {
       },
       detailLabel: {
         fontSize: 16,
-        color: COLORS.textLight,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       detailValue: {
         fontSize: 16,
         fontWeight: '500',
-        color: COLORS.textDark,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       button: {
         backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
@@ -783,7 +791,7 @@ const getStyles = () => {
         margin: 16,
       },
       buttonText: {
-        color: COLORS.textLight,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
         fontSize: 16,
         fontWeight: 'bold',
       },
@@ -815,7 +823,7 @@ const getStyles = () => {
       quantityButtonText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: COLORS.textLight,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       quantityTextContainer: {
         minWidth: 32,
@@ -871,19 +879,252 @@ const getStyles = () => {
       },
       loadingText: {
         marginTop: 12,
-        color: isDarkMode ? COLORS.textLight : COLORS.textDark,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       errorText: {
-        color: isDarkMode ? COLORS.textLight : COLORS.textDark,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       button: {
         padding: 12,
         borderRadius: 8,
         marginTop: 16,
+        color: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
       },
       buttonText: {
-        color: COLORS.textLight,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
         fontWeight: 'bold',
+      },
+      loadingIndicator: {
+        color: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
+        size: "large",
+      },
+    },
+    shopDescription: {
+      container: {
+        borderBottomWidth: 1,
+        borderColor: isDarkMode ? COLORS.borderDark : COLORS.borderLight,
+      },
+      title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 12,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+      },
+      text: {
+        fontSize: 16,
+        lineHeight: 24,
+        color: COLORS.placeholder,
+      },
+      input: {
+        fontSize: 16,
+        lineHeight: 24,
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 8,
+        marginBottom: 4,
+        borderColor: isDarkMode ? COLORS.borderDark : COLORS.borderLight,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+      },
+      label: {
+        fontSize: 12,
+        marginTop: 4,
+        color: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
+      },
+    },
+    shopHeader: {
+      header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        zIndex: 10,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+      },
+      backButton: {
+        padding: 8,
+        backgroundColor: 'rgba(0,0,0,0.2)',
+        borderRadius: 20,
+      },
+      actions: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      button: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,        
+        borderRadius: 20,
+      },
+      disabledButton: {
+        opacity: 0.6,
+      },
+      toggleButton: {
+        backgroundColor: 'rgba(0,0,0,0.2)',
+        marginLeft: 8,
+      },
+      shareButton: {
+        padding: 8,
+        backgroundColor: 'rgba(0,0,0,0.2)',
+        borderRadius: 20,
+        marginLeft: 8,
+      },
+      buttonContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      buttonText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginLeft: 6,
+        marginRight: 6,
+        color: isDarkMode ? COLORS.textLight : COLORS.textDark,
+      },
+      buttonIcon: {
+        marginRight: 6,
+        marginLeft: 4,
+        color: isDarkMode ? COLORS.textLight : COLORS.textDark,
+      },
+    },
+    shopMapSection: {
+      container: {
+        marginTop: 24,
+        height: 200,
+        borderRadius: 8,
+        overflow: 'hidden',
+      },
+      map: {
+        ...StyleSheet.absoluteFillObject,
+      },
+      button: {
+        position: 'absolute',
+        bottom: 16,
+        right: 16,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
+      },
+      buttonText: {
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+        fontWeight: 'bold',
+      },
+    },
+    shopProductList: {
+      list: {
+        padding: 8,
+        borderWidth: 1,
+        borderRadius: 8,
+        borderColor: isDarkMode ? COLORS.borderDark : COLORS.borderLight,
+        paddingBottom: 8,
+        marginBottom: 16,
+      },
+      card: {
+        backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+        borderRadius: 8,
+        marginVertical: 6,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 3,
+        overflow: 'hidden',
+      },
+      cardContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 12,
+      },
+      productInfo: {
+        flex: 1,
+      },
+      productName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 4,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+      },
+      productDescription: {
+        fontSize: 14,
+        color: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
+        marginBottom: 4,
+      },
+      priceContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      originalPrice: {
+        fontSize: 14,
+        color: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
+        textDecorationLine: 'line-through',
+        marginRight: 6,
+      },
+      price: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
+        marginRight: 12,
+      },
+      quantity: {
+        fontSize: 13,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+      },
+      addButton: {
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 10,
+      },
+      addButtonText: {
+        color: isDarkMode ? COLORS.textLight : COLORS.textDark,
+        fontSize: 24,
+        fontWeight: 'bold',
+      },
+      separator: {
+        height: 1,
+        backgroundColor: isDarkMode ? COLORS.grey200 : COLORS.grey100,
+      },
+      loading: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      error: {
+        color: COLORS.error,
+        padding: 16,
+        textAlign: 'center',
+      },
+      empty: {
+        textAlign: 'center',
+        marginTop: 32,
+        fontSize: 16,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+      },
+      listHeader: {
+        backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        marginBottom: 8,
+      },
+      textListHeader: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        padding: 16,
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+      },
+    },
+    stripePaymentProvider: {
+      loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
       },
     },
   });
