@@ -41,7 +41,7 @@ const ShopScreen = () => {
   if (route.params?.myShop) {
     shop = myShop;
   } else {
-    setShop(route.params?.shop || null);
+    shop = (route.params?.shop || null);
   }
   const [oldShop, setOldShop] = useState(route.params?.shop || null);
   const [variants, setVariants] = useState([]);
@@ -57,7 +57,7 @@ const ShopScreen = () => {
   const primaryCategoryName = businessCategories[shop?.primaryCategory]?.name || shop?.primaryCategory;
 
   const handleInputChange = (field, value) => {
-    setShop(prev => ({
+    shop = (prev => ({
       ...prev,
       [field]: value
     }));
@@ -166,7 +166,7 @@ const ShopScreen = () => {
       const updatedShop = { ...shop, images: shop.images.filter(image => image.type !== 'placeholder') };
       
       // Update the shop in local state
-      setShop(updatedShop);
+      shop = (updatedShop);
       
       // Update the shop in the backend
       await updateShop(shop.id, updatedShop);
@@ -193,7 +193,7 @@ const ShopScreen = () => {
   };
 
   const discardChanges = () => {
-    setShop(oldShop);
+    shop = (oldShop);
     setHasChanges(false);
     setEditMode('view');
     setIsSaving(false);
@@ -208,7 +208,7 @@ const ShopScreen = () => {
   };
 
   const handleImagesChange = (updatedImages) => {
-    setShop(prev => ({
+    shop = (prev => ({
       ...prev,
       images: updatedImages
     }));
