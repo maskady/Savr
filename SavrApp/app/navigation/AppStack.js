@@ -9,7 +9,6 @@ import ErrorScreen from "../screens/ErrorScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import ShopScreen from "../screens/ShopScreen";
 import CompanyListScreen from "../screens/CompanyListScreen";
-import CardPaymentScreen from "../screens/CardPaymentScreen";
 import StripePaymentScreen from "../screens/StripePaymentScreen";
 
 import PostProductScreen from "../screens/PostProductScreen";
@@ -35,7 +34,6 @@ const AppStack = () => {
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Shop" component={ShopScreen} />
       <Stack.Screen name="CompanyList" component={CompanyListScreen} />
-      <Stack.Screen name="CardPayment" component={CardPaymentScreen} />
       <Stack.Screen name="StripePayment" component={StripePaymentScreen} />
       <Stack.Screen name="CompanyCreation" component={CompanyCreationScreen} />
       <Stack.Screen name="CompanyUpdate" component={CompanyUpdateScreen} />
