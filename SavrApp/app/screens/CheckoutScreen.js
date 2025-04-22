@@ -12,7 +12,6 @@ import getStyles from '../styles/CheckoutStyles';
 
 const CheckoutScreen = () => {
   const navigation = useNavigation();
-  const [paymentMethod, setPaymentMethod] = React.useState('card');
   const { darkMode } = useContext(SettingsContext);
   const [styles, setStyles] = useState(getStyles(darkMode));
   
@@ -25,7 +24,6 @@ const CheckoutScreen = () => {
     itemCount,
   } = useCart();
   
-  // Fake data for delivery and service fees - TODO: Replace with actual data
   const deliveryFee = 0;
   const serviceFee = 0;
   

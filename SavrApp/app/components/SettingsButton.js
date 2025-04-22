@@ -1,15 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import getStyles from '../styles/SettingsStyles';
 import { Appearance } from 'react-native';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 export const SettingsButton = () => {
-    const [styles, setStyles] = useState(getStyles());
-    useEffect(() => {
-      const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
-      return () => sub.remove();
-    }, []);
-    
-  
+    const { darkMode } = useContext(SettingsContext);
+    const [styles] = useState(getStyles(darkMode));
     return <Ionicons name="settings-sharp" size={styles.settingsDropDown.settingsIcon.size} color={styles.settingsDropDown.settingsIcon.color} />
 }

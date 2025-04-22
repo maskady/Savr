@@ -58,11 +58,12 @@ const getStyles = () => {
       marginVertical: 10
     },
     statCard: {
-      backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+      backgroundColor: isDarkMode ? COLORS.cardBackgroundDark : COLORS.cardBackgroundLight,
       padding: 16,
       borderRadius: 8,
       alignItems: 'center',
-      width: '45%'
+      width: '45%',
+      elevation: 2,
     },
     statValue: {
       fontSize: 18,
@@ -84,7 +85,7 @@ const getStyles = () => {
       fontSize: 16,
       fontWeight: '600',
       marginBottom: 10,
-      color: isDarkMode ? COLORS.textDark : COLORS.textLight
+      color: isDarkMode ? COLORS.textDark : COLORS.textLight,
     },
     chartStyle: {
       marginVertical: 8,
@@ -92,7 +93,10 @@ const getStyles = () => {
       paddingBottom: 10,
       borderRadius: 16,
       alignSelf: 'center',
-      overflow: 'visible'
+      overflow: 'visible',
+      backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+      borderWidth: 1,
+      borderColor: isDarkMode ? COLORS.borderDark : COLORS.borderLight,
     },
     bottomNav: {
       flexDirection: 'row',
@@ -189,31 +193,19 @@ const getStyles = () => {
       barStyle: isDarkMode ? 'light-content' : 'dark-content',
     },
     chartConfig: {
-      backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
-      backgroundGradientFrom: isDarkMode ? COLORS.Grey : COLORS.White,
-      backgroundGradientTo: isDarkMode ? COLORS.Grey : COLORS.White,
-      decimalPlaces: 0,
+      backgroundGradientFrom: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+      backgroundGradientTo: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
       color: (opacity = 1) => isDarkMode ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
       labelColor: (opacity = 1) => isDarkMode ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
-      style: {
-        borderRadius: 16,
-      },
-    },
-    lineChartConfig: {
-      backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
-      backgroundGradientFrom: isDarkMode ? COLORS.Grey : COLORS.White,
-      backgroundGradientTo: isDarkMode ? COLORS.Grey : COLORS.White,
-      decimalPlaces: 0,
-      color: (opacity = 1) => isDarkMode ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
-      labelColor: (opacity = 1) => isDarkMode ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
-      style: {
-        borderRadius: 16,
-      },
       propsForDots: {
-        r: '5',
+        r: '4',
         strokeWidth: '2',
-        stroke: '#1976D2'
+        stroke: isDarkMode ? COLORS.textLight : COLORS.textDark,
       },
+      propsForBackgroundLines: {
+        stroke: isDarkMode ? COLORS.grey800 : COLORS.grey300,
+      },
+      decimalPlaces: 2,
     },
     addOptionsDropdown: {
       container: {
@@ -577,7 +569,7 @@ const getStyles = () => {
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+        backgroundColor: isDarkMode ? COLORS.cardBackgroundDark : COLORS.cardBackgroundLight,
       },
       image: {
         width: 80,
@@ -725,6 +717,7 @@ const getStyles = () => {
         padding: 16,
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
       },
       price: {
         fontSize: 24,
@@ -1083,7 +1076,7 @@ const getStyles = () => {
         marginBottom: 16,
       },
       card: {
-        backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+        backgroundColor: isDarkMode ? COLORS.cardBackgroundDark : COLORS.cardBackgroundLight,
         borderRadius: 8,
         marginVertical: 6,
         shadowColor: '#000',

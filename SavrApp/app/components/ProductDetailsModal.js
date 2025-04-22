@@ -90,15 +90,17 @@ const ProductDetailsModal = ({ item, visible, onClose, quantityButton }) => {
             )}
             
             <View style={styles.productDetailsModal.priceContainer}>
-              <Text style={styles.productDetailsModal.price}>{item.price} €</Text>
-              {discount > 0 && (
-                <View style={styles.productDetailsModal.discountContainer}>
-                  <Text style={styles.productDetailsModal.originalPrice}>{item.originalPrice} €</Text>
-                  <View style={styles.productDetailsModal.discountBadge}>
-                    <Text style={styles.productDetailsModal.discountText}>-{discount}%</Text>
+              <>
+                <Text style={styles.productDetailsModal.price}>{item.price} €</Text>
+                {discount > 0 && (
+                  <View style={styles.productDetailsModal.discountContainer}>
+                    <Text style={styles.productDetailsModal.originalPrice}>{item.originalPrice} €</Text>
+                    <View style={styles.productDetailsModal.discountBadge}>
+                      <Text style={styles.productDetailsModal.discountText}>-{discount}%</Text>
+                    </View>
                   </View>
-                </View>
-              )}
+                )}
+              </>
               {quantityButton}
             </View>
             
