@@ -31,8 +31,7 @@ const ShopScreen = () => {
   const { darkMode } = useContext(SettingsContext);
   const styles = getStyles(darkMode);
 
-  //const [shop, setShop] = useState(route.params?.shop || null);
-  let shop = route.params?.shop || null;
+  const [shop, setShop] = useState(route.params?.shop || null);
 
   const [oldShop, setOldShop] = useState(route.params?.shop || null);
   const [variants, setVariants] = useState([]);
@@ -59,7 +58,7 @@ const ShopScreen = () => {
   
 
   const handleInputChange = (field, value) => {
-    shop = (prev => ({
+    setShop(prev => ({
       ...prev,
       [field]: value
     }));
@@ -87,7 +86,7 @@ const ShopScreen = () => {
             }];
           }
 
-          shop = { ...data, images: shopImages, categories };
+          setShop({ ...data, images: shopImages, categories });
         }
       } catch (err) {
         console.error('Error fetching shop details:', err);
@@ -155,7 +154,7 @@ const ShopScreen = () => {
       const updatedShop = { ...shop, images: shop.images.filter(image => image.type !== 'placeholder') };
       
       // Update the shop in local state
-      shop = (updatedShop);
+      setShop(updatedShop);
       
       // Update the shop in the backend
       await updateShop(shop.id, updatedShop);
@@ -182,7 +181,7 @@ const ShopScreen = () => {
   };
 
   const discardChanges = () => {
-    shop = (oldShop);
+    setShop(oldShop);
     setHasChanges(false);
     setEditMode('view');
     setIsSaving(false);
@@ -197,7 +196,7 @@ const ShopScreen = () => {
   };
 
   const handleImagesChange = (updatedImages) => {
-    shop = (prev => ({
+    setShop(prev => ({
       ...prev,
       images: updatedImages
     }));
