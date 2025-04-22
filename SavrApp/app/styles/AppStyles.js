@@ -58,11 +58,12 @@ const getStyles = () => {
       marginVertical: 10
     },
     statCard: {
-      backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+      backgroundColor: isDarkMode ? COLORS.cardBackgroundDark : COLORS.cardBackgroundLight,
       padding: 16,
       borderRadius: 8,
       alignItems: 'center',
-      width: '45%'
+      width: '45%',
+      elevation: 2,
     },
     statValue: {
       fontSize: 18,
@@ -577,7 +578,7 @@ const getStyles = () => {
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+        backgroundColor: isDarkMode ? COLORS.cardBackgroundDark : COLORS.cardBackgroundLight,
       },
       image: {
         width: 80,
@@ -1083,7 +1084,7 @@ const getStyles = () => {
         marginBottom: 16,
       },
       card: {
-        backgroundColor: isDarkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
+        backgroundColor: isDarkMode ? COLORS.cardBackgroundDark : COLORS.cardBackgroundLight,
         borderRadius: 8,
         marginVertical: 6,
         shadowColor: '#000',
