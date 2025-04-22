@@ -32,7 +32,9 @@ const ListItem = ({ shop, onSelect, userLocation }) => {
     if (url.startsWith('http') || url.startsWith('https')) {
       return url;
     }
-    return `${HOST_URL}${url}`;
+    // Delete the last slash if it exists
+    const host_url_without_slash = HOST_URL.endsWith('/') ? HOST_URL.slice(0, -1) : HOST_URL;
+    return `${host_url_without_slash}${url}`;
   };
 
   // Get image URL for the shop
