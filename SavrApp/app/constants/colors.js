@@ -1,6 +1,8 @@
 export const COLORS = {
     backgroundLight: "white",
     backgroundDark: "#121212",
+    cardBackgroundLight: "white",
+    cardBackgroundDark: "#333",
     primary: "darkgreen", // remove when everywhere primaryDark and primaryLight are used
     secondary: "darkgreen", // remove when everywhere primaryDark and primaryLight are used
     borderLight: "#ddd",
