@@ -1,8 +1,8 @@
 export const COLORS = {
     backgroundLight: "white",
     backgroundDark: "#121212",
-    primary: "#6200ea",
-    secondary: "#03dac6",
+    primary: "darkgreen", // remove when everywhere primaryDark and primaryLight are used
+    secondary: "darkgreen", // remove when everywhere primaryDark and primaryLight are used
     borderLight: "#ddd",
     borderDark: "#444",
     textLight: "black",
@@ -49,10 +49,8 @@ export const COLORS = {
     onBackground: '#000000',  // text/icons on background
 
     // Primary/secondary variants
-    primaryLight:   '#BB86FC',
-    primaryDark:    '#3700B3',
-    secondaryLight: '#66FFF9',
-    secondaryDark:  '#018786',
+    primaryLight:   'darkgreen',
+    primaryDark:    'lightgreen',
 
     // Overlay/transparency helpers
     overlayLight: 'rgba(255,255,255,0.12)',
