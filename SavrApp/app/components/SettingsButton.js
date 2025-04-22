@@ -7,5 +7,9 @@ import { SettingsContext } from '../contexts/SettingsContext';
 export const SettingsButton = () => {
     const { darkMode } = useContext(SettingsContext);
     const [styles] = useState(getStyles(darkMode));
+
+    useEffect(() => {
+        
+    }, [darkMode]);
     return <Ionicons name="settings-sharp" size={styles.settingsDropDown.settingsIcon.size} color={styles.settingsDropDown.settingsIcon.color} />
 }
