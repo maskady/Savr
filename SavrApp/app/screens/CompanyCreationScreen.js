@@ -164,7 +164,7 @@ const CompanyCreationScreen = () => {
           value={company.name}
           onChangeText={(text) => handleInputChange('name', text)}
           placeholder="Name of the company"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
         {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
       </View>
@@ -176,7 +176,7 @@ const CompanyCreationScreen = () => {
           value={company.description}
           onChangeText={(text) => handleInputChange('description', text)}
           placeholder="Description of the company"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           multiline
           numberOfLines={4}
         />
@@ -189,7 +189,7 @@ const CompanyCreationScreen = () => {
           value={company.address}
           onChangeText={(text) => handleInputChange('address', text)}
           placeholder="Adress"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
       </View>
       
@@ -201,7 +201,7 @@ const CompanyCreationScreen = () => {
             value={company.postalCode}
             onChangeText={(text) => handleInputChange('postalCode', text)}
             placeholder="ZIP Code"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            placeholderTextColor={styles.input.placeholderTextColor}
           />
         </View>
         
@@ -212,7 +212,7 @@ const CompanyCreationScreen = () => {
             value={company.city}
             onChangeText={(text) => handleInputChange('city', text)}
             placeholder="City"
-            placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+            placeholderTextColor={styles.input.placeholderTextColor}
           />
         </View>
       </View>
@@ -224,7 +224,7 @@ const CompanyCreationScreen = () => {
           value={company.country}
           onChangeText={(text) => handleInputChange('country', text)}
           placeholder="Country"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
         />
       </View>
       
@@ -235,7 +235,7 @@ const CompanyCreationScreen = () => {
           value={company.phone}
           onChangeText={(text) => handleInputChange('phone', text)}
           placeholder="+1234567890"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           keyboardType="phone-pad"
         />
         {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
@@ -248,7 +248,7 @@ const CompanyCreationScreen = () => {
           value={company.email}
           onChangeText={(text) => handleInputChange('email', text)}
           placeholder="email@example.com"
-          placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
+          placeholderTextColor={styles.input.placeholderTextColor}
           keyboardType="email-address"
           autoCapitalize="none"
         />
