@@ -114,7 +114,7 @@ export default function ShopProductList({ shopId, onItemPress, variants, setVari
   };
 
   const renderItem = ({ item }) => {
-    console.log(`Item: ${JSON.stringify(item, null, 2)}`);
+    //console.log(`Item: ${JSON.stringify(item, null, 2)}`);
     
 
     return (
