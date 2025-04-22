@@ -57,4 +57,8 @@ export const COLORS = {
   // Overlay/transparency helpers
   overlayLight: 'rgba(255,255,255,0.12)',
   overlayDark:  'rgba(0,0,0,0.54)',
+
+  // Placeholder colors
+  placeholderLight: '#AAAAAA',
+  placeholderDark: '#888888',
 };
