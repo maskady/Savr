@@ -1,60 +1,60 @@
 export const COLORS = {
-    backgroundLight: "white",
-    backgroundDark: "#121212",
-    primary: "#6200ea",
-    secondary: "#03dac6",
-    borderLight: "#ddd",
-    borderDark: "#444",
-    textLight: "black",
-    textDark: "white",
-    businesses: {
-      "restaurant": "green",
-      "cafe": "orange",
-      "butcher": "red",
-      "bakery": "brown",
-      "florist": "purple",
-      "fishmonger": "blue",
-      "grocery": "lightblue",
-      "canteen": "lightgreen",
-      "other": "lightgray",
-    },
-    border: '#e0e0e0',
-    placeholder: '#a0a0a0',
+  backgroundLight: "white",
+  backgroundDark: "#121212",
+  primary: "#6200ea",
+  secondary: "#03dac6",
+  borderLight: "#ddd",
+  borderDark: "#444",
+  textLight: "black",
+  textDark: "white",
+  businesses: {
+    "restaurant": "green",
+    "cafe": "orange",
+    "butcher": "red",
+    "bakery": "brown",
+    "florist": "purple",
+    "fishmonger": "blue",
+    "grocery": "lightblue",
+    "canteen": "lightgreen",
+    "other": "lightgray",
+  },
+  border: '#e0e0e0',
+  placeholder: '#a0a0a0',
 
-    // Semantic status colors
-    success:      '#4CAF50',  // green for success states
-    error:        '#F44336',  // red for error states
-    warning:      '#FF9800',  // orange for warnings
-    info:         '#2196F3',  // blue for informational messages
+  // Semantic status colors
+  success:      '#4CAF50',  // green for success states
+  error:        '#F44336',  // red for error states
+  warning:      '#FF9800',  // orange for warnings
+  info:         '#2196F3',  // blue for informational messages
 
-    // Disabled/inactive state colors
-    disabled:      '#BDBDBD',
-    disabledText:  '#757575',
+  // Disabled/inactive state colors
+  disabled:      '#BDBDBD',
+  disabledText:  '#757575',
 
-    // Grayscale scale
-    grey100: '#F5F5F5',
-    grey200: '#EEEEEE',
-    grey300: '#E0E0E0',
-    grey400: '#BDBDBD',
-    grey500: '#9E9E9E',
-    grey600: '#757575',
-    grey700: '#616161',
-    grey800: '#424242',
-    grey900: '#212121',
+  // Grayscale scale
+  grey100: '#F5F5F5',
+  grey200: '#EEEEEE',
+  grey300: '#E0E0E0',
+  grey400: '#BDBDBD',
+  grey500: '#9E9E9E',
+  grey600: '#757575',
+  grey700: '#616161',
+  grey800: '#424242',
+  grey900: '#212121',
 
-    // Surface & background tokens
-    surface:      '#FFFFFF',  // card and sheet backgrounds
-    onSurface:    '#000000',  // text/icons on surface
-    background:   '#FFFFFF',  // app background (light mode)
-    onBackground: '#000000',  // text/icons on background
+  // Surface & background tokens
+  surface:      '#FFFFFF',  // card and sheet backgrounds
+  onSurface:    '#000000',  // text/icons on surface
+  background:   '#FFFFFF',  // app background (light mode)
+  onBackground: '#000000',  // text/icons on background
 
-    // Primary/secondary variants
-    primaryLight:   '#BB86FC',
-    primaryDark:    '#3700B3',
-    secondaryLight: '#66FFF9',
-    secondaryDark:  '#018786',
+  // Primary/secondary variants
+  primaryLight:   '#BB86FC',
+  primaryDark:    '#3700B3',
+  secondaryLight: '#66FFF9',
+  secondaryDark:  '#018786',
 
-    // Overlay/transparency helpers
-    overlayLight: 'rgba(255,255,255,0.12)',
-    overlayDark:  'rgba(0,0,0,0.54)',
-  };
+  // Overlay/transparency helpers
+  overlayLight: 'rgba(255,255,255,0.12)',
+  overlayDark:  'rgba(0,0,0,0.54)',
+};
