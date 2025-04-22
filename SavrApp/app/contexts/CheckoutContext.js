@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import { request } from '../utils/request';
 
 // Cart context
 export const CartContext = createContext();
@@ -15,24 +16,35 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  const addToCart = (product) => {
+  const addToCart = async (product) => {
+    if (product?.shopName === undefined) {
+      const { response, data } = await request(`/shop/${product.shopId}`, 'GET');
+      if (response.ok) {
+        product.shopName = data.data.name;
+      }
+      else {
+        console.error("Failed to fetch shop name:", response.statusText);
+        return;
+      }
+    }
+
     setCartItems(prevItems => {
-      // Chercher si le magasin existe déjà dans le panier
+      // Search if the shop already exists in the cart
       const shopIndex = prevItems.findIndex(shop => shop.shopId === product.shopId);
       
       if (shopIndex !== -1) {
-        // Le magasin existe, vérifier si le produit existe
+        // Shop exists, check if the product exists in the shop
         const updatedItems = [...prevItems];
         const productIndex = updatedItems[shopIndex].items.findIndex(item => item.id === product.id);
         
         if (productIndex !== -1) {
-          // Le produit existe, augmenter la quantité
+          // Product exists, increase its quantity
           updatedItems[shopIndex].items[productIndex] = {
             ...updatedItems[shopIndex].items[productIndex],
             quantity: updatedItems[shopIndex].items[productIndex].quantity + 1
           };
         } else {
-          // Le produit n'existe pas, l'ajouter aux items du magasin
+          // Product does not exist, add it to the shop
           updatedItems[shopIndex].items.push({
             ...product,
             quantity: 1
@@ -41,7 +53,7 @@ export const CartProvider = ({ children }) => {
         
         return updatedItems;
       } else {
-        // Le magasin n'existe pas, l'ajouter avec le produit
+        // Shop does not exist, create a new entry for it
         return [
           ...prevItems,
           {
@@ -57,7 +69,7 @@ export const CartProvider = ({ children }) => {
 
   const removeFromCart = (shopId, productId) => {
     setCartItems(prevItems => {
-      // Trouver l'index du magasin
+      // Find the index of the shop
       const shopIndex = prevItems.findIndex(shop => shop.shopId === shopId);
       
       if (shopIndex === -1) return prevItems;
@@ -70,16 +82,16 @@ export const CartProvider = ({ children }) => {
       const currentProduct = updatedItems[shopIndex].items[productIndex];
       
       if (currentProduct.quantity > 1) {
-        // Réduire la quantité du produit
+        // Decrease the quantity of the product
         updatedItems[shopIndex].items[productIndex] = {
           ...currentProduct,
           quantity: currentProduct.quantity - 1
         };
       } else {
-        // Supprimer le produit
+        // Remove the product from the shop
         updatedItems[shopIndex].items.splice(productIndex, 1);
         
-        // Si le magasin n'a plus de produits, le supprimer également
+        // If the shop has no products left, remove the shop from the cart
         if (updatedItems[shopIndex].items.length === 0) {
           updatedItems.splice(shopIndex, 1);
         }
@@ -91,17 +103,17 @@ export const CartProvider = ({ children }) => {
 
   const removeItemCompletely = (shopId, productId) => {
     setCartItems(prevItems => {
-      // Trouver l'index du magasin
+      // Find the index of the shop
       const shopIndex = prevItems.findIndex(shop => shop.shopId === shopId);
       
       if (shopIndex === -1) return prevItems;
       
       const updatedItems = [...prevItems];
       
-      // Filtrer pour supprimer complètement le produit
+      // Filter to remove the product from the shop
       updatedItems[shopIndex].items = updatedItems[shopIndex].items.filter(item => item.id !== productId);
       
-      // Si le magasin n'a plus de produits, le supprimer également
+      // If the shop has no products left, remove the shop from the cart
       if (updatedItems[shopIndex].items.length === 0) {
         updatedItems.splice(shopIndex, 1);
       }

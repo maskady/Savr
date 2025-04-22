@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await loadUserData(); // Wait for the promise to resolve
       setUser(data);
-      console.log("[AuthContext] User data loaded:", data);
+      // console.log("[AuthContext] User data loaded:", data);
     } catch (error) {
       console.error("[AuthContext] Error fetching user data:", error);
     } finally {
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   const checkToken = async () => {
     try {
       const token = await getToken();
-      console.log("AuthProvider: Token", token);
+      // console.log("AuthProvider: Token", token);
       if (token) {
         login();
       }
