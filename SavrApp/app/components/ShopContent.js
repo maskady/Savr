@@ -16,10 +16,6 @@ export default function ShopContent({
 }) {
 
   const [styles, setStyles] = useState(getStyles());
-  useEffect(() => {
-    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
-    return () => sub.remove();
-  }, []);
 
   useEffect(() => {
     let isMounted = true;
