@@ -46,8 +46,8 @@ const ShopScreen = () => {
   const primaryCategoryName = businessCategories[shop?.primaryCategory]?.name || shop?.primaryCategory;
 
 
-  const goBackOrHome = async () => {
-    await handleSaveChanges();
+  const goBackOrHome = () => {
+    handleSaveChanges();
 
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -58,7 +58,7 @@ const ShopScreen = () => {
   
 
   const handleInputChange = (field, value) => {
-    shop = (prev => ({
+    setShop(prev => ({
       ...prev,
       [field]: value
     }));
@@ -86,7 +86,7 @@ const ShopScreen = () => {
             }];
           }
 
-          shop = ({ ...data, images: shopImages, categories });
+          setShop({ ...data, images: shopImages, categories });
         }
       } catch (err) {
         console.error('Error fetching shop details:', err);
@@ -97,7 +97,7 @@ const ShopScreen = () => {
     };
 
     fetchShopDetails();
-  }, [shop?.id, darkMode]);
+  }, [shop?.id]);
 
   const handleCall = () => {
     if (shop?.phone) {
@@ -154,7 +154,7 @@ const ShopScreen = () => {
       const updatedShop = { ...shop, images: shop.images.filter(image => image.type !== 'placeholder') };
       
       // Update the shop in local state
-      shop = (updatedShop);
+      setShop(updatedShop);
       
       // Update the shop in the backend
       await updateShop(shop.id, updatedShop);
@@ -181,7 +181,7 @@ const ShopScreen = () => {
   };
 
   const discardChanges = () => {
-    shop = (oldShop);
+    setShop(oldShop);
     setHasChanges(false);
     setEditMode('view');
     setIsSaving(false);
@@ -196,7 +196,7 @@ const ShopScreen = () => {
   };
 
   const handleImagesChange = (updatedImages) => {
-    shop = (prev => ({
+    setShop(prev => ({
       ...prev,
       images: updatedImages
     }));

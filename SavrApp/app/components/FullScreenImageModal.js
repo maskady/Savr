@@ -5,12 +5,7 @@ import getStyles from '../styles/AppStyles';
 import { ArrowLeft } from 'lucide-react-native';
 
 export default function FullScreenImageModal({ image, onClose }) {
-  const [styles, setStyles] = useState(getStyles());
-  useEffect(() => {
-    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
-    return () => sub.remove();
-  }, []);
-  
+  const [styles, setStyles] = useState(getStyles()); 
   
   return (
     <Modal visible={!!image} transparent animationType="fade" onRequestClose={onClose}>
