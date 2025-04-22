@@ -10,7 +10,7 @@ const getStyles = (darkMode) => {
     card: darkMode ? COLORS.grey900 : COLORS.surface,
     subtext: darkMode ? COLORS.grey400 : COLORS.grey600,
     discount: darkMode ? COLORS.secondary : COLORS.success,
-    buttonBackground: darkMode ? COLORS.surface : COLORS.primary,
+    buttonBackground: darkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
     buttonText: darkMode ? COLORS.primary : '#FFFFFF',
   };
 
@@ -226,10 +226,9 @@ const getStyles = (darkMode) => {
       paddingVertical: 16,
       borderTopWidth: 1,
       borderColor: theme.border,
-      backgroundColor: theme.background,
+      backgroundColor: theme.buttonBackground,
     },
     payButton: {
-      backgroundColor: theme.buttonBackground,
       borderRadius: 12,
       paddingVertical: 16,
       alignItems: 'center',
