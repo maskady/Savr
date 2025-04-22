@@ -7,8 +7,7 @@ import {
   TouchableOpacity, 
   Appearance,
   Alert,
-  Image,
-  Platform
+  Image
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/NewCompanyStyles'; 
