@@ -13,7 +13,6 @@ const ShopListScreen = () => {
   const { company } = route.params || { company: { id: null, name: 'All Shops' } };
   const { user } = useContext(AuthContext);
 
-  // State pour stocker les shops
   const [shops, setShops] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
