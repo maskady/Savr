@@ -9,7 +9,7 @@ import { STRIPE_PUBLISHABLE_KEY, STRIPE_MERCHANT_ID, STRIPE_URL_SCHEME } from '@
 
 import SettingsContext from '../contexts/SettingsContext';
 import getStyles from '../styles/CheckoutStyles';
-import { request } from '../utils/request';
+import request from '../utils/request';
 
 const CheckoutScreen = () => {
   const navigation = useNavigation();

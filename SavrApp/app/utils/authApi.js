@@ -1,4 +1,4 @@
-import { request } from './request';
+import request from './request';
 
 const loginUser = (email, password) =>
   request('/auth/login', 'POST', { email: email.trim(), password });

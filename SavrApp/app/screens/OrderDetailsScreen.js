@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   StatusBar,
 } from 'react-native';
-import { request } from '../utils/request';
+import request from '../utils/request';
 import { FontAwesome6 } from '@expo/vector-icons';
 import getStyles from '../styles/OrderDetailsStyles';
 import SettingsContext from '../contexts/SettingsContext';

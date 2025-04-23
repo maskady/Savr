@@ -14,7 +14,7 @@ import SettingsDropdown from '../components/SettingsDropdown';
 import getStyles from '../styles/AppStyles';
 import { useNavigation } from '@react-navigation/native';
 import AuthContext from '../contexts/AuthContext';
-import { request } from '../utils/request';
+import request from '../utils/request';
 import SettingsContext from '../contexts/SettingsContext';
 
 const screenWidth = Dimensions.get('window').width;

@@ -1,4 +1,4 @@
-import { request } from './request';
+import request from './request';
 
 const getShops = async (latitude, longitude, radius) => {
   try {

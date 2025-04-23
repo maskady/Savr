@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Appearance, ActivityIndicator, TouchableOpacity } from 'react-native';
 import getStyles from '../styles/AppStyles';
 import { useStripe, initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native';
-import { request } from '../utils/request';
+import request from '../utils/request';
 import { APP_NAME } from '@env';
 
 const OrderAndPay = ({ orderId, cartItems, onPaymentSuccess, onPaymentError }) => {

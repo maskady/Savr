@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, ActivityIndicator, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import { request } from '../utils/request';
+import request from '../utils/request';
 
 const StripePaymentProvider = ({ children }) => {
   const [publishableKey, setPublishableKey] = useState('');

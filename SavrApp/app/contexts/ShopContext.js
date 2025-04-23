@@ -3,7 +3,7 @@ import React, { createContext, useState, useMemo, useEffect } from 'react';
 import getShops from '../utils/api';
 import { businessCategories } from '../constants/businessCategories';
 import { throttle } from 'lodash';
-import { request } from '../utils/request';
+import request from '../utils/request';
 import haversine from 'haversine-distance';
 
 const ShopContext = createContext();

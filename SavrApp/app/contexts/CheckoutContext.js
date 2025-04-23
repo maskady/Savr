@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { request } from '../utils/request';
+import request from '../utils/request';
 
 // Cart context
 export const CartContext = createContext();

@@ -17,7 +17,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome6 } from '@expo/vector-icons';
 import SettingsContext from '../contexts/SettingsContext';
-import { request } from '../utils/request';
+import request from '../utils/request';
 import AuthContext from '../contexts/AuthContext';
 
 const ShopCreationScreen = () => {

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { request } from './request';
+import request from './request';
 
 export const storeToken = async (token) => {
     try {
