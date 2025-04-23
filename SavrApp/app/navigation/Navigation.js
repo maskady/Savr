@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AuthContext } from "../contexts/AuthContext";
+import { SettingsContext } from "../contexts/SettingsContext";
 
 import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
@@ -10,6 +11,8 @@ const RootStack = createStackNavigator();
 const Navigation = () => {
   const { isLoggedIn } = useContext(AuthContext);
   const [routeName, setRouteName] = useState(isLoggedIn ? "App" : "Auth");
+
+  const { darkMode } = useContext(SettingsContext);
   
   useEffect(() => {
     console.log("Navigation: isLoggedIn:", isLoggedIn);
@@ -20,7 +23,10 @@ const Navigation = () => {
 
   return (
     <RootStack.Navigator
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ 
+        headerShown: false,
+        cardStyle: { backgroundColor: darkMode ? "#000" : "#fff" },
+      }}
       initialRouteName={routeName}
       key={routeName} // key prop to force re-render on route change
     >
