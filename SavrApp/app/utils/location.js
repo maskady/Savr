@@ -200,8 +200,7 @@ const stopLocationUpdates = (intervalId) => {
   }
 };
 
-export {
-  getUserLocation,
+export{
   getCurrentLocation,
   saveLocationToStorage,
   getLocationFromStorage,
@@ -209,3 +208,5 @@ export {
   stopLocationUpdates,
   isDifferentRegion,
 };
+
+export default getUserLocation;

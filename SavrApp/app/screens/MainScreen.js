@@ -11,7 +11,7 @@ import { businessCategories } from '../constants/businessCategories';
 import SettingsContext from '../contexts/SettingsContext';
 import getStyles from '../styles/AppStyles';
 import ShopContext from '../contexts/ShopContext';
-import { getUserLocation, startLocationUpdates, stopLocationUpdates, isDifferentRegion } from '../utils/location';
+import getUserLocation, {  startLocationUpdates, stopLocationUpdates, isDifferentRegion } from '../utils/location';
 import haversine from 'haversine-distance';
 
 const MainScreen = () => {
