@@ -1,8 +1,8 @@
 //request.js
 import { API_URI } from '@env';
-import { getToken } from './token';
+import getToken from './token';
 
-export const request = async (endpoint, method, body, query={}) => {
+const request = async (endpoint, method, body, query={}) => {
   const headers = { "Content-Type": "application/json" };
 
   let token = await getToken();
@@ -20,3 +20,5 @@ export const request = async (endpoint, method, body, query={}) => {
   const data = await response.json();
   return { response, data };
 };
+
+export default request;

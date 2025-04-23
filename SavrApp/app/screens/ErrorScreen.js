@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation} from '@react-navigation/native';
 import getStyles from '../styles/ErrorStyles';
-import { SettingsContext } from '../contexts/SettingsContext';
+import SettingsContext from '../contexts/SettingsContext';
 
 const ErrorScreen = () => {
   const navigation = useNavigation();

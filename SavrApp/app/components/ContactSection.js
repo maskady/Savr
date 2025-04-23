@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
+import COLORS from '../constants/colors';
 import { Phone, MapPin } from 'lucide-react-native';
 
 export default function ContactSection({

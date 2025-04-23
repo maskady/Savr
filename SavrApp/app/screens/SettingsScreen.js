@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { View, Appearance, SafeAreaView, Text, ActivityIndicator, TouchableOpacity, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
-import { getToken, storeToken, removeToken, refreshToken } from "../utils/token";
+import getToken, {  storeToken, removeToken, refreshToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
 import { saveUserData } from "../utils/api";
-import { AuthContext } from "../contexts/AuthContext";
-import { SettingsContext } from "../contexts/SettingsContext";
+import AuthContext from "../contexts/AuthContext";
+import SettingsContext from "../contexts/SettingsContext";
 
 const SettingsScreen = () => {
   const [firstName, setFirstName] = useState("");

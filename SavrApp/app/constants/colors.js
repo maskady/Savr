@@ -1,4 +1,4 @@
-export const COLORS = {
+const COLORS = {
     backgroundLight: "white",
     backgroundDark: "#121212",
     cardBackgroundLight: "white",
@@ -62,3 +62,5 @@ export const COLORS = {
   placeholderLight: '#AAAAAA',
   placeholderDark: '#888888',
 };
+
+export default COLORS;

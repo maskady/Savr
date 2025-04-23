@@ -7,7 +7,7 @@ import {
   Appearance
 } from 'react-native';
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
+import COLORS from '../constants/colors';
 
 export default function ShopDescription({
   description,

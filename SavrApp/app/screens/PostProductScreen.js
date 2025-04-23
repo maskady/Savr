@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { SettingsContext } from '../contexts/SettingsContext';
+import SettingsContext from '../contexts/SettingsContext';
 import { getShopProducts, postProduct, postProductVariant, updateProduct } from '../utils/api';
 import CategoryDropdown from '../components/CategoryDropdown';
 import ImageManager from '../components/ImageManager';

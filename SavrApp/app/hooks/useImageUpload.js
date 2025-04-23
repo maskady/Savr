@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { API_URI } from '@env';
-import { getToken } from '../utils/token';
+import getToken from '../utils/token';
 
 const imageUploadUrl = `${API_URI}/image/upload`;
 

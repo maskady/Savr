@@ -12,13 +12,13 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/CompanyShopStyles'; 
-import { getToken } from '../utils/token';
+import getToken from '../utils/token';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { SettingsContext } from '../contexts/SettingsContext';
-import { request } from '../utils/request';
-import { AuthContext } from '../contexts/AuthContext';
+import SettingsContext from '../contexts/SettingsContext';
+import request from '../utils/request';
+import AuthContext from '../contexts/AuthContext';
 
 const ShopCreationScreen = () => {
   const navigation = useNavigation();

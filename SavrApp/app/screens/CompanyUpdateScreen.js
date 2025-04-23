@@ -11,9 +11,9 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/CompanyShopStyles'; 
-import { getToken } from '../utils/token';
+import getToken from '../utils/token';
 import { Ionicons, FontAwesome6 } from '@expo/vector-icons';
-import { SettingsContext } from '../contexts/SettingsContext';
+import SettingsContext from '../contexts/SettingsContext';
 
 const CompanyUpdateScreen = ({ route, navigation }) => {
   const [company, setCompany] = useState(route.params.company);

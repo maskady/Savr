@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, Image, TouchableOpacity, ScrollView, Dimensions, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
+import COLORS from '../constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { HOST_URL } from '@env'; 
 
