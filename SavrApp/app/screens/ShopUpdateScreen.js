@@ -29,6 +29,8 @@ const ShopUpdateScreen = ({ route }) => {
   const { darkMode } = useContext(SettingsContext);
   const [styles] = useState(getStyles(darkMode));
 
+  const { handleRefresh } = route.params || { handleRefresh: () => {} };
+
   useEffect(() => {
     fetchCategories();
     if (shop.categories && !shop.categories.includes(shop.primaryCategory)) {
@@ -72,11 +74,10 @@ const ShopUpdateScreen = ({ route }) => {
       )
 
       console.log("Response.ok? ", response.ok);
-      // console.log("Response data:", data);
 
       if (response.ok) {
         Alert.alert("Success", "Shop updated successfully!", [
-          { text: "OK", onPress: () => navigation.goBack() }
+          { text: "OK", onPress: () => {handleRefresh(); navigation.navigate('ShopList', { company: { id: shop.companyId } })} }
         ]);
       } else {
         Alert.alert("Error", data.message || "Failed to update shop.", [{ text: "OK" }]);
