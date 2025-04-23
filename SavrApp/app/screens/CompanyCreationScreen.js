@@ -12,14 +12,16 @@ import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/CompanyShopStyles'; 
 import { getToken } from '../utils/token';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import SettingsContext from '../contexts/SettingsContext';
 
 const CompanyCreationScreen = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { handleRefresh } = route.params || { handleRefresh: () => {} };
+
   const { darkMode } = useContext(SettingsContext);
   const [styles, setStyles] = useState(getStyles(darkMode));
-
-  const navigation = useNavigation();
   
   const [company, setCompany] = useState({
     name: '',
@@ -68,7 +70,7 @@ const CompanyCreationScreen = () => {
       console.log("Response data:", data);
 
       if (response.ok) {
-        Alert.alert("Success", "Company created successfully!", [{ text: "OK", onPress: () => navigation.navigate('CompanyList') }]);
+        Alert.alert("Success", "Company created successfully!", [{ text: "OK", onPress: () => { handleRefresh() ; navigation.navigate('CompanyList') }}]);
       } else {
         Alert.alert("Error", data.message || "Failed to create company.", [{ text: "OK" }]);
       }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, Appearance } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
 import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';
 import getStyles from '../styles/CompanyStyles'; 
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -14,6 +14,7 @@ const CompanyListScreen = () => {
   const { user } = useContext(AuthContext); 
   const route = useRoute();
   const from = route.params?.from || null; 
+  const [isLoadingCompanies, setIsLoadingCompanies] = useState(false); 
 
   useEffect(() => {
     retrieveCompanies();
@@ -26,6 +27,7 @@ const CompanyListScreen = () => {
   const [companies, setCompanies] = useState(null);
 
   const retrieveCompanies = async () => {
+    setIsLoadingCompanies(true);
     let onlyMyCompanies = true;
     if (user.roleId === 'admin') {
       onlyMyCompanies = false;
@@ -46,21 +48,24 @@ const CompanyListScreen = () => {
 
       if (response.ok) {
         setCompanies(data.data);
+        setIsLoadingCompanies(false);
         if (from === 'home' && data.data.length < 2) {
           navigation.navigate('ShopList', { company: data.data[0] });
         }
       }
       else {
         console.error("Error fetching companies:", response);
+        setIsLoadingCompanies(false);
       }
     }
     catch (error) {
       console.error("Error fetching companies :", error);
+      setIsLoadingCompanies(false);
     }
   };
 
   const handleAddCompany = () => {
-    navigation.navigate('CompanyCreation');
+    navigation.navigate('CompanyCreation', { handleRefresh: refreshCompanies });
   };
 
   // Function to handle editing a company
@@ -68,7 +73,7 @@ const CompanyListScreen = () => {
     console.log('Edit company with ID:', companyId);
     // Retrieve the company details from the companies array
     const companyToEdit = companies.find(company => company.id === companyId);
-    navigation.navigate('CompanyUpdate', { company: companyToEdit });
+    navigation.navigate('CompanyUpdate', { company: companyToEdit, handleRefresh: refreshCompanies });
   };
 
   const handleOpenCompany = (company) => {
@@ -76,13 +81,27 @@ const CompanyListScreen = () => {
     navigation.navigate('ShopList', { company });
   };
 
-  if (!companies) {
-    return (
-      <View style={companyStyles.loadingContainer}>
-        <Text style={companyStyles.loadingText}>Loading...</Text>
+  const refreshCompanies = () => {
+    retrieveCompanies();
+  };
+
+  const renderCompany = ({ item: company }) => (
+    <TouchableOpacity onPress={() => handleOpenCompany(company)}>
+      <View style={companyStyles.companyCard}>
+        <View style={companyStyles.companyInfo}>
+          <Text style={companyStyles.companyName}>{company.name}</Text>
+          <Text style={companyStyles.companyAddress}>{company.address}</Text>
+          <Text style={companyStyles.companyCity}>{company.city}</Text>
+        </View>
+        <TouchableOpacity
+          style={companyStyles.editButton}
+          onPress={() => handleEditCompany(company.id)}
+        >
+          <Feather name="edit" size={20} color={darkMode ? 'white' : 'black'} />
+        </TouchableOpacity>
       </View>
-    );
-  }
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={companyStyles.safeArea}>
@@ -108,42 +127,23 @@ const CompanyListScreen = () => {
         </TouchableOpacity>
       </View>
       
-      {/* Scrollable list of companies */}
-      <ScrollView 
-        style={companyStyles.scrollContainer}
-        contentContainerStyle={companyStyles.contentContainer}
-      >
-        {companies?.length === 0 ? (
-          <View style={companyStyles.emptyContainer}>
-            <Text style={{ color: darkMode ? 'white' : 'black' }}>
-              You don't have any companies yet. Tap the + button to add one.
-            </Text>
-          </View>
-        ) : (
-          companies.map((company) => (
-            <TouchableOpacity 
-              key={company.id} 
-              onPress={() => handleOpenCompany(company)}
-            >
-              <View 
-                style={companyStyles.companyCard}
-              >
-                <View style={companyStyles.companyInfo}>
-                  <Text style={companyStyles.companyName}>{company.name}</Text>
-                  <Text style={companyStyles.companyAddress}>{company.address}</Text>
-                  <Text style={companyStyles.companyCity}>{company.city}</Text>
-                </View>
-                <TouchableOpacity 
-                  style={companyStyles.editButton}
-                  onPress={() => handleEditCompany(company.id)}
-                >
-                  <Feather name="edit" size={20} color={darkMode ? 'white' : 'black'} />
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          ))
-        )}
-      </ScrollView>
+      <FlatList
+        data={companies}
+        renderItem={renderCompany}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={
+          companies?.length === 0
+            ? companyStyles.emptyContainer
+            : companyStyles.contentContainer
+        }
+        ListEmptyComponent={
+          <Text style={{ color: darkMode ? 'white' : 'black' }}>
+            You don't have any companies yet. Tap the + button to add one.
+          </Text>
+        }
+        refreshing={isLoadingCompanies}
+        onRefresh={refreshCompanies}
+      />
     </SafeAreaView>
   );
 };
