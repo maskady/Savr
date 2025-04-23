@@ -151,6 +151,7 @@ const MainScreen = () => {
           shops={filteredShops}
           onShopSelect={handleSelect}
           getUserLocation={getUserLocation}
+          setRegion={setRegion}
         />
         <View style={styles.searchOverlay}></View>
       </View>
