@@ -179,8 +179,8 @@ const OrdersScreen = () => {
   const renderTabBar = useCallback(props => (
     <TabBar
       {...props}
-      indicatorStyle={{ backgroundColor: Colors.Primary }}
-      style={{ backgroundColor: styles.tabBar.backgroundColor, color: "black" }}
+      indicatorStyle={{ backgroundColor: styles.tabBar.indicatorColor }}
+      style={{ backgroundColor: styles.tabBar.backgroundColor}}
       activeColor={styles.tabBar.activeTextColor}          
       inactiveColor={styles.tabBar.inactiveTextColor}
     />

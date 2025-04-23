@@ -19,6 +19,7 @@ const getStyles = (darkMode) => {
       color: themeColors.subText,
       activeTextColor: themeColors.text,
       inactiveTextColor: themeColors.subText,
+      indicatorColor: darkMode ? '#fff' : '#000',
     },
     statusBar: {
       backgroundColor: themeColors.background,
