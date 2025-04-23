@@ -62,9 +62,6 @@ const CheckoutScreen = () => {
 
   const handlePaymentSuccess = (paymentData) => {
     setTimeout(() => {
-
-      console.log('Payment success:', paymentData);
-      request( `/payment/${paymentData.id}/update-payment-status`, 'PUT');
       navigation.navigate('OrderDetails', { orderId: paymentData.id }); 
       clearCart();
     }, 1000);
