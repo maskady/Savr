@@ -15,7 +15,7 @@ import { getToken } from '../utils/token';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import CategoryDropdown from '../components/CategoryDropdown';
-import { request } from '../utils/request';
+import request from '../utils/request';
 import SettingsContext from '../contexts/SettingsContext';
 
 
