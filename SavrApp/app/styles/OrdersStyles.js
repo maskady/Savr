@@ -14,6 +14,12 @@ const getStyles = (darkMode) => {
   };
 
   return StyleSheet.create({
+    tabBar: {
+      backgroundColor: themeColors.background,
+      color: themeColors.subText,
+      activeTextColor: themeColors.text,
+      inactiveTextColor: themeColors.subText,
+    },
     statusBar: {
       backgroundColor: themeColors.background,
       barStyle: darkMode ? 'light-content' : 'dark-content',
