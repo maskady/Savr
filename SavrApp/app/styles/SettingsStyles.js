@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS } from "../constants/colors";
+import COLORS from "../constants/colors";
 
 const getStyles = (darkMode) => {
   // Définition du thème basé sur le paramètre darkMode

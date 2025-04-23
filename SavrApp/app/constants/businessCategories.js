@@ -1,5 +1,5 @@
 import { getCategories } from "../utils/api";
-import { COLORS } from "./colors";
+import COLORS from "./colors";
 
 export let businessCategories = {}; // category id -> category object
 export let businessCategoriesColors = {}; // category id -> color
