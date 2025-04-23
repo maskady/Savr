@@ -24,7 +24,7 @@ import CategoryDropdown from '../components/CategoryDropdown';
 const ShopCreationScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { companyId } = route.params || {}; 
+  const { companyId, handleRefresh } = route.params || {}; 
   
   const { darkMode } = useContext(SettingsContext);
   const [styles, setStyles] = useState(getStyles(darkMode));
@@ -104,7 +104,7 @@ const ShopCreationScreen = () => {
 
       if (response.ok) {
         Alert.alert("Success", "Shop created successfully!", [
-          { text: "OK", onPress: () => navigation.navigate('ShopList', { company: { id: dataToSend.companyId } }) }
+          { text: "OK", onPress: () => { handleRefresh(); navigation.navigate('ShopList', { company: { id: dataToSend.companyId } }) }}
         ]);
 
         if (shop.email !== emailOwnership) {

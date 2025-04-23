@@ -14,8 +14,13 @@ import getStyles from '../styles/CompanyShopStyles';
 import { getToken } from '../utils/token';
 import { Ionicons, FontAwesome6 } from '@expo/vector-icons';
 import SettingsContext from '../contexts/SettingsContext';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-const CompanyUpdateScreen = ({ route, navigation }) => {
+const CompanyUpdateScreen = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { handleRefresh } = route.params || { handleRefresh: () => {} };
+
   const [company, setCompany] = useState(route.params.company);
   const { darkMode } = useContext(SettingsContext);
   const [styles, setStyles] = useState(getStyles(darkMode));
@@ -56,7 +61,7 @@ const CompanyUpdateScreen = ({ route, navigation }) => {
 
       if (response.ok) {
         Alert.alert("Success", "Company updated successfully!", [
-          { text: "OK", onPress: () => navigation.goBack() }
+          { text: "OK", onPress: () => { handleRefresh(); navigation.navigate('CompanyList'); } }
         ]);
       } else {
         Alert.alert("Error", data.message || "Failed to update company.", [{ text: "OK" }]);

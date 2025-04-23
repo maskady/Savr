@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
 import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';
 import getStyles from '../styles/CompanyStyles'; 
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -57,13 +57,17 @@ const ShopListScreen = () => {
     }
   };
 
+  const refreshShops = () => {
+    retrieveShops();
+  }
+
   const handleAddShop = () => {
-    navigation.navigate('ShopCreation', { companyId: company.id });
+    navigation.navigate('ShopCreation', { companyId: company.id, handleRefresh: refreshShops });
   };
 
   const handleEditShop = (shop) => {
     console.log('Edit shop:', shop.name);
-    navigation.navigate('ShopUpdate', { shop });
+    navigation.navigate('ShopUpdate', { shop, handleRefresh: refreshShops });
   };
 
   const handleDetailShop = (shop) => {
@@ -77,6 +81,31 @@ const ShopListScreen = () => {
     const titleImage = images.find(img => img.type === 'titleImage');
     return titleImage || images[0];
   };
+
+  const renderShop = ({ item: shop }) => (
+    <TouchableOpacity onPress={() => handleDetailShop(shop)}>
+      <View style={styles.companyCard}>
+        <View style={styles.companyInfo}>
+          <Text style={styles.companyName}>{shop.name}</Text>
+          <Text style={styles.companyAddress}>{shop.address}</Text>
+          <Text style={styles.companyCity}>
+            {shop.city}, {shop.postalCode}
+          </Text>
+          {shop.primaryCategory && (
+            <Text style={[styles.companyCity, { marginTop: 4 }]}>
+              Category: {shop.primaryCategory}
+            </Text>
+          )}
+        </View>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => handleEditShop(shop)}
+        >
+          <Feather name="edit" size={20} color={styles.companyName.color} />
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -98,48 +127,24 @@ const ShopListScreen = () => {
         </TouchableOpacity>
       </View>
       
-      {/* Liste déroulante des shops */}
-      <ScrollView 
-        style={styles.scrollContainer}
-        contentContainerStyle={styles.contentContainer}
-      >
-        {isLoading ? (
-          <View style={styles.emptyContainer}>
-            <Text style={{ color: styles.companyName.color }}>
-              Loading shops...
-            </Text>
-          </View>
-        ) : shops.length === 0 ? (
-          <View style={styles.emptyContainer}>
+      <FlatList
+        data={shops}
+        renderItem={renderShop}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={
+          shops.length === 0 ? styles.emptyContainer : styles.contentContainer
+        }
+        ListEmptyComponent={
+          !isLoading && (
             <Text style={{ color: styles.companyName.color }}>
               No shops found. Tap the + button to add one.
             </Text>
-          </View>
-        ) : (
-          shops.map((shop) => (
-            <TouchableOpacity onPress={() => handleDetailShop(shop)} key={shop.id}>
-              <View style={styles.companyCard}>
-                <View style={styles.companyInfo}>
-                  <Text style={styles.companyName}>{shop.name}</Text>
-                  <Text style={styles.companyAddress}>{shop.address}</Text>
-                  <Text style={styles.companyCity}>{shop.city}, {shop.postalCode}</Text>
-                  {shop.primaryCategory && (
-                    <Text style={[styles.companyCity, { marginTop: 4 }]}>
-                      Category: {shop.primaryCategory}
-                    </Text>
-                  )}
-                </View>
-                <TouchableOpacity 
-                  style={styles.editButton}
-                  onPress={() => handleEditShop(shop)}
-                >
-                  <Feather name="edit" size={20} color={styles.companyName.color} />
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          ))
-        )}
-      </ScrollView>
+          )
+        }
+        refreshing={isLoading}
+        onRefresh={refreshShops}
+
+      />
     </SafeAreaView>
   );
 };
