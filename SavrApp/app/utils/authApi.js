@@ -1,6 +1,6 @@
 import { request } from './request';
 
-export const loginUser = (email, password) =>
+const loginUser = (email, password) =>
   request('/auth/login', 'POST', { email: email.trim(), password });
 
 export const logoutUser = (token) =>
@@ -17,4 +17,4 @@ export const registerUser = (email, password, firstName, lastName) =>
 export const checkUserExists = (email) =>
   request('/auth/exists', 'POST', { email: email.trim() });
 
-
+export default loginUser;
