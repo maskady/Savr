@@ -10,7 +10,6 @@ import {
   Dimensions,
 } from 'react-native';
 import { TabView, TabBar } from 'react-native-tab-view';
-import AuthContext from '../contexts/AuthContext';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import SettingsContext from '../contexts/SettingsContext';
@@ -29,8 +28,7 @@ const Colors = {
 const OrdersScreen = () => {
   const route = useRoute();
   const { orders = [], onRefresh, refreshing } = route.params || {};
-  const [error, setError] = useState(null);
-  const { user } = useContext(AuthContext); 
+  const [error] = useState(null);
   const navigation = useNavigation();
   const { darkMode } = useContext(SettingsContext);
   const styles = useMemo(() => getStyles(darkMode), [darkMode]);
