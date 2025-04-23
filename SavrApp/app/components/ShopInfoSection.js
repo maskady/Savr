@@ -11,7 +11,7 @@ import { Star } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import CategoryDropdown from './CategoryDropdown';
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
+import COLORS from '../constants/colors';
 
 export default function ShopInfoSection({
   shop,

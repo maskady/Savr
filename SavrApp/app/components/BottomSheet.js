@@ -2,7 +2,7 @@ import React, { useRef, useContext, useState, useEffect } from 'react';
 import { Animated, PanResponder, Dimensions, View, Appearance } from 'react-native';
 import { SettingsContext } from '../contexts/SettingsContext';
 import getStyles from '../styles/BottomSheetStyles';
-import { COLORS } from '../constants/colors';
+import COLORS from '../constants/colors';
 
 
 const BottomSheet = ({ children }) => {
