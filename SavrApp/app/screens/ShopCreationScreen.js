@@ -19,6 +19,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { SettingsContext } from '../contexts/SettingsContext';
 import { request } from '../utils/request';
 import { AuthContext } from '../contexts/AuthContext';
+import CategoryDropdown from '../components/CategoryDropdown';
 
 const ShopCreationScreen = () => {
   const navigation = useNavigation();
@@ -49,7 +50,6 @@ const ShopCreationScreen = () => {
 
   const [emailOwnership, setEmailOwnership] = useState('');
   
-  const [categoryInput, setCategoryInput] = useState('');
   const [errors, setErrors] = useState({});
 
   const { user } = useContext(AuthContext);
@@ -158,33 +158,15 @@ const ShopCreationScreen = () => {
     }
   };
   
-  const addCategory = () => {
-    if (categoryInput.trim()) {
-      const updatedCategories = [...shop.categories, categoryInput.trim()];
-      setShop({
-        ...shop,
-        categories: updatedCategories,
-        primaryCategory: shop.primaryCategory || categoryInput.trim()
-      });
-      setCategoryInput('');
-    }
-  };
-  
-  const removeCategory = (index) => {
-    const updatedCategories = [...shop.categories];
-    const removedCategory = updatedCategories[index];
-    updatedCategories.splice(index, 1);
-    
-    const updatedPrimaryCategory = 
-      shop.primaryCategory === removedCategory
-        ? (updatedCategories.length > 0 ? updatedCategories[0] : '')
-        : shop.primaryCategory;
-    
-    setShop({
-      ...shop,
-      categories: updatedCategories,
-      primaryCategory: updatedPrimaryCategory
-    });
+  // Handler for selecting a category from dropdown
+  const handleCategorySelect = (ignore, value) => {
+    // Currently, we only use one (primary) category. TODO: implement multiple categories
+    const trimmed = value.trim();
+    setShop(prev => ({
+      ...prev,
+      categories: [trimmed],
+      primaryCategory: trimmed,
+    }));
   };
   
   const setPrimaryCategory = (category) => {
@@ -384,9 +366,8 @@ const ShopCreationScreen = () => {
           />
         </View>
         
-        {/* Categories */}
+        {/* Latitude & Longitude */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Categories *</Text>
           <View style={styles.rowContainer}>
             <View style={[styles.inputGroup, {flex: 1, marginRight: 10}]}>
               <Text style={styles.label}>Latitude *</Text>
@@ -444,7 +425,13 @@ const ShopCreationScreen = () => {
           </View>
           
           {/* Categories */}
-          <View style={styles.inputGroup}>
+          <Text style={styles.label}>Categories *</Text>
+          <CategoryDropdown 
+            shop={shop} 
+            onInputChange={handleCategorySelect} 
+            category={shop.primaryCategory}
+          />
+          {/* <View style={styles.inputGroup}>
             <Text style={styles.label}>Categories *</Text>
             <View style={styles.rowContainer}>
               <View style={[styles.input, {flex: 3, marginRight: 10, justifyContent: 'center'}]}>
@@ -501,7 +488,7 @@ const ShopCreationScreen = () => {
                 Tap on a category to set it as primary. Current primary: {shop.primaryCategory || 'None'}
               </Text>
             )}
-          </View>
+          </View> */}
           
           {/* Images */}
           <View style={styles.inputGroup}>

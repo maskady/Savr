@@ -305,6 +305,12 @@ const getStyles = () => {
         borderRadius: 4,
         borderColor: isDarkMode ? COLORS.borderDark : COLORS.borderLight,
       },
+      dropdownTextColor: {
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+      },
+      dropdownPlaceholderColor: {
+        color: isDarkMode ? COLORS.placeholderDark : COLORS.placeholderLight,
+      },
     },
     categoryFilter: {
       categoryContainer: {
