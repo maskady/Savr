@@ -12,13 +12,16 @@ import { SettingsContext } from '../contexts/SettingsContext';
 import getStyles from '../styles/AppStyles';
 import { ShopContext } from '../contexts/ShopContext';
 import { getUserLocation, startLocationUpdates, stopLocationUpdates, isDifferentRegion } from '../utils/location';
-import haversine from 'haversine-distance';
 
 const MainScreen = () => {
   const { darkMode } = useContext(SettingsContext);
   const navigation = useNavigation();
   const [styles, setStyles] = useState(getStyles());
-  
+  useEffect(() => {
+    const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
+    return () => sub.remove();
+  }, []);
+
   // Start with region as null while we fetch the user's location.
   const [region, setRegion] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
@@ -62,16 +65,11 @@ const MainScreen = () => {
 
     initializeLocation();
 
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setStyles(getStyles());
-    });
-
     // Cleanup function
     return () => {
       if (locationUpdateInterval) {
         stopLocationUpdates(locationUpdateInterval);
       }
-      subscription.remove();
     };
   }, []);
 
@@ -89,26 +87,15 @@ const MainScreen = () => {
   // While loading, display the activity indicator with a message.
   if (isLoading || region === null) {
     return (
-      <View
-        style={[
-          styles.flexContainer,
-          {
-            backgroundColor: darkMode ? '#121212' : '#fff',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-        ]}
-      >
+      <View style={[styles.flexContainer, styles.mainScreen.loadingContainer]}>
         <StatusBar
           barStyle={styles.statusBar.barStyle}
           backgroundColor={styles.statusBar.backgroundColor}
         />
-        <ActivityIndicator size="large" color={darkMode ? '#fff' : '#121212'} />
-        <View style={{ marginTop: 10 }}>
-          <Text style={{ color: darkMode ? '#fff' : '#121212', fontSize: 16 }}>
-            Acquiring location...
-          </Text>
-        </View>
+        <ActivityIndicator style={styles.mainScreen.loadingIndicator}/>
+        <Text style={styles.mainScreen.acquiringText}>
+          Acquiring location...
+        </Text>
       </View>
     );
   }
@@ -131,7 +118,7 @@ const MainScreen = () => {
   );
 
   return (
-    <View style={[styles.flexContainer, { backgroundColor: darkMode ? '#121212' : '#fff' }]}>
+    <View style={styles.flexContainer}>
       <StatusBar
         barStyle={styles.statusBar.barStyle}
         backgroundColor={styles.statusBar.backgroundColor}
@@ -169,7 +156,7 @@ const MainScreen = () => {
           keyExtractor={(shop) => shop.id.toString()}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingTop: 14, paddingHorizontal: 1 }}
+          contentContainerStyle={styles.mainScreen.bottomSheetContent}
         />
       </BottomSheet>
     </View>

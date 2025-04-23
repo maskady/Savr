@@ -207,6 +207,25 @@ const getStyles = () => {
       },
       decimalPlaces: 2,
     },
+    mainScreen: {
+      loadingContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      acquiringText: {
+        marginTop: 10,
+        fontSize: 16,
+        color: isDarkMode ? COLORS.textLight : COLORS.textDark,
+      },
+      bottomSheetContent: {
+        paddingTop: 14,
+        paddingHorizontal: 1,
+      },
+      loadingIndicator: {
+        size: "large",
+        color: isDarkMode ? COLORS.textDark : COLORS.textLight,
+      }
+    },
     addOptionsDropdown: {
       container: {
         position: 'relative',
@@ -218,7 +237,7 @@ const getStyles = () => {
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 0,
@@ -610,10 +629,10 @@ const getStyles = () => {
         flex: 0,
         flexDirection: 'row',
         alignSelf: 'flex-start',
-        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
         padding: 4,
         borderRadius: 4,
-        borderColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
+        borderColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
         borderWidth: 1,
       },
       markerCount: {
@@ -635,7 +654,7 @@ const getStyles = () => {
         backgroundColor: 'transparent',
       },
       payButton: {
-        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
         borderRadius: 8,
         paddingVertical: 15,
         alignItems: 'center',
@@ -711,7 +730,7 @@ const getStyles = () => {
         marginHorizontal: 3,
       },
       activeIndicator: {
-        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
       },
       priceContainer: {
         padding: 16,
@@ -777,7 +796,7 @@ const getStyles = () => {
         color: isDarkMode ? COLORS.textDark : COLORS.textLight,
       },
       button: {
-        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
         padding: 16,
         borderRadius: 10,
         alignItems: 'center',
@@ -791,7 +810,7 @@ const getStyles = () => {
     },
     quantityCartButton: {
       addButton: {
-        backgroundColor: isDarkMode ? COLORS.primaryDark : isDarkMode ? COLORS.primaryDark : COLORS.primary,
+        backgroundColor: isDarkMode ? COLORS.primaryDark : isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
         width: 40,
         height: 40,
         borderRadius: 20,
@@ -811,7 +830,7 @@ const getStyles = () => {
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
       },
       quantityButtonText: {
         fontSize: 18,
@@ -1059,7 +1078,7 @@ const getStyles = () => {
         paddingVertical: 8,
         paddingHorizontal: 16,
         borderRadius: 20,
-        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primary,
+        backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight,
       },
       buttonText: {
         color: isDarkMode ? COLORS.textDark : COLORS.textLight,
@@ -1275,3 +1294,4 @@ const getStyles = () => {
 }
 
 export default getStyles;
+
