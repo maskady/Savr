@@ -17,12 +17,16 @@ import getStyles from '../styles/OrdersStyles';
 import OrderItem from '../components/OrderItem'; 
 
 const Colors = {
-  Primary: '#000000',      
+  Pending: '#FE9900',
+  Paid: '#FFDE59', 
+  Prepared: '#A9DC58', 
+  Delivered: '#4CDE3B',
   Grey: '#333333',        
-  Success: '#444444',      
-  Error: '#000000',        
-  Warning: '#888888',      
+  Success: 'lightgreen',     
+  Confirmed: 'darkgreen', 
+  Error: '#E4080A',        
   Info: '#555555',      
+  Primary: '#007AFF',
 };
 
 const OrdersScreen = () => {
@@ -63,15 +67,15 @@ const OrdersScreen = () => {
 
   const getStatusColor = useCallback((status) => {
     switch (status?.toLowerCase()) {
-      case 'pen': return Colors.Warning;
-      case 'pai': return Colors.Success;
-      case 'con': return Colors.Success;
-      case 'pre': return Colors.Primary;
+      case 'pen': return Colors.Pending;
+      case 'pai': return Colors.Paid;
+      case 'con': return Colors.Confirmed;
+      case 'pre': return Colors.Prepared;
       case 'del': return Colors.Info;
-      case 'com': return Colors.Success;
+      case 'com': return Colors.Confirmed;
       case 'can': return Colors.Error;
       case 'nos': return Colors.Error;
-      default: return Colors.Primary;
+      default: return Colors.Grey;
     }
   }, []);
 

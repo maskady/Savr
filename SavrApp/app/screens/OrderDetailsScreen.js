@@ -14,15 +14,14 @@ import getStyles from '../styles/OrderDetailsStyles';
 import SettingsContext from '../contexts/SettingsContext';
 
 const Colors = {
-  Primary: '#000000',      
+  Pending: '#FE9900',
+  Paid: '#FFDE59', 
+  Prepared: '#A9DC58', 
+  Delivered: '#4CDE3B',
   Grey: '#333333',        
-
-  Success: '#444444',      
-  lightGrey: '#CCCCCC',   
-  darkGrey: '#666666',       
-
-  Error: '#000000',        
-  Warning: 'red',  
+  Success: 'lightgreen',     
+  Confirmed: 'darkgreen', 
+  Error: '#E4080A',        
   Info: '#555555',      
 };
 
@@ -81,6 +80,7 @@ const OrderDetailsScreen = ({ route, navigation }) => {
     switch(status) {
       case 'pen': return 'Pending';
       case 'con': return 'Confirmed';
+      case 'pai': return 'Paid';
       case 'pre': return 'Preparing';
       case 'del': return 'Delivered';
       case 'com': return 'Completed';
@@ -91,26 +91,16 @@ const OrderDetailsScreen = ({ route, navigation }) => {
   };
 
   const getStatusColor = (status) => {
-    // "pen" -- Pending "pai" -- Paid "con" -- Confirmed "pre" -- Preparing "del" -- Delivered "com" -- Completed "can" -- Cancelled "nos" -- Not Show
-    switch (status.toLowerCase()) {
-      case 'pen':
-        return Colors.Warning;
-      case 'pai':
-        return Colors.Success;
-      case 'con':
-        return Colors.Success;
-      case 'pre':
-        return Colors.Primary;
-      case 'del':
-        return Colors.Info;
-      case 'com':
-        return Colors.Success;
-      case 'can':
-        return Colors.Error;
-      case 'nos':
-        return Colors.Error;
-      default:
-        return Colors.Primary;
+    switch (status?.toLowerCase()) {
+      case 'pen': return Colors.Pending;
+      case 'pai': return Colors.Paid;
+      case 'con': return Colors.Confirmed;
+      case 'pre': return Colors.Prepared;
+      case 'del': return Colors.Info;
+      case 'com': return Colors.Confirmed;
+      case 'can': return Colors.Error;
+      case 'nos': return Colors.Error;
+      default: return Colors.Primary;
     }
   };
 
