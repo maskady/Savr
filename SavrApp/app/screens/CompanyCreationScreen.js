@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/CompanyShopStyles'; 
-import { getToken } from '../utils/token';
+import getToken from '../utils/token';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import SettingsContext from '../contexts/SettingsContext';

@@ -1,6 +1,6 @@
 //request.js
 import { API_URI } from '@env';
-import { getToken } from './token';
+import getToken from './token';
 
 const request = async (endpoint, method, body, query={}) => {
   const headers = { "Content-Type": "application/json" };

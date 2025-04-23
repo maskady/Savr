@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StatusBar } fro
 import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';
 import getStyles from '../styles/CompanyStyles'; 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { getToken } from '../utils/token';
+import getToken from '../utils/token';
 import AuthContext from '../contexts/AuthContext';
 import SettingsContext from '../contexts/SettingsContext';
 
