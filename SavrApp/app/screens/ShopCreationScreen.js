@@ -108,11 +108,14 @@ const ShopCreationScreen = () => {
         ]);
 
         if (shop.email !== emailOwnership) {
-          const ownershipResponse = await request('/ownership/shop', 'POST', null, {
-            userId: user.id,
+          const ownershipReqBody = {
+            //userId: user.id,
             shopId: data.data.id,
             email: emailOwnership,
-          });
+          };
+          console.log("Ownership request sent with body:\n", ownershipReqBody);
+          const { response } = await request('/ownership/shop', 'POST', ownershipReqBody, null);
+          const ownershipResponse = response;
 
           if (ownershipResponse.ok) {
             console.log("Ownership request sent successfully.");
@@ -397,32 +400,6 @@ const ShopCreationScreen = () => {
           </View>
         </View>
           
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Phone Number *</Text>
-            <TextInput
-              style={[styles.input, errors.phone && styles.inputError]}
-              value={shop.phone}
-              onChangeText={(text) => handleInputChange('phone', text)}
-              placeholder="+1234567890"
-              placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-              keyboardType="phone-pad"
-            />
-            {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
-          </View>
-          
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email *</Text>
-            <TextInput
-              style={[styles.input, errors.email && styles.inputError]}
-              value={shop.email}
-              onChangeText={(text) => handleInputChange('email', text)}
-              placeholder="email@example.com"
-              placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-            {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-          </View>
           
           {/* Categories */}
           <Text style={styles.label}>Categories *</Text>

@@ -42,7 +42,7 @@ const CheckoutScreen = () => {
 
   const handlePaymentSuccess = (paymentData) => {
     setTimeout(() => {
-      request('PUT', `/payment/${paymentData.id}/update-payment-status`);
+      request(`/payment/${paymentData.id}/update-payment-status`, 'PUT');
       navigation.navigate('OrderDetails', { orderId: paymentData.id }); 
       clearCart();
     }, 1000);
