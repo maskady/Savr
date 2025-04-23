@@ -58,10 +58,6 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
     const fetchGeoJson = async () => {
       const results = await Promise.all(
         shops.map(async (shop) => {
-          // const { data: variants = [] } = await getAvailableProductVariantsForShop(shop.id);
-          // const count = Array.isArray(variants)
-          //   ? variants.reduce((sum, variant) => sum + (variant.quantity || 0), 0)
-          //   : 0;
           const count = shop.availableProductsVariantCount;
           return {
             feature: {
