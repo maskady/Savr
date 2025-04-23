@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { removeToken, getToken } from '../utils/token';
-import { fetchBusinessCategories } from '../constants/businessCategories';
+import fetchBusinessCategories from '../constants/businessCategories';
 import { loadUserData } from '../utils/api';
 
 // Create the context

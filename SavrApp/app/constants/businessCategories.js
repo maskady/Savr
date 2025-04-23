@@ -18,7 +18,7 @@ export let businessCategoryGroups = {
   other: "other",
 }; // category id -> group id (string)
 
-export const fetchBusinessCategories = async () => {
+const fetchBusinessCategories = async () => {
   try {
     // Fetch categories array from API and filter out removed/deleted categories.
     const response = await getCategories();
@@ -57,3 +57,5 @@ export const fetchBusinessCategories = async () => {
     businessCategoriesColors = {};
   }
 }
+
+export default fetchBusinessCategories;
