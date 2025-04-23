@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
-import { SettingsContext } from '../contexts/SettingsContext';
+import SettingsContext from '../contexts/SettingsContext';
 import { getDistance } from 'geolib';
 import { ChevronRight } from 'lucide-react-native';
 import { HOST_URL } from '@env';

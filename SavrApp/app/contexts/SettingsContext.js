@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { Appearance } from 'react-native';
 
-export const SettingsContext = createContext();
+const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
     const [currency, setCurrency] = useState({ symbol: '€', code: 'EUR' });
@@ -23,3 +23,5 @@ export const SettingsProvider = ({ children }) => {
         </SettingsContext.Provider>
     );
 };
+
+export default SettingsContext;

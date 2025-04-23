@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import getStyles from '../styles/SettingsStyles';
-import { SettingsContext } from '../contexts/SettingsContext';
+import SettingsContext from '../contexts/SettingsContext';
 
 const SettingsButton = () => {
     const { darkMode } = useContext(SettingsContext);

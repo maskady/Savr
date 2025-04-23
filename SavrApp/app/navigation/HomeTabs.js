@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import { SettingsContext } from "../contexts/SettingsContext";
+import SettingsContext from "../contexts/SettingsContext";
 import { useNavigation } from "@react-navigation/native";
 
 // Screens

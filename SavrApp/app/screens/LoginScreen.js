@@ -20,7 +20,7 @@ import { loginUser } from "../utils/authApi";
 import getStyles from "../styles/AuthStyles";
 import { useTranslation } from 'react-i18next';
 import AuthContext from "../contexts/AuthContext";
-import { SettingsContext } from "../contexts/SettingsContext";
+import SettingsContext from "../contexts/SettingsContext";
 
 const LoginScreen = () => {
   const { t } = useTranslation();

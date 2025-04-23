@@ -23,7 +23,7 @@ import { registerUser } from "../utils/authApi";
 import { useTranslation } from 'react-i18next';
 
 import getStyles from "../styles/AuthStyles";
-import { SettingsContext } from "../contexts/SettingsContext";
+import SettingsContext from "../contexts/SettingsContext";
 
 const RegisterScreen = () => {
   const { t } = useTranslation();

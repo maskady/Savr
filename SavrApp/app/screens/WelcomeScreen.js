@@ -14,7 +14,7 @@ import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { checkUserExists } from "../utils/authApi";
 import { useTranslation, Trans } from 'react-i18next';
 import getStyles from "../styles/AuthStyles";
-import { SettingsContext } from "../contexts/SettingsContext";
+import SettingsContext from "../contexts/SettingsContext";
 
 const WelcomeScreen = () => {
   const [email, setEmail] = useState("");

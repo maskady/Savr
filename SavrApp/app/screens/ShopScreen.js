@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { SettingsContext } from '../contexts/SettingsContext';
+import SettingsContext from '../contexts/SettingsContext';
 import { getShopById, updateShop } from '../utils/api';
 import { businessCategories } from '../constants/businessCategories';
 import { ShopContext } from '../contexts/ShopContext';

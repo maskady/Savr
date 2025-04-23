@@ -7,7 +7,7 @@ import OrderAndPay from '../components/OrderAndPay';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { STRIPE_PUBLISHABLE_KEY, STRIPE_MERCHANT_ID, STRIPE_URL_SCHEME } from '@env';
 
-import { SettingsContext } from '../contexts/SettingsContext';
+import SettingsContext from '../contexts/SettingsContext';
 import getStyles from '../styles/CheckoutStyles';
 import { request } from '../utils/request';
 
