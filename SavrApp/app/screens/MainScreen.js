@@ -61,6 +61,9 @@ const MainScreen = () => {
 
       // Fetch shops based on current region
       fetchShopsIfNeeded(currentRegion);
+      // Initialize regionBoundedShops for initial load
+      setCurrentMapRegion(currentRegion);
+      filterShopsByRegion(currentRegion);
       setIsLoading(false);
     };
 
