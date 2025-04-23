@@ -1,6 +1,6 @@
-import { request } from './request';
+import request from './request';
 
-export const getShops = async (latitude, longitude, radius) => {
+const getShops = async (latitude, longitude, radius) => {
   try {
     const response = await request('/shop', 'GET', null, { latitude, longitude, radius });
     const data = response?.data?.data || []; // Safely access response.data.data
@@ -153,5 +153,6 @@ export const getOrders = async (shopId=null, userId=null) => {
     console.error('Error fetching order history:', error);
     throw error;
   }
-
 }
+
+export default getShops;

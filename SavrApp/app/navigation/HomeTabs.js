@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import { SettingsContext } from "../contexts/SettingsContext";
+import SettingsContext from "../contexts/SettingsContext";
 import { useNavigation } from "@react-navigation/native";
 
 // Screens
@@ -10,12 +10,9 @@ import ProfileScreen from "../screens/ProfileScreen";
 import CheckoutScreen from "../screens/CheckoutScreen";
 import ShopScreen from "../screens/ShopScreen";
 
-import { CartContext } from "../contexts/CheckoutContext";
-import { AuthContext } from "../contexts/AuthContext";
-import { ShopContext } from "../contexts/ShopContext";
+import AuthContext from "../contexts/AuthContext";
+import ShopContext from "../contexts/ShopContext";
 import CompanyListScreen from "../screens/CompanyListScreen";
-
-import { request } from "../utils/request";
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +20,6 @@ const HomeTabs = () => {
   const { darkMode } = useContext(SettingsContext);
   const navigation = useNavigation();
 
-  const { addToCart, clearCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
   const { fetchMyShop } = useContext(ShopContext);
 

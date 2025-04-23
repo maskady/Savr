@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Appearance, ActivityIndicator, TouchableOpacity } from 'react-native';
 import getStyles from '../styles/AppStyles';
 import { useStripe, initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native';
-import { request } from '../utils/request';
+import request from '../utils/request';
 import { APP_NAME } from '@env';
 
 const OrderAndPay = ({ orderId, cartItems, onPaymentSuccess, onPaymentError }) => {
@@ -62,7 +62,7 @@ const OrderAndPay = ({ orderId, cartItems, onPaymentSuccess, onPaymentError }) =
         // Initialize payment sheet with the new order ID
         await initializePaymentSheet(newOrderId);
         // Open payment sheet after initialization
-        await openPaymentSheet();
+        await openPaymentSheet(newOrderId);
       } else {
         throw new Error('Failed to create order');
       }
@@ -148,7 +148,7 @@ const OrderAndPay = ({ orderId, cartItems, onPaymentSuccess, onPaymentError }) =
     }
   };
 
-  const openPaymentSheet = async () => {
+  const openPaymentSheet = async (newOrderId) => {
     try {
       const { error, paymentOption } = await presentPaymentSheet();
       console.log('Payment option:', paymentOption, error);
@@ -158,7 +158,7 @@ const OrderAndPay = ({ orderId, cartItems, onPaymentSuccess, onPaymentError }) =
         onPaymentError && onPaymentError(error.message);
       } else {
         console.log('Payment success with option:', paymentOption);
-        onPaymentSuccess && onPaymentSuccess({ id: currentOrderId });
+        onPaymentSuccess && onPaymentSuccess({ id: newOrderId });
       }
     } catch (error) {
       console.error('Error presenting payment sheet:', error);

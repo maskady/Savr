@@ -14,9 +14,10 @@ import getStyles from '../styles/CompanyShopStyles';
 import { getToken } from '../utils/token';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { SettingsContext } from '../contexts/SettingsContext';
 import CategoryDropdown from '../components/CategoryDropdown';
 import { request } from '../utils/request';
+import SettingsContext from '../contexts/SettingsContext';
+
 
 const ShopUpdateScreen = ({ route }) => {
   const [shop, setShop] = useState(route.params.shop);

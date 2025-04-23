@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { COLORS } from '../constants/colors';
+import COLORS from '../constants/colors';
 
 const getStyles = (darkMode) => {
   
@@ -14,6 +14,13 @@ const getStyles = (darkMode) => {
   };
 
   return StyleSheet.create({
+    tabBar: {
+      backgroundColor: themeColors.background,
+      color: themeColors.subText,
+      activeTextColor: themeColors.text,
+      inactiveTextColor: themeColors.subText,
+      indicatorColor: darkMode ? '#fff' : '#000',
+    },
     statusBar: {
       backgroundColor: themeColors.background,
       barStyle: darkMode ? 'light-content' : 'dark-content',

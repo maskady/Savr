@@ -4,8 +4,8 @@ import { AntDesign, Feather, FontAwesome6 } from '@expo/vector-icons';
 import getStyles from '../styles/CompanyStyles'; 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getToken } from '../utils/token';
-import { AuthContext } from '../contexts/AuthContext';
-import { SettingsContext } from '../contexts/SettingsContext';
+import AuthContext from '../contexts/AuthContext';
+import SettingsContext from '../contexts/SettingsContext';
 
 const ShopListScreen = () => {
   const navigation = useNavigation();

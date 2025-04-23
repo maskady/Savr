@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
-import { request } from '../utils/request';
+import request from '../utils/request';
 
 // Cart context
 export const CartContext = createContext();
 
 // Custom hook to use cart context
-export const useCart = () => {
+const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
     throw new Error('useCart must be used within a CartProvider');
@@ -26,6 +26,11 @@ export const CartProvider = ({ children }) => {
         console.error("Failed to fetch shop name:", response.statusText);
         return;
       }
+    }
+
+    if (cartItems.length > 0 && cartItems[0].shopId !== product.shopId) {
+      alert("You can only add products from one shop at a time. Please remove the other products from your cart first.");
+      return;
     }
 
     setCartItems(prevItems => {
@@ -193,3 +198,5 @@ export const CartProvider = ({ children }) => {
     </CartContext.Provider>
   );
 };
+
+export default useCart;

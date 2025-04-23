@@ -13,14 +13,14 @@ import {
   ScrollView,
 } from "react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { storeToken } from "../utils/token";
+import storeToken from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
-import { loginUser } from "../utils/authApi";
+import loginUser from "../utils/authApi";
 import getStyles from "../styles/AuthStyles";
 import { useTranslation } from 'react-i18next';
-import { AuthContext } from "../contexts/AuthContext";
-import { SettingsContext } from "../contexts/SettingsContext";
+import AuthContext from "../contexts/AuthContext";
+import SettingsContext from "../contexts/SettingsContext";
 
 const LoginScreen = () => {
   const { t } = useTranslation();

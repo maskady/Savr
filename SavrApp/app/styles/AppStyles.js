@@ -1,5 +1,5 @@
 import { StyleSheet, Appearance } from "react-native";
-import { COLORS } from "../constants/colors";
+import COLORS from "../constants/colors";
 
 const getStyles = () => {
   const theme = Appearance.getColorScheme();

@@ -15,15 +15,15 @@ import {
 } from "react-native";
 import { ArrowLeft } from "lucide-react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { storeToken } from "../utils/token";
-import { AuthContext } from "../contexts/AuthContext";
+import storeToken from "../utils/token";
+import AuthContext from "../contexts/AuthContext";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { registerUser } from "../utils/authApi";
 
 import { useTranslation } from 'react-i18next';
 
 import getStyles from "../styles/AuthStyles";
-import { SettingsContext } from "../contexts/SettingsContext";
+import SettingsContext from "../contexts/SettingsContext";
 
 const RegisterScreen = () => {
   const { t } = useTranslation();

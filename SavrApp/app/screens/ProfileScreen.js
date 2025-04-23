@@ -13,9 +13,9 @@ import { LineChart } from 'react-native-chart-kit';
 import SettingsDropdown from '../components/SettingsDropdown';
 import getStyles from '../styles/AppStyles';
 import { useNavigation } from '@react-navigation/native';
-import { AuthContext } from '../contexts/AuthContext';
-import { request } from '../utils/request';
-import { SettingsContext } from '../contexts/SettingsContext';
+import AuthContext from '../contexts/AuthContext';
+import request from '../utils/request';
+import SettingsContext from '../contexts/SettingsContext';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -198,7 +198,7 @@ const ProfileScreen = () => {
         <TouchableOpacity 
           style={{backgroundColor: '#4CAF50', padding: 10, borderRadius: 5, marginTop: 20}} 
           onPress={() => { navigation.navigate('Orders', { orders, setOrders, onRefresh, refreshing, setRefreshing }) }}>
-          <Text style={styles.buttonText}>Order History</Text>
+          <Text style={styles.buttonText}>My Orders</Text>
         </TouchableOpacity>
 
       </ScrollView>

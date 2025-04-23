@@ -3,7 +3,6 @@ import { StyleSheet, Appearance } from "react-native";
 
 const getStyles = () => {
   const theme = Appearance.getColorScheme();
-  const isDarkMode = theme === "dark";
 
   return StyleSheet.create({
 

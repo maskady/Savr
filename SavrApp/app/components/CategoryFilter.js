@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity, Text, View, Appearance } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { SettingsContext } from '../contexts/SettingsContext';
+import SettingsContext from '../contexts/SettingsContext';
 import Search from './Search';
 import { businessCategoriesColors } from '../constants/businessCategories';
 import getStyles from '../styles/AppStyles';

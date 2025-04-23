@@ -8,7 +8,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import getStyles from '../styles/AppStyles';
 import { getAvailableProductVariantsForShop } from '../utils/api';
-import { getUserLocation, startLocationUpdates, stopLocationUpdates } from '../utils/location';
+import getUserLocation, { startLocationUpdates, stopLocationUpdates } from '../utils/location';
 
 const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) => {
   const [styles, setStyles] = useState(getStyles());

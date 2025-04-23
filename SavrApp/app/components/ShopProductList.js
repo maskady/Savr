@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Appearance } from 'react-native';
 import PropTypes from 'prop-types';
 import getStyles from '../styles/AppStyles';
-import { COLORS } from '../constants/colors';
+import COLORS from '../constants/colors';
 import QuantityCartButton from './QuantityCartButton';
-import { useCart } from '../contexts/CheckoutContext';
+import useCart from '../contexts/CheckoutContext';
 import ProductDetailsModal from './ProductDetailsModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

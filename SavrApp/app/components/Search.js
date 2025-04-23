@@ -2,7 +2,7 @@ import { View, TouchableOpacity, TextInput, Text, Appearance } from 'react-nativ
 import React, { useState, useEffect, useContext } from 'react';
 import getStyles from '../styles/AppStyles';
 import { Ionicons } from '@expo/vector-icons';
-import { SettingsContext } from '../contexts/SettingsContext';
+import SettingsContext from '../contexts/SettingsContext';
 
 
 const Search = ({ searchActive, setSearchActive, searchQuery, onSearchQueryChange }) => {

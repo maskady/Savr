@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, Appearance, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import getStyles from '../styles/SettingsStyles';
-import { SettingsButton } from './SettingsButton';
-import { AuthContext } from '../contexts/AuthContext';
+import SettingsButton from './SettingsButton';
+import AuthContext from '../contexts/AuthContext';
 
 const SettingsDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);

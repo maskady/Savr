@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { View, Appearance, SafeAreaView, Text, ActivityIndicator, TouchableOpacity, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
-import { getToken, storeToken, removeToken, refreshToken } from "../utils/token";
+import storeToken, { getToken,  removeToken, refreshToken } from "../utils/token";
 import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
 import { saveUserData } from "../utils/api";
-import { AuthContext } from "../contexts/AuthContext";
-import { SettingsContext } from "../contexts/SettingsContext";
+import AuthContext from "../contexts/AuthContext";
+import SettingsContext from "../contexts/SettingsContext";
 
 const SettingsScreen = () => {
   const [firstName, setFirstName] = useState("");
@@ -36,7 +36,7 @@ const SettingsScreen = () => {
 
   const navigation = useNavigation();
 
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
 
   const logout = async () => {
     try {
@@ -89,6 +89,7 @@ const SettingsScreen = () => {
   );
 
   useEffect(() => {
+    console.log("[SettingsScreen] UseEffect triggered: user:", user);
     setFirstName(user.firstName);
     setLastName(user.lastName);
     setEmail(user.email);
@@ -107,14 +108,21 @@ const SettingsScreen = () => {
 
   const handleSave = async () => {
     try {
-      // Save user data
-      saveUserData({ firstName, lastName, email });
-      
+      const { response } = await saveUserData({ firstName, lastName, email });
+      if (response.status === 409) {
+        alert("Email already exists");
+        return;
+      }
+      if (!response.ok) {
+        throw new Error("Failed to update user data");
+      }
+  
       // Refresh token
       const token = await getToken();
       const tokenData = await refreshToken(token);
-      const newToken = await tokenData.token;
-      console.log("[SettingsScreen] New token:", newToken);
+      console.log("[SettingsScreen] Token data:", tokenData.data.data);
+      const newToken = await tokenData.data.data.token;
+      setUser(tokenData.data.data);
 
       if (newToken) {
         await removeToken();
@@ -279,6 +287,7 @@ const SettingsScreen = () => {
               editable={editableEmail}
               placeholder="Email"
               style={styles.editableInput}
+              autoCapitalize="none"
             />
             <TouchableOpacity
               onPress={() => {
