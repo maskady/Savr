@@ -144,32 +144,32 @@ const OrdersScreen = () => {
 
     return (
       <View style={styles.tabContent}>
-          <FlatList
-            data={currentOrders}
-            renderItem={renderOrderItem}
-            keyExtractor={keyExtractor}
-            contentContainerStyle={styles.listContainer}
-            windowSize={5}
-            maxToRenderPerBatch={10}
-            initialNumToRender={10}
-            updateCellsBatchingPeriod={50}
-            removeClippedSubviews={true}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                colors={[Colors.Primary]}
-                tintColor={Colors.Primary}
-              />
-            }
-            ListEmptyComponent={
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>
-                  {route.key === 'past' ? 'No past orders found.' : 'No upcoming orders found.'}
-                </Text>
-              </View>
-            }
-          />
+        <FlatList
+          data={currentOrders}
+          renderItem={renderOrderItem}
+          keyExtractor={keyExtractor}
+          contentContainerStyle={styles.listContainer}
+          windowSize={5}
+          maxToRenderPerBatch={10}
+          initialNumToRender={10}
+          updateCellsBatchingPeriod={50}
+          removeClippedSubviews={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[Colors.Primary]}
+              tintColor={Colors.Primary}
+            />
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>
+                {route.key === 'past' ? 'No past orders found.' : 'No upcoming orders found.'}
+              </Text>
+            </View>
+          }
+        />
       </View>
     );
   }, [pastOrders, upcomingOrders, refreshing, error, styles, renderOrderItem, keyExtractor, onRefresh]);
