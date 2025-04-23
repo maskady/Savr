@@ -67,7 +67,7 @@ const CheckoutScreen = () => {
       request( `/payment/${paymentData.id}/update-payment-status`, 'PUT');
       navigation.navigate('OrderDetails', { orderId: paymentData.id }); 
       clearCart();
-    }, 5000);
+    }, 1000);
   };
 
   const handlePaymentError = (error) => {
