@@ -130,7 +130,7 @@ const ProfileScreen = () => {
       if (data && data.data.length > 0) {
         setOrders(data.data);
         // TODO: change from pending to completed when there is some data in the DB
-        setOrderHistory(data.data.filter(order => order.status.toLowerCase() === 'pen')); 
+        setOrderHistory(data.data); 
       }
     } catch (error) {
       setError('Network error. Please check your connection.');
