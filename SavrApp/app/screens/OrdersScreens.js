@@ -130,7 +130,7 @@ const OrdersScreen = () => {
         </View>
       );
     }
-
+  
     if (error && !refreshing) {
       return (
         <View style={styles.centered}>
@@ -203,8 +203,12 @@ const OrdersScreen = () => {
           renderScene={renderScene}
           renderTabBar={renderTabBar}
           onIndexChange={setIndex}
-          initialLayout={{ width: Dimensions.get('window').width }}
+          initialLayout={{ 
+            width: Dimensions.get('window').width,
+            height: 0 
+          }}
           swipeEnabled={true}
+          lazy={true} 
         />
       </View>
     </>
