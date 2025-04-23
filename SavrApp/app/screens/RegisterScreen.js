@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { ArrowLeft } from "lucide-react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { storeToken } from "../utils/token";
+import storeToken from "../utils/token";
 import AuthContext from "../contexts/AuthContext";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import { registerUser } from "../utils/authApi";

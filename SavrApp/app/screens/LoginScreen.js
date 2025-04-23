@@ -13,7 +13,7 @@ import {
   ScrollView,
 } from "react-native";
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { storeToken } from "../utils/token";
+import storeToken from "../utils/token";
 import { ArrowLeft } from "lucide-react-native";
 import IOSKeyboardToolBar from "../components/IOSKeyboardToolBar";
 import loginUser from "../utils/authApi";
