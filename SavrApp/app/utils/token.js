@@ -9,7 +9,7 @@ export const storeToken = async (token) => {
   }
 };
 
-const getToken = async () => {
+export const getToken = async () => {
   try {
       const token = await AsyncStorage.getItem('userToken');
       return token;
@@ -37,4 +37,3 @@ export const refreshToken = async (token) => {
   }
 };
 
-export default getToken;

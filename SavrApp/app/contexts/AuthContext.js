@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import getToken, { removeToken } from '../utils/token';
+import { getToken, removeToken } from '../utils/token';
 import fetchBusinessCategories from '../constants/businessCategories';
 import { loadUserData } from '../utils/api';
 
