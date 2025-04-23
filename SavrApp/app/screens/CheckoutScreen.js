@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StatusBar} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { useCart } from '../contexts/CheckoutContext';
+import useCart from '../contexts/CheckoutContext';
 import OrderAndPay from '../components/OrderAndPay';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { STRIPE_PUBLISHABLE_KEY, STRIPE_MERCHANT_ID, STRIPE_URL_SCHEME } from '@env';
