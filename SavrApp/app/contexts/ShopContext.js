@@ -6,7 +6,7 @@ import { throttle } from 'lodash';
 import { request } from '../utils/request';
 import haversine from 'haversine-distance';
 
-export const ShopContext = createContext();
+const ShopContext = createContext();
 
 export const ShopProvider = ({ children }) => {
   const [shops, setShops] = useState([]);
@@ -195,3 +195,5 @@ export const ShopProvider = ({ children }) => {
     </ShopContext.Provider>
   );
 };
+
+export default ShopContext;

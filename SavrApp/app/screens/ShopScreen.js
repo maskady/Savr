@@ -13,7 +13,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import SettingsContext from '../contexts/SettingsContext';
 import { getShopById, updateShop } from '../utils/api';
 import { businessCategories } from '../constants/businessCategories';
-import { ShopContext } from '../contexts/ShopContext';
+import ShopContext from '../contexts/ShopContext';
 import AuthContext from '../contexts/AuthContext';
 import { getStyles } from '../styles/ShopScreenStyles';
 import ShopHeader from '../components/ShopHeader';

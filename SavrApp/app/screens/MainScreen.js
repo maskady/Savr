@@ -10,7 +10,7 @@ import ListItem from '../components/ListItem';
 import { businessCategories } from '../constants/businessCategories';
 import SettingsContext from '../contexts/SettingsContext';
 import getStyles from '../styles/AppStyles';
-import { ShopContext } from '../contexts/ShopContext';
+import ShopContext from '../contexts/ShopContext';
 import { getUserLocation, startLocationUpdates, stopLocationUpdates, isDifferentRegion } from '../utils/location';
 import haversine from 'haversine-distance';
 
