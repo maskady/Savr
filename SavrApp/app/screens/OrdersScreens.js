@@ -37,8 +37,8 @@ const OrdersScreen = () => {
   
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: 'past', title: 'Past Orders' },
     { key: 'upcoming', title: 'Upcoming Orders' },
+    { key: 'past', title: 'Past Orders' },
   ]);
 
   const pastOrders = useMemo(() => {

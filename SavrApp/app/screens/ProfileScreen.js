@@ -198,7 +198,7 @@ const ProfileScreen = () => {
         <TouchableOpacity 
           style={{backgroundColor: '#4CAF50', padding: 10, borderRadius: 5, marginTop: 20}} 
           onPress={() => { navigation.navigate('Orders', { orders, setOrders, onRefresh, refreshing, setRefreshing }) }}>
-          <Text style={styles.buttonText}>Order History</Text>
+          <Text style={styles.buttonText}>My Orders</Text>
         </TouchableOpacity>
 
       </ScrollView>
