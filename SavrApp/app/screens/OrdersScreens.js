@@ -197,7 +197,7 @@ const OrdersScreen = () => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <FontAwesome6 name="arrow-left" size={24} color={styles.icon.color} />
           </TouchableOpacity>
-          <Text style={styles.title}>Mes Commandes</Text>
+          <Text style={styles.title}>My Orders</Text>
         </View>
         
         <TabView
