@@ -9,7 +9,7 @@ const getStyles = (darkMode) => {
     border: darkMode ? COLORS.borderDark : COLORS.borderLight,
     shadow: darkMode ? COLORS.overlayDark : COLORS.overlayLight,
     card: darkMode ? COLORS.grey800 : COLORS.surface,
-    addButton: darkMode ? COLORS.primaryLight : COLORS.primaryDark,
+    addButton: darkMode ? COLORS.primaryDark : COLORS.primaryLight,
   };
 
   return StyleSheet.create({

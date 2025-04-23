@@ -11,7 +11,7 @@ const getStyles = (darkMode) => {
     card: darkMode ? COLORS.grey900 : COLORS.surface,
     subtext: darkMode ? COLORS.grey400 : COLORS.grey600,
     discount: darkMode ? COLORS.secondary : COLORS.success,
-    buttonBackground: darkMode ? COLORS.surface : COLORS.primary,
+    buttonBackground: darkMode ? COLORS.surface : COLORS.primaryLight,
     buttonText: darkMode ? COLORS.primary : '#FFFFFF',
   };
 
