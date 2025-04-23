@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import { View, Text, TouchableOpacity, Modal, Appearance } from 'react-native';
 import getStyles from '../styles/AppStyles';
 import { businessCategories } from "../constants/businessCategories";
-import COLORS from '../constants/colors';
 import { t } from 'i18next';
 
 const CategoryDropdown = ({shop, onInputChange, category}) => {
@@ -12,8 +11,6 @@ const CategoryDropdown = ({shop, onInputChange, category}) => {
       return () => sub.remove();
     }, []);
 
-    const colors = COLORS;
-
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
     const placeholder = 'Select Category';
@@ -22,7 +19,7 @@ const CategoryDropdown = ({shop, onInputChange, category}) => {
     if (category) {
         text = businessCategories[category]?.name;
     }
-    const textColor = text === placeholder ? colors.placeholder : colors.text;
+    const textColor = text === placeholder ? styles.categoryDropdown.dropdownPlaceholderColor : styles.categoryDropdown.dropdownTextColor  ;
 
 
     return (
@@ -31,7 +28,7 @@ const CategoryDropdown = ({shop, onInputChange, category}) => {
             style={styles.categoryDropdown.dropdownTrigger}
             onPress={() => setShowCategoryDropdown(true)}
         >
-            <Text style={{ color: textColor }}>
+            <Text style={{color: textColor}}>
                 {text}
             </Text>
         </TouchableOpacity>

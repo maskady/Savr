@@ -16,9 +16,10 @@ import { getToken } from '../utils/token';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome6 } from '@expo/vector-icons';
-import SettingsContext from '../contexts/SettingsContext';
-import request from '../utils/request';
-import AuthContext from '../contexts/AuthContext';
+import { SettingsContext } from '../contexts/SettingsContext';
+import { request } from '../utils/request';
+import { AuthContext } from '../contexts/AuthContext';
+import CategoryDropdown from '../components/CategoryDropdown';
 
 const ShopCreationScreen = () => {
   const navigation = useNavigation();
@@ -49,7 +50,6 @@ const ShopCreationScreen = () => {
 
   const [emailOwnership, setEmailOwnership] = useState('');
   
-  const [categoryInput, setCategoryInput] = useState('');
   const [errors, setErrors] = useState({});
 
   const { user } = useContext(AuthContext);
@@ -108,11 +108,14 @@ const ShopCreationScreen = () => {
         ]);
 
         if (shop.email !== emailOwnership) {
-          const ownershipResponse = await request('/ownership/shop', 'POST', null, {
-            userId: user.id,
+          const ownershipReqBody = {
+            //userId: user.id,
             shopId: data.data.id,
             email: emailOwnership,
-          });
+          };
+          console.log("Ownership request sent with body:\n", ownershipReqBody);
+          const { response } = await request('/ownership/shop', 'POST', ownershipReqBody, null);
+          const ownershipResponse = response;
 
           if (ownershipResponse.ok) {
             console.log("Ownership request sent successfully.");
@@ -158,33 +161,15 @@ const ShopCreationScreen = () => {
     }
   };
   
-  const addCategory = () => {
-    if (categoryInput.trim()) {
-      const updatedCategories = [...shop.categories, categoryInput.trim()];
-      setShop({
-        ...shop,
-        categories: updatedCategories,
-        primaryCategory: shop.primaryCategory || categoryInput.trim()
-      });
-      setCategoryInput('');
-    }
-  };
-  
-  const removeCategory = (index) => {
-    const updatedCategories = [...shop.categories];
-    const removedCategory = updatedCategories[index];
-    updatedCategories.splice(index, 1);
-    
-    const updatedPrimaryCategory = 
-      shop.primaryCategory === removedCategory
-        ? (updatedCategories.length > 0 ? updatedCategories[0] : '')
-        : shop.primaryCategory;
-    
-    setShop({
-      ...shop,
-      categories: updatedCategories,
-      primaryCategory: updatedPrimaryCategory
-    });
+  // Handler for selecting a category from dropdown
+  const handleCategorySelect = (ignore, value) => {
+    // Currently, we only use one (primary) category. TODO: implement multiple categories
+    const trimmed = value.trim();
+    setShop(prev => ({
+      ...prev,
+      categories: [trimmed],
+      primaryCategory: trimmed,
+    }));
   };
   
   const setPrimaryCategory = (category) => {
@@ -384,9 +369,8 @@ const ShopCreationScreen = () => {
           />
         </View>
         
-        {/* Categories */}
+        {/* Latitude & Longitude */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Categories *</Text>
           <View style={styles.rowContainer}>
             <View style={[styles.inputGroup, {flex: 1, marginRight: 10}]}>
               <Text style={styles.label}>Latitude *</Text>
@@ -416,35 +400,15 @@ const ShopCreationScreen = () => {
           </View>
         </View>
           
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Phone Number *</Text>
-            <TextInput
-              style={[styles.input, errors.phone && styles.inputError]}
-              value={shop.phone}
-              onChangeText={(text) => handleInputChange('phone', text)}
-              placeholder="+1234567890"
-              placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-              keyboardType="phone-pad"
-            />
-            {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
-          </View>
-          
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email *</Text>
-            <TextInput
-              style={[styles.input, errors.email && styles.inputError]}
-              value={shop.email}
-              onChangeText={(text) => handleInputChange('email', text)}
-              placeholder="email@example.com"
-              placeholderTextColor={Appearance.getColorScheme() === 'dark' ? '#888888' : '#AAAAAA'}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-            {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-          </View>
           
           {/* Categories */}
-          <View style={styles.inputGroup}>
+          <Text style={styles.label}>Categories *</Text>
+          <CategoryDropdown 
+            shop={shop} 
+            onInputChange={handleCategorySelect} 
+            category={shop.primaryCategory}
+          />
+          {/* <View style={styles.inputGroup}>
             <Text style={styles.label}>Categories *</Text>
             <View style={styles.rowContainer}>
               <View style={[styles.input, {flex: 3, marginRight: 10, justifyContent: 'center'}]}>
@@ -501,7 +465,7 @@ const ShopCreationScreen = () => {
                 Tap on a category to set it as primary. Current primary: {shop.primaryCategory || 'None'}
               </Text>
             )}
-          </View>
+          </View> */}
           
           {/* Images */}
           <View style={styles.inputGroup}>

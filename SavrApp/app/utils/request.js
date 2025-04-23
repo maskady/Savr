@@ -15,8 +15,10 @@ const request = async (endpoint, method, body, query={}) => {
     headers,
     body: body ? JSON.stringify(body) : null,
   });
+  
 
   const data = await response.json();
+  //console.log("RESPONSE", JSON.stringify(data,null,2));
   return { response, data };
 };
 

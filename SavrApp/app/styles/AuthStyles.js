@@ -10,7 +10,7 @@ const getStyles = (darkMode) => {
     subText: darkMode ? COLORS.grey300 : COLORS.grey600,
     placeholder: darkMode ? COLORS.grey300 : COLORS.grey500,
     inputBackground: darkMode ? COLORS.grey800 : COLORS.white,
-    buttonBackground: darkMode ? COLORS.primaryLight : COLORS.primaryDark,
+    buttonBackground: darkMode ? COLORS.primaryDark : COLORS.primaryLight,
     buttonText: darkMode ? COLORS.textDark : COLORS.textLight,
     buttonDisabled: darkMode ? COLORS.grey600 : COLORS.grey400,
     link: darkMode ? COLORS.white : COLORS.black,

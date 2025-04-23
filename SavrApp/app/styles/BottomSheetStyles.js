@@ -1,5 +1,6 @@
 import { StyleSheet, Appearance } from "react-native";
 
+
 const getStyles = () => {
   const theme = Appearance.getColorScheme();
 

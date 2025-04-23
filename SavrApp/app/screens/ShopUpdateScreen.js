@@ -13,9 +13,11 @@ import * as ImagePicker from 'expo-image-picker';
 import getStyles from '../styles/CompanyShopStyles'; 
 import { getToken } from '../utils/token';
 import { FontAwesome6, Ionicons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
+import CategoryDropdown from '../components/CategoryDropdown';
+import { request } from '../utils/request';
 import SettingsContext from '../contexts/SettingsContext';
+
 
 const ShopUpdateScreen = ({ route }) => {
   const [shop, setShop] = useState(route.params.shop);
@@ -63,18 +65,14 @@ const ShopUpdateScreen = ({ route }) => {
     };
     
     try {
-      const response = await fetch(`https://www.sevr.polaris.marek-mraz.com/api/shop/${shop.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${await getToken()}`
-        },
-        body: JSON.stringify(dataToSend)
-      });
+      const {response, data} = await request(
+        `/shop/${shopData.id}`,
+        'PUT',
+        dataToSend,
+      )
 
-      const data = await response.json();
-      console.log("Response data:", data);
+      console.log("Response.ok? ", response.ok);
+      // console.log("Response data:", data);
 
       if (response.ok) {
         Alert.alert("Success", "Shop updated successfully!", [
@@ -228,6 +226,17 @@ const ShopUpdateScreen = ({ route }) => {
       ]
     );
   }
+
+  // Handler for selecting a category from dropdown
+  const handleCategorySelect = (ignore, value) => {
+    // Currently, we only use one (primary) category. TODO: implement multiple categories
+    const trimmed = value.trim();
+    setShop(prev => ({
+      ...prev,
+      categories: [...prev.categories, trimmed],
+      primaryCategory: prev.primaryCategory || trimmed,
+    }));
+  };
 
   const fetchCategories = async () => {
       try {
@@ -404,7 +413,12 @@ const ShopUpdateScreen = ({ route }) => {
       {/* Categories */}
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Categories</Text>
-        <View style={styles.rowContainer}>
+        <CategoryDropdown 
+            shop={shop} 
+            onInputChange={handleCategorySelect} 
+            category={shop.primaryCategory}
+          />
+        {/* <View style={styles.rowContainer}>
           <View style={[styles.input, {flex: 3, marginRight: 10, justifyContent: 'center'}]}>
             <Picker
               selectedValue={categoryInput}
@@ -424,7 +438,8 @@ const ShopUpdateScreen = ({ route }) => {
           >
             <Text style={styles.imagePickerButtonText}>Add</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
+
         
         <View style={categoriesStyles.categoriesContainer}>
           {shop.categories && shop.categories.map((category, index) => (

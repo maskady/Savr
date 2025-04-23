@@ -26,7 +26,7 @@ const ShopListScreen = () => {
   const retrieveShops = async () => {
     setIsLoading(true);
     try {
-      let url = 'https://www.sevr.polaris.marek-mraz.com/api/shop?latitude=0&longitude=0&radius=10000';
+      let url = 'https://www.sevr.polaris.marek-mraz.com/api/shop?latitude=0&longitude=0&radius=10000'; // This is bad, it can hurt performance when we have a lot of shops TODO: fix!
 
       const response = await fetch(url, {
         method: 'GET',
