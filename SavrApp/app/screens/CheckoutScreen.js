@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StatusBar} from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StatusBar, Alert} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import useCart from '../contexts/CheckoutContext';
 import OrderAndPay from '../components/OrderAndPay';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { STRIPE_PUBLISHABLE_KEY, STRIPE_MERCHANT_ID, STRIPE_URL_SCHEME } from '@env';
+
 
 import SettingsContext from '../contexts/SettingsContext';
 import getStyles from '../styles/CheckoutStyles';
@@ -38,6 +39,25 @@ const CheckoutScreen = () => {
     } else {
       removeFromCart(shopId, item.id);
     }
+  };
+
+  const handleClearCart = () => {
+    // Alert avec vérification avant de vider le panier
+    Alert.alert(
+      'Clear Cart',
+      'Are you sure you want to clear your cart?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => clearCart(),
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const handlePaymentSuccess = (paymentData) => {
@@ -142,15 +162,20 @@ const CheckoutScreen = () => {
         <ScrollView style={styles.scrollView}>
           {/* Header */}
           <View style={styles.header}>
-            <TouchableOpacity 
-              style={styles.backButton} 
-              onPress={() => navigation.goBack()}
-            >
-              <FontAwesome name="arrow-left" size={20} color={darkMode ? "#fff" : "#333"} />
+            <>
+              <TouchableOpacity 
+                style={styles.backButton} 
+                onPress={() => navigation.goBack()}
+              >
+                <FontAwesome name="arrow-left" size={20} color={darkMode ? "#fff" : "#333"} />
+              </TouchableOpacity>
+              <Text style={styles.headerTitle}>
+                Checkout
+              </Text>
+            </>
+            <TouchableOpacity onPress={handleClearCart}>
+              <FontAwesome name="trash" size={24} color='red' />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>
-              Checkout
-            </Text>
           </View>
           
           {/* Products List */}

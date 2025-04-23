@@ -38,6 +38,7 @@ const getStyles = (darkMode) => {
       flexDirection: 'row',
       alignItems: 'center',
       marginBottom: 20,
+      justifyContent: 'space-between',
     },
     headerTitle: {
       fontSize: 20,
