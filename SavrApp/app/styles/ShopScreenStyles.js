@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import COLORS from '../constants/colors';
 
-export const getStyles = (darkMode) => {
+const getStyles = (darkMode) => {
   const theme = {
     background: darkMode ? COLORS.backgroundDark : COLORS.backgroundLight,
     text: darkMode ? COLORS.textDark : COLORS.textLight,
@@ -310,3 +310,5 @@ export const getStyles = (darkMode) => {
     },
   });
 };
+
+export default getStyles;
