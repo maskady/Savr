@@ -105,7 +105,6 @@ export const ShopProvider = ({ children }) => {
   useEffect(() => {
     // Start with all shops
     let filtered = shops;
-    console.log(shops);
 
     // Apply search filter if query exists
     if (searchQuery.trim() !== '') {
