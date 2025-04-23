@@ -37,3 +37,4 @@ export const refreshToken = async (token) => {
   }
 };
 
+export default storeToken;
