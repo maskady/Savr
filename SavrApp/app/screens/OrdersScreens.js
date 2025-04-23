@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { TabView, TabBar } from 'react-native-tab-view';
-import { AuthContext } from '../contexts/AuthContext';
+import AuthContext from '../contexts/AuthContext';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { SettingsContext } from '../contexts/SettingsContext';

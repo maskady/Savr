@@ -4,7 +4,7 @@ import fetchBusinessCategories from '../constants/businessCategories';
 import { loadUserData } from '../utils/api';
 
 // Create the context
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
@@ -73,3 +73,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export default AuthContext;

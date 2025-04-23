@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AuthContext } from "../contexts/AuthContext";
+import AuthContext from "../contexts/AuthContext";
 import { SettingsContext } from "../contexts/SettingsContext";
 
 import AuthStack from "./AuthStack";

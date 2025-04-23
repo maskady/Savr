@@ -11,7 +11,7 @@ import CheckoutScreen from "../screens/CheckoutScreen";
 import ShopScreen from "../screens/ShopScreen";
 
 import { CartContext } from "../contexts/CheckoutContext";
-import { AuthContext } from "../contexts/AuthContext";
+import AuthContext from "../contexts/AuthContext";
 import { ShopContext } from "../contexts/ShopContext";
 import CompanyListScreen from "../screens/CompanyListScreen";
 

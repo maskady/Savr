@@ -7,7 +7,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import getStyles from "../styles/SettingsStyles";
 import AddOptionsDropdown from "../components/AddOptionsDropdown";
 import { saveUserData } from "../utils/api";
-import { AuthContext } from "../contexts/AuthContext";
+import AuthContext from "../contexts/AuthContext";
 import { SettingsContext } from "../contexts/SettingsContext";
 
 const SettingsScreen = () => {
