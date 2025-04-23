@@ -140,18 +140,17 @@ const MainScreen = () => {
       <View style={styles.mapContainer}>
         <MapSection
           region={region}
-          onRegionChange={(newRegion) => {
-            if (newRegion && isDifferentRegion(newRegion, region)) {  
-              setRegion(newRegion);
-              fetchShopsIfNeeded(newRegion);
-            }
-
-            filterShopsByRegion(newRegion);
-          }}
           shops={filteredShops}
           onShopSelect={handleSelect}
           getUserLocation={getUserLocation}
-          setRegion={setRegion}
+          setRegion={(newRegion) => {
+            if (newRegion && isDifferentRegion(newRegion, region)) {  
+              setRegion(newRegion);
+              fetchShopsIfNeeded(newRegion);
+              filterShopsByRegion(newRegion);
+            }
+          }}
+          
         />
         <View style={styles.searchOverlay}></View>
       </View>

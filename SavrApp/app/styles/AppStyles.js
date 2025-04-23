@@ -130,7 +130,6 @@ const getStyles = () => {
       backgroundColor: COLORS.lightGrey,
       borderWidth: 2,
       borderColor: COLORS.Black,
-
     },
     clusterText: {
       color: COLORS.Black,

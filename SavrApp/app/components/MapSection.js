@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Appearance } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Appearance, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Supercluster from 'supercluster';
 import { debounce } from 'lodash';
@@ -11,6 +11,7 @@ import { getAvailableProductVariantsForShop } from '../utils/api';
 import getUserLocation, { startLocationUpdates, stopLocationUpdates } from '../utils/location';
 
 const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) => {
+
   const [styles, setStyles] = useState(getStyles());
   useEffect(() => {
     const sub = Appearance.addChangeListener(() => setStyles(getStyles()));
@@ -18,7 +19,6 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
   }, []);
   
   const [clusters, setClusters] = useState([]);
-  const [userLocation, setUserLocation] = useState(null);
   const [locationUpdateInterval, setLocationUpdateInterval] = useState(null);
   const mapRef = useRef(null);
 
@@ -37,7 +37,6 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
     // Get initial location
     const initLocation = async () => {
       const location = await getUserLocation(1); // Get location max 1 minute old
-      setUserLocation(location);
     };
     
     initLocation();
@@ -55,32 +54,27 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
   }, []);
 
   useEffect(() => {
-    const fetchGeoJson = async () => {
-      const results = await Promise.all(
-        shops.map(async (shop) => {
-          const count = shop.availableProductsVariantCount;
-          return {
-            feature: {
-              type: 'Feature',
-              properties: { cluster: false, shopId: shop.id },
-              geometry: {
-                type: 'Point',
-                coordinates: [shop.longitude, shop.latitude],
-              },
-            },
-            count,
-          };
-        })
-      );
-      const geoJsonData = results.map(r => r.feature);
-      const countsMap = {};
-      results.forEach(r => { countsMap[r.feature.properties.shopId] = r.count; });
-      setVariantCounts(countsMap);
-      setGeoJson(geoJsonData);
-    };
+    let startTime = performance.now();
+    const data = [];
+    const countsMap = {};
 
-    fetchGeoJson();
-  }, [shops.map(s => s.id).join(',')]);
+    for (const shop of shops) {
+      const count = shop.availableProductsVariantCount;
+      data.push({
+        type: 'Feature',
+        properties: { cluster: false, shopId: shop.id },
+        geometry: { type: 'Point', coordinates: [shop.longitude, shop.latitude] },
+      });
+      countsMap[shop.id] = count;
+    }
+
+    console.log('data', data.length);
+    setVariantCounts(countsMap);
+    setGeoJson(data);
+    let endTime = performance.now();
+    console.log('fetchGeoJson', endTime - startTime, 'ms');
+
+  }, [shops.map(s => s.id).sort().join(',')]);
 
   // Load the data into Supercluster whenever the geoJSON changes
   useEffect(() => {
@@ -92,6 +86,7 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
 
   // Update clusters based on the current region with additional padding for smoother transitions
   const updateClusters = (newRegion) => {
+    let startTime = performance.now();
     const { longitudeDelta, latitudeDelta, latitude, longitude } = newRegion;
     const bounds = [
       longitude - longitudeDelta * (0.5 + padding),
@@ -102,6 +97,8 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
     const zoom = Math.floor(Math.log2(360 / longitudeDelta));
     const clusters = superclusterRef.current.getClusters(bounds, zoom);
     setClusters(clusters);
+    let endTime = performance.now();
+    console.log('updateClusters', endTime - startTime,'ms');
   };
 
   // Render either an individual marker or a cluster marker based on properties
@@ -109,6 +106,7 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
     const [longitude, latitude] = cluster.geometry.coordinates;
     const { cluster: isCluster, point_count: pointCount, shopId } = cluster.properties;
     const number = variantCounts[shopId] || 0;
+
 
     if (isCluster) {
       return (
@@ -147,8 +145,8 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
         coordinate={{ latitude, longitude }}
         onPress={() => onShopSelect && onShopSelect(shop)}
       >
-        <View style={styles.pinContainer}>
-          <FontAwesome6 name="location-pin" size={40} style={styles.locationPin} color={color} />
+        <View style={[styles.pinContainer]}>
+          <FontAwesome6 name="location-pin" size={Platform.OS === 'ios' ? 40 : 33} style={styles.locationPin} color={color} />
           <Text style={[styles.pinText]}>
             {number}
           </Text>
@@ -171,17 +169,14 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
       // Get fresh location (max 1 minute old)
       const newLocation = await getUserLocation(1);
       
-      // Update local state
-      setUserLocation(newLocation);
-      
       // Animate map to new location
       if (mapRef.current) {
         mapRef.current.animateToRegion(newLocation, 500);
       }
       
       // Update region state in parent component
-      if (onRegionChange) {
-        onRegionChange(newLocation);
+      if (setRegion) {
+        setRegion(newLocation);
       }
       
       // Update clusters
@@ -199,9 +194,8 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
         region={region}
         onRegionChangeComplete={(newRegion) => {
           console.log('newregion',newRegion );
-          // setRegion(newRegion);
-          debouncedUpdateClusters(newRegion);
-          onRegionChange && onRegionChange(newRegion);
+          setRegion(newRegion);
+          updateClusters(newRegion);
         }}
         showsUserLocation={true}
         followsUserLocation={false} // If true, region will be updated to user's location - user cannot move on map
@@ -212,7 +206,13 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
         userLocationUpdateInterval={30000} // Update user location every 30 seconds - Andorid specific, iOS uses the default
         userLocationFastestInterval={10000} // Fastest interval to receive updates - Android specific, iOS uses the default
       >
-        {clusters.map(cluster => renderMarker(cluster))}
+        {(() => {
+          let time = performance.now();
+          const renderedMarkers = clusters.map(cluster => renderMarker(cluster));
+          let time2 = performance.now();
+          console.log('renderMarkersss', time2 - time, 'ms');
+          return renderedMarkers;
+        })()}
       </MapView>
       <TouchableOpacity style={styles.locateButton} onPress={locateMyself}>
         <MaterialIcons name="my-location" size={24} style={styles.myLocationIcon} />

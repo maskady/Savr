@@ -32,6 +32,7 @@ const requestLocationPermission = async () => {
  * @returns {Promise<object|null>} Location object or null if unavailable
  */
 const getCurrentLocation = async () => {
+  let startTime = performance.now();
   try {
     const hasPermission = await requestLocationPermission();
     
@@ -41,8 +42,10 @@ const getCurrentLocation = async () => {
     }
     
     const location = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Balanced
+      accuracy: Location.Accuracy.Low
     });
+    let endTime = performance.now();
+    console.log('getCurrentLocation', endTime - startTime, 'ms');
     
     return location;
   } catch (error) {
