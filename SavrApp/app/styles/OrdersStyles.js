@@ -14,6 +14,10 @@ const getStyles = (darkMode) => {
   };
 
   return StyleSheet.create({
+    tabContent: {
+      flex: 1,
+      width: '100%',
+    },
     tabBar: {
       backgroundColor: themeColors.background,
       color: themeColors.subText,
