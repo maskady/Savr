@@ -28,6 +28,11 @@ export const CartProvider = ({ children }) => {
       }
     }
 
+    if (cartItems.length > 0 && cartItems[0].shopId !== product.shopId) {
+      alert("You can only add products from one shop at a time. Please remove the other products from your cart first.");
+      return;
+    }
+
     setCartItems(prevItems => {
       // Search if the shop already exists in the cart
       const shopIndex = prevItems.findIndex(shop => shop.shopId === product.shopId);
