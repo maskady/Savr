@@ -1,6 +1,6 @@
 // ShopContext.js
 import React, { createContext, useState, useMemo, useEffect } from 'react';
-import { getShops } from '../utils/api';
+import getShops from '../utils/api';
 import { businessCategories } from '../constants/businessCategories';
 import { throttle } from 'lodash';
 import { request } from '../utils/request';
