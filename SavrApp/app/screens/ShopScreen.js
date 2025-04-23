@@ -253,11 +253,11 @@ const ShopScreen = () => {
         onImagePress={handleFullScreenImage}
         darkMode={darkMode}
       />
-      <FullScreenImageModal
+      {/* <FullScreenImageModal
         image={fullScreenImage}
         onClose={() => setFullScreenImage(null)}
         darkMode={darkMode}
-      />
+      /> */}
     </SafeAreaView>
   );
 };
