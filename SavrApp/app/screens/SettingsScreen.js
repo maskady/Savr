@@ -287,6 +287,7 @@ const SettingsScreen = () => {
               editable={editableEmail}
               placeholder="Email"
               style={styles.editableInput}
+              autoCapitalize="none"
             />
             <TouchableOpacity
               onPress={() => {
