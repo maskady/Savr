@@ -124,8 +124,8 @@ const OrdersScreen = () => {
 
   const keyExtractor = useCallback((item) => item.id.toString(), []);
 
-  const renderScene = useCallback(({ route }) => {
-    const currentOrders = route.key === 'past' ? pastOrders : upcomingOrders;
+  const renderScene = useCallback(({ route: sceneRoute }) => {
+    const currentOrders = sceneRoute.key === 'past' ? pastOrders : upcomingOrders;
     
     if (refreshing) {
       return (
@@ -169,7 +169,7 @@ const OrdersScreen = () => {
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyText}>
-                {route.key === 'past' ? 'No past orders found.' : 'No upcoming orders found.'}
+                {sceneRoute.key === 'past' ? 'No past orders found.' : 'No upcoming orders found.'}
               </Text>
             </View>
           }
