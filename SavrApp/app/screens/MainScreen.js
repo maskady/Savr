@@ -61,6 +61,9 @@ const MainScreen = () => {
 
       // Fetch shops based on current region
       fetchShopsIfNeeded(currentRegion);
+      // Initialize regionBoundedShops for initial load
+      setCurrentMapRegion(currentRegion);
+      filterShopsByRegion(currentRegion);
       setIsLoading(false);
     };
 
@@ -148,6 +151,7 @@ const MainScreen = () => {
           shops={filteredShops}
           onShopSelect={handleSelect}
           getUserLocation={getUserLocation}
+          setRegion={setRegion}
         />
         <View style={styles.searchOverlay}></View>
       </View>
