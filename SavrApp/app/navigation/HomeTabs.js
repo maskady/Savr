@@ -13,6 +13,7 @@ import ShopScreen from "../screens/ShopScreen";
 import AuthContext from "../contexts/AuthContext";
 import ShopContext from "../contexts/ShopContext";
 import CompanyListScreen from "../screens/CompanyListScreen";
+import COLORS from "../constants/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,7 +53,7 @@ const HomeTabs = () => {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#007AFF",
+        tabBarActiveTintColor: darkMode ? COLORS.primaryDark : COLORS.primaryLight,
         tabBarInactiveTintColor: darkMode ? "#fff" : "gray",
         tabBarStyle: {
           backgroundColor: darkMode ? "#333" : "#fff",

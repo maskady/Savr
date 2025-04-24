@@ -2,6 +2,7 @@ import React from 'react';
 import { Marker } from 'react-native-maps';
 import { View, Text } from 'react-native';
 import getStyles from '../styles/AppStyles';
+import COLORS from '../constants/colors';
 
 export default React.memo(function ClusterMarker({ cluster, onPress, size }) {
   const styles = getStyles();
@@ -18,7 +19,7 @@ export default React.memo(function ClusterMarker({ cluster, onPress, size }) {
         style={[
           styles.clusterContainer, 
           {
-            backgroundColor: '#ffbb00', 
+            backgroundColor: COLORS.businesses.cluster, 
             width: size, 
             height: size,
             borderRadius: size/2,

@@ -29,12 +29,13 @@ const CategoryFilter = ({
     const order = {
       bakery: 1,
       grocery: 2,
-      restaurant: 3,
+      florist: 3,
+      restaurant: 5,
       cafe: 4,
-      other: 6,
+      other: 7,
     };
-    const aOrder = order[a.id] || 5;
-    const bOrder = order[b.id] || 5;
+    const aOrder = order[a.id] || 6;
+    const bOrder = order[b.id] || 6;
 
     return aOrder - bOrder || a.name.localeCompare(b.name);
   });
