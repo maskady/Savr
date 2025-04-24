@@ -5,7 +5,6 @@ import {
   Text, 
   TextInput, 
   TouchableOpacity, 
-  Appearance,
   Alert,
   Image,
 } from 'react-native';
@@ -22,6 +21,15 @@ const CompanyUpdateScreen = () => {
   const { handleRefresh } = route.params || { handleRefresh: () => {} };
 
   const [company, setCompany] = useState(route.params.company);
+  // Fix for the case where images are not defined in previous company
+  useEffect(() => {
+    const companyWithImages = {
+      ...company,
+      images: company.images || []
+    }
+    setCompany(companyWithImages);
+  }, []);
+
   const { darkMode } = useContext(SettingsContext);
   const [styles, setStyles] = useState(getStyles(darkMode));
   
