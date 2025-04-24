@@ -42,7 +42,7 @@ const getCurrentLocation = async () => {
     }
     
     const location = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Low
+      accuracy: Location.Accuracy.Balanced
     });
     let endTime = performance.now();
     console.log('getCurrentLocation', endTime - startTime, 'ms');
