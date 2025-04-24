@@ -129,8 +129,8 @@ const ProfileScreen = () => {
       
       if (data && data.data.length > 0) {
         setOrders(data.data);
-        // TODO: change from pending to completed when there is some data in the DB
         setOrderHistory(data.data); 
+        return data.data;
       }
     } catch (error) {
       setError('Network error. Please check your connection.');
@@ -143,7 +143,7 @@ const ProfileScreen = () => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    fetchOrders();
+    return fetchOrders();
   };
 
   return (

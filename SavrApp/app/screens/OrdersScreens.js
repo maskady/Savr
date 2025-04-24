@@ -32,6 +32,7 @@ const Colors = {
 const OrdersScreen = () => {
   const route = useRoute();
   const { orders = [], onRefresh, refreshing } = route.params || {};
+  const [ ordersList, setOrdersList ] = useState(orders);
   const [error] = useState(null);
   const navigation = useNavigation();
   const { darkMode } = useContext(SettingsContext);
@@ -44,26 +45,39 @@ const OrdersScreen = () => {
   ]);
 
   const pastOrders = useMemo(() => {
-    return orders.filter(order => {
+    return ordersList.filter(order => {
       return ['com', 'can', 'nos', 'del'].includes(order.status?.toLowerCase());
     });
-  }, [orders]);
+  }, [ordersList]);
 
   const upcomingOrders = useMemo(() => {
-    return orders.filter(order => {
+    return ordersList.filter(order => {
       return ['pen', 'pai', 'con', 'pre'].includes(order.status?.toLowerCase());
     });
-  }, [orders]);
+  }, [ordersList]);
 
   useEffect(() => {
-    if (onRefresh) {
-      onRefresh();
-    }
-  }, [onRefresh]);
+    const initializeOrdersList = async () => {
+      const data = await handleRefresh();
+      console.log('Orders data:', data);
+      if (data) {
+        setOrdersList(data);
+      }
+    };
+  
+    initializeOrdersList();
+  }, []);
 
   const handleOrderPress = useCallback((order) => {
     navigation.navigate('OrderDetails', { orderId: order.id });
   }, [navigation]);
+
+  const handleRefresh = useCallback(async () => {
+    const data = await onRefresh();
+    if (data) {
+      setOrdersList(data);
+    }
+  }, [onRefresh]);
 
   const getStatusColor = useCallback((status) => {
     switch (status?.toLowerCase()) {
@@ -139,7 +153,7 @@ const OrdersScreen = () => {
       return (
         <View style={styles.centered}>
           <Text style={styles.errorText}>{error}</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={onRefresh}>
+          <TouchableOpacity style={styles.retryButton} onPress={handleRefresh}>
             <Text style={styles.retryText}>Retry</Text>
           </TouchableOpacity>
         </View>
@@ -161,7 +175,7 @@ const OrdersScreen = () => {
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={onRefresh}
+              onRefresh={handleRefresh}
               colors={[Colors.Primary]}
               tintColor={Colors.Primary}
             />
@@ -176,7 +190,7 @@ const OrdersScreen = () => {
         />
       </View>
     );
-  }, [pastOrders, upcomingOrders, refreshing, error, styles, renderOrderItem, keyExtractor, onRefresh]);
+  }, [pastOrders, upcomingOrders, refreshing, error, styles, renderOrderItem, keyExtractor, handleRefresh]);
 
   const renderTabBar = useCallback(props => (
     <TabBar
