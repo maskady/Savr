@@ -2,12 +2,8 @@ import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Appearance, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import Supercluster from 'supercluster';
-import { debounce } from 'lodash';
-import { businessCategoriesColors } from '../constants/businessCategories';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import getStyles from '../styles/AppStyles';
-import { getAvailableProductVariantsForShop } from '../utils/api';
 import getUserLocation, { startLocationUpdates, stopLocationUpdates } from '../utils/location';
 import ClusterMarker from './ClusterMarker';
 import ShopMarker from './ShopMarker';
@@ -23,14 +19,12 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
   const [clusters, setClusters] = useState([]);
   const [mapClusters, setMapClusters] = useState([]);
 
-
   const [locationUpdateInterval, setLocationUpdateInterval] = useState(null);
   const [mapRegion, setMapRegion] = useState(region);
   
   const mapRef = useRef(null);
 
   // Optimized cluster update function that only changes what's needed
-
   const handleMapClusterChange = useCallback((newClusters) => {
     setMapClusters((clusters) => {
       // 1) Build a sorted copy of newClusters by key
@@ -166,6 +160,7 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
       
       // Create GeoJSON feature
       data.push({
+        id: 'shop-' + shop.id,
         type: 'Feature',
         properties: { 
           cluster: false, 
@@ -192,17 +187,9 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
 
   // Load the data into Supercluster whenever the geoJSON changes
   useEffect(() => {
-    console.log('Loading', geoJson.length, 'points into Supercluster');
     superclusterRef.current.load(geoJson);
-    if (region) {
-      updateClusters(region);
-    }
   }, [geoJson]);
 
-  // Debug clusters whenever they change
-  useEffect(() => {
-    console.log('>>>>>>>>>Clusters state updated:', clusters.length, 'items');
-  }, [clusters]);
 
   // Update clusters based on the current region with additional padding for smoother transitions
   const updateClusters = (newRegion) => {
@@ -342,8 +329,8 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
         showsMyLocationButton={false} // Disable default button, we'll use our own
         showsBuildings={false}
         showsScale={true}
-        // userLocationUpdateInterval={30000} // Update user location every 30 seconds - Andorid specific, iOS uses the default
-        // userLocationFastestInterval={10000} // Fastest interval to receive updates - Android specific, iOS uses the default
+        userLocationUpdateInterval={5000} // Update user location every 30 seconds - Andorid specific, iOS uses the default
+        userLocationFastestInterval={3000} // Fastest interval to receive updates - Android specific, iOS uses the default
       >
         {renderedMarkers}
       </MapView>

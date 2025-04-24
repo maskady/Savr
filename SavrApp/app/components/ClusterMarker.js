@@ -7,6 +7,7 @@ export default React.memo(function ClusterMarker({ cluster, onPress, size }) {
   const styles = getStyles();
   const [longitude, latitude] = cluster.geometry.coordinates;
   const { point_count: pointCount } = cluster.properties;
+  size = Math.min(size, 33);
 
   return (
     <Marker
