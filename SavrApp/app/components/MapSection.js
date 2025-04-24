@@ -120,6 +120,11 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
   const [geoJson, setGeoJson] = useState([]);
   const [variantCounts, setVariantCounts] = useState({});
 
+
+  useEffect(() => {
+    setMapRegion(region);
+  }, [region]);
+  
   // Initialize location tracking
   useEffect(() => {
     // Get initial location
@@ -185,9 +190,12 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
 
   }, [shops.map(s => s.id).sort().join(',')]);
 
-  // Load the data into Supercluster whenever the geoJSON changes
+  // Load the data into Supercluster whenever the geoJSON or region changes
   useEffect(() => {
     superclusterRef.current.load(geoJson);
+    if (mapRegion) {
+      updateClusters(mapRegion);
+    }
   }, [geoJson]);
 
 
