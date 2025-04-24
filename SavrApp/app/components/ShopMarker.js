@@ -33,6 +33,5 @@ export default React.memo(function ShopMarker({ shop, number, onPress }) {
   );
 }, (prev, next) => {
   const isEqual = prev.shop.id === next.shop.id && prev.number === next.number;
-  console.log('ShopMarker equal check:', isEqual);
   return isEqual;
 }); 

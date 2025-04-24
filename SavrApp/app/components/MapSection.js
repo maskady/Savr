@@ -22,6 +22,8 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
   
   const [clusters, setClusters] = useState([]);
   const [locationUpdateInterval, setLocationUpdateInterval] = useState(null);
+  const [mapRegion, setMapRegion] = useState(region);
+  
   const mapRef = useRef(null);
 
   // Clustering configuration
@@ -50,6 +52,9 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
     // Start periodic location updates every 30 seconds
     const intervalId = startLocationUpdates(0.5); // 0.5 minutes = 30 seconds
     setLocationUpdateInterval(intervalId);
+
+
+    
     
     // Cleanup
     return () => {
@@ -60,6 +65,8 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
   }, []);
 
   useEffect(() => {
+
+    console.log('>>>>>>>>>>>>>>>useEffect shops');
     let startTime = performance.now();
     const data = [];
     const countsMap = {};
@@ -111,7 +118,7 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
 
   // Debug clusters whenever they change
   useEffect(() => {
-    console.log('Clusters state updated:', clusters.length, 'items');
+    console.log('>>>>>>>>>Clusters state updated:', clusters.length, 'items');
   }, [clusters]);
 
   // Update clusters based on the current region with additional padding for smoother transitions
@@ -150,8 +157,7 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
         return; // Nothing changed → skip setClusters
       }
     }
-    
-    setClusters(next);
+    // setClusters(next);
     let endTime = performance.now();
     console.log('updateClusters', endTime - startTime,'ms');
   };
@@ -179,13 +185,12 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
     }
   };
 
-  console.log('------clusters', clusters.length);
   return (
     <View style={styles.mapSection.container}>
       <MapView
         ref={mapRef}
         style={styles.map}
-        region={region}
+        region={mapRegion}
         onRegionChangeComplete={(newRegion) => {
           console.log('newregion',newRegion );
           setRegion(newRegion);
@@ -197,12 +202,14 @@ const MapSection = ({ region, setRegion, shops, onRegionChange, onShopSelect }) 
         showsMyLocationButton={false} // Disable default button, we'll use our own
         showsBuildings={false}
         showsScale={true}
-        userLocationUpdateInterval={30000} // Update user location every 30 seconds - Andorid specific, iOS uses the default
-        userLocationFastestInterval={10000} // Fastest interval to receive updates - Android specific, iOS uses the default
+        // userLocationUpdateInterval={30000} // Update user location every 30 seconds - Andorid specific, iOS uses the default
+        // userLocationFastestInterval={10000} // Fastest interval to receive updates - Android specific, iOS uses the default
       >
         {
         
         clusters.map(cluster => {
+
+          console.log('cluster---------------------------- update');
           if (cluster.properties.cluster) {
             // Calculate size based on point count
             const size = Math.min(44, 26 + (cluster.properties.point_count / 2));

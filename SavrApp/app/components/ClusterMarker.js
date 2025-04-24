@@ -32,9 +32,6 @@ export default React.memo(function ClusterMarker({ cluster, onPress, size }) {
     </Marker>
   );
 }, (prev, next) => {
-  const isEqual = prev.cluster.id === next.cluster.id && 
-                 prev.cluster.properties.point_count === next.cluster.properties.point_count &&
-                 prev.size === next.size;
-  console.log('ClusterMarker equal check:', isEqual);
+  const isEqual = prev.cluster.id === next.cluster.id;
   return isEqual;
 }); 
