@@ -5,6 +5,7 @@ import SettingsContext from '../contexts/SettingsContext';
 import { getDistance } from 'geolib';
 import { ChevronRight } from 'lucide-react-native';
 import { HOST_URL } from '@env';
+import COLORS from '../constants/colors';
 
 const ListItem = ({ shop, onSelect, userLocation }) => {
   const {darkMode} = useContext(SettingsContext);
@@ -73,7 +74,7 @@ const ListItem = ({ shop, onSelect, userLocation }) => {
         )}
       </View>
       <View style={styles.listItem.arrowContainer}>
-        <ChevronRight size={24} color={darkMode ? '#6200ea' : '#007AFF'} />
+        <ChevronRight size={24} color={darkMode ? COLORS.primaryDark : COLORS.primaryLight} />
       </View>
     </TouchableOpacity>
   );
