@@ -8,6 +8,7 @@ import {
   Linking,
   Share,
   Alert,
+  Platform,
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import SettingsContext from '../contexts/SettingsContext';
@@ -107,7 +108,8 @@ const ShopScreen = () => {
 
   const handleNavigate = () => {
     if (shop?.latitude && shop?.longitude) {
-      const url = `https://maps.apple.com/?daddr=${shop.latitude},${shop.longitude}`; // TODO: Use default map and export to string constants
+      const baseUrl = Platform.OS === 'android' ? 'geo:0,0?q=' : 'http://maps.apple.com/?q=';
+      const url = `${baseUrl}${shop.latitude},${shop.longitude}(${shop.name})`;
       Linking.openURL(url);
     }
   };
