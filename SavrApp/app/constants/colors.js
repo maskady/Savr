@@ -10,15 +10,22 @@ const COLORS = {
     textLight: "black",
     textDark: "white",
     businesses: {
-      "restaurant": "green",
-      "cafe": "orange",
-      "butcher": "red",
-      "bakery": "brown",
-      "florist": "purple",
-      "fishmonger": "blue",
-      "grocery": "lightblue",
-      "canteen": "lightgreen",
-      "other": "lightgray",
+      "cluster":      "#e6f499",
+
+      "restaurant":   "#66c2a5",
+      "canteen":      "#66c2a5",
+      
+      "butcher":      "#d53e4f",
+      
+      "florist":      "#5e4ea3",
+      
+      "fishmonger":   "#3389bd",
+      
+      "grocery":      "#abdca5",
+      "cafe":         "#f56d42", // orange
+      "bakery":       "#fdaf60", // light orange
+
+      "other":        "lightgray",
     },
     border: '#e0e0e0',
     placeholder: '#a0a0a0',
@@ -51,8 +58,8 @@ const COLORS = {
   onBackground: '#000000',  // text/icons on background
 
   // Primary/secondary variants
-  primaryLight:   'darkgreen',
-  primaryDark:    'lightgreen',
+  primaryLight:   '#66c2a5', // something between green and blue
+  primaryDark:    '#66c2a5',
 
   // Overlay/transparency helpers
   overlayLight: 'rgba(255,255,255,0.12)',

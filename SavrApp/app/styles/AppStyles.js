@@ -65,6 +65,11 @@ const getStyles = () => {
       width: '45%',
       elevation: 2,
     },
+    myOrdersButton: {
+      backgroundColor: isDarkMode ? COLORS.primaryDark : COLORS.primaryLight, 
+      padding: 10, 
+      borderRadius: 5,
+      marginTop: 20},
     statValue: {
       fontSize: 18,
       fontWeight: 'bold',
